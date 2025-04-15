@@ -1,9 +1,8 @@
+import pygame
 
 # Game settings
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
-FPS = 60
-TITLE = "My Game"
 
 # Colors (RGB)
 WHITE = (255, 255, 255)
@@ -26,10 +25,12 @@ PAUSED = 'paused'
 GAME_OVER = 'game_over'
 
 # Layers
-BACKGROUND_LAYER = 0
-TERRAIN_LAYER = 1
-PLAYER_LAYER = 2
-UI_LAYER = 3
+Z_LAYERS = {
+    'background': 0,
+    'terrain': 1,
+    'player': 2,
+    'ui': 3
+}
 
 # Asset paths
 ASSET_DIR = 'assets'
