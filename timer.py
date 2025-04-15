@@ -1,4 +1,4 @@
-import pygame
+from pygame.time import get_ticks
 
 class Timer:
     def __init__(self, duration, function=None):
@@ -9,14 +9,14 @@ class Timer:
 
     def activate(self):
         self.active = True
-        self.start_ticks = pygame.time.get_ticks()
+        self.start_ticks = get_ticks()
 
     def deactivate(self):
         self.active = False
 
     def update(self):
         if self.active:
-            now = pygame.time.get_ticks()
+            now = get_ticks()
             if now - self.start_ticks > self.duration:
                 if self.function:
                     self.function()
