@@ -34,7 +34,8 @@ class UI:
 
         # Volume slider
         self.volume_text = self.font.render("Volume:", True, "white")
-        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250))
+        text_height = self.volume_text.get_height()
+        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250 - text_height/2)) #Corrected line
         slider_width = int(200 * SCALE_X)
         slider_height = int(20 * SCALE_Y)
         slider_handle_width = int(20 * SCALE_X)
