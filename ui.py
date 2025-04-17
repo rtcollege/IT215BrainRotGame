@@ -140,4 +140,4 @@ class UI:
                 if self.volume_rect.collidepoint(mouse_pos):
                     self.volume = (mouse_pos[0] - (WINDOW_WIDTH/2 - 100)) // 2
                     self.volume = max(0, min(100, self.volume))
-                    self.volume_slider.x = WINDOW_WIDTH/2 - 100 + (self.volume * 2)
+                    self.volume_slider.x = int(WINDOW_WIDTH/2 - 100 + (self.volume * 2))

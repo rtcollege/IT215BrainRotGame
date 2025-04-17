@@ -70,7 +70,7 @@ class Game:
                         elif self.ui.back_button.check_input(mouse_pos):
                             self.ui.current_scene = 'main_menu'
                     
-            self.display_surface.fill("purple")
+            self.display_surface.fill("gray")
             self.ui.update(dt)
             pygame.display.update()
             

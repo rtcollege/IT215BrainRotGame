@@ -496,6 +496,8 @@
             "white", 
             "#b68f40"
         )
+
+        The font we are using is bigger than standard text. Can we make it so the buttons are bigger proportionally to compensate?
     
 # settings.py
 
