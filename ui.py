@@ -41,16 +41,16 @@ class UI:
         slider_handle_height = int(30 * SCALE_Y)
 
         self.slider_width = int(200 * SCALE_X)
-        self.volume_slider.x = int(WINDOW_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
-
-
-        self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - slider_width/2, int(250 * SCALE_Y), slider_width, slider_height)
+        self.volume = 50
         self.volume_slider = pygame.Rect(
-            WINDOW_WIDTH/2 - slider_width/2 + (self.volume * slider_width/100),
+            WINDOW_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100),
             int(245 * SCALE_Y),
             slider_handle_width,
             slider_handle_height
         )
+
+
+        self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - slider_width/2, int(250 * SCALE_Y), slider_width, slider_height)
 
         # Difficulty buttons
         diff_y = 400
