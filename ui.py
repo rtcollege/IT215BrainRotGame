@@ -72,12 +72,15 @@ class UI:
         self.settings_title_rect = self.settings_title.get_rect(topleft=(50, 100))
         
         # Volume slider
-        self.volume_text = self.font.render("Volume", True, "white")
+        self.volume_text = self.font.render("Volume:", True, "white")
+        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250))
         self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - 100, 250, 200, 20)
         self.volume_slider = pygame.Rect(WINDOW_WIDTH/2 - 100 + (self.volume * 2), 245, 20, 30)
         
         # Difficulty buttons
         diff_y = 400
+        self.difficulty_text = self.font.render("Difficulty:", True, "white")
+        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y))
         self.easy_button = Button(None, (WINDOW_WIDTH/2 - 200, diff_y), "Easy", self.font, "white", "#b68f40")
         self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
         self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
@@ -115,8 +118,9 @@ class UI:
             # Draw settings title
             self.display_surface.blit(self.settings_title, self.settings_title_rect)
             
-            # Draw volume slider
-            self.display_surface.blit(self.volume_text, (WINDOW_WIDTH/2 - 100, 220))
+            # Draw volume label and slider
+            self.display_surface.blit(self.volume_text, self.volume_text_rect)
+            self.display_surface.blit(self.difficulty_text, self.difficulty_text_rect)
             pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
             pygame.draw.rect(self.display_surface, "white", self.volume_slider)
             
