@@ -21,13 +21,13 @@ class Button:
             self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
         else:
             self.rect = pygame.Rect(
-                self.x_pos - (self.text.get_width() + self.padding_x) // 2,
+                self.x_pos,
                 self.y_pos - (self.text.get_height() + self.padding_y) // 2,
                 self.text.get_width() + self.padding_x,
                 self.text.get_height() + self.padding_y
             )
         
-        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(midleft=(self.x_pos + self.padding_x//2, self.y_pos))
 
     def update(self, screen):
         if self.image is not None:
