@@ -781,11 +781,11 @@
     Who: Ryan
     
     Prompt:
-        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+        The "difficulty:" text in the settings scene does not line up vertically with the buttons.
     
     Response:
-        # Create buttons
-        button_x = 50  # Left alignment position
+        text_height = self.difficulty_text.get_height()
+        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y - text_height/2))
 
 #
 
