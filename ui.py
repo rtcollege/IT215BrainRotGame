@@ -48,7 +48,8 @@ class UI:
         self.display_surface = pygame.display.get_surface()
         self.sprites = pygame.sprite.Group()
         self.font = font
-        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 60)  # Bigger font for titles
+        title_font_size = int(60 * min(SCALE_X, SCALE_Y))
+        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", title_font_size)  # Bigger font for titles
         self.current_scene = 'main_menu'
         self.difficulty = 'medium'
         self.volume = 50
@@ -58,9 +59,9 @@ class UI:
         self.title_rect = self.title_text.get_rect(topleft=(50, 100))
         
         # Create buttons
-        button_x = 50  # Left alignment position
-        button_y_start = 300
-        button_y_spacing = 100
+        button_x = int(50 * SCALE_X)  # Left alignment position
+        button_y_start = int(300 * SCALE_Y)
+        button_y_spacing = int(100 * SCALE_Y)
         
         self.play_button = Button(None, (button_x, button_y_start), "Play", self.font, "white", "#b68f40")
         self.settings_button = Button(None, (button_x, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
@@ -74,8 +75,10 @@ class UI:
         # Volume slider
         self.volume_text = self.font.render("Volume:", True, "white")
         self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250))
-        self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - 100, 250, 200, 20)
-        self.volume_slider = pygame.Rect(WINDOW_WIDTH/2 - 100 + (self.volume * 2), 245, 20, 30)
+        slider_width = int(200 * SCALE_X)
+        slider_height = int(20 * SCALE_Y)
+        self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - slider_width/2, int(250 * SCALE_Y), slider_width, slider_height)
+        self.volume_slider = pygame.Rect(WINDOW_WIDTH/2 - slider_width/2 + (self.volume * slider_width/100), int(245 * SCALE_Y), int(20 * SCALE_X), int(30 * SCALE_Y))
         
         # Difficulty buttons
         diff_y = 400
