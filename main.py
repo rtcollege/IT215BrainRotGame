@@ -55,6 +55,8 @@ class Game:
                     if self.ui.current_scene == 'main_menu':
                         if self.ui.play_button.check_input(mouse_pos):
                             print("Play clicked")
+                            print("Difficulty:", self.ui.difficulty)
+                            print("Volume:", self.ui.volume)
                         elif self.ui.settings_button.check_input(mouse_pos):
                             self.ui.current_scene = 'settings'
                         elif self.ui.quit_button.check_input(mouse_pos):

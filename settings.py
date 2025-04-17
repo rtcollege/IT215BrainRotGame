@@ -2,8 +2,8 @@ import pygame, sys
 from pygame.math import Vector2 as vector
 
 # Game settings
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 960
+WINDOW_HEIGHT = 540
 TILE_SIZE = 64
 ANIMATION_SPEED = 10
 FPS = 60
