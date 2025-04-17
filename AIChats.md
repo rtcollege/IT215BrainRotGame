@@ -684,6 +684,7 @@
         Move the buttons much father to the left please
 
     Response:
+        button_x = 50  # Left alignment position
 
 #
 
@@ -692,11 +693,13 @@
     Who: Ryan
 
     Prompt:
-        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+        Make it so the back button lines up horizontally with the main menu buttons
 
     Response:
-        # Create buttons
-        button_x = 50  # Left alignment position
+        # Back button - positioned at the same x position as main menu buttons
+        self.back_button = Button(
+            None, 
+            (button_x, button_y_start + 4 * button_y_spacing), 
 
 #
 
@@ -705,11 +708,10 @@
     Who: Ryan
     
     Prompt:
-        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+        It is perfect horizontally, vertically it is too far down now.
     
     Response:
-        # Create buttons
-        button_x = 50  # Left alignment position
+        (button_x, button_y_start + 3 * button_y_spacing), 
 
 #
     
