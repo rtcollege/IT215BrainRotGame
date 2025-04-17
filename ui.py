@@ -58,12 +58,14 @@ class UI:
         self.title_rect = self.title_text.get_rect(topleft=(50, 100))
         
         # Create buttons
+        button_x = 200  # Left alignment position
         button_y_start = 300
         button_y_spacing = 100
         
-        self.play_button = Button(None, (WINDOW_WIDTH/2, button_y_start), "Play", self.font, "white", "#b68f40")
-        self.settings_button = Button(None, (WINDOW_WIDTH/2, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
-        self.quit_button = Button(None, (WINDOW_WIDTH/2, button_y_start + 2 * button_y_spacing), "Quit", self.font, "white", "#b68f40")
+        self.play_button = Button(None, (button_x, button_y_start), "Play", self.font, "white", "#b68f40")
+        self.settings_button = Button(None, (button_x, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
+        self.credits_button = Button(None, (button_x, button_y_start + 2 * button_y_spacing), "Credits", self.font, "white", "#b68f40")
+        self.quit_button = Button(None, (button_x, button_y_start + 3 * button_y_spacing), "Quit", self.font, "white", "#b68f40")
         
         # Settings scene setup
         self.settings_title = self.title_font.render("Settings", True, "white")
@@ -107,11 +109,13 @@ class UI:
             # Update and draw buttons
             self.play_button.update(self.display_surface)
             self.settings_button.update(self.display_surface)
+            self.credits_button.update(self.display_surface)
             self.quit_button.update(self.display_surface)
             
             # Update button colors based on hover
             self.play_button.change_color(mouse_pos)
             self.settings_button.change_color(mouse_pos)
+            self.credits_button.change_color(mouse_pos)
             self.quit_button.change_color(mouse_pos)
             
         elif self.current_scene == 'settings':
