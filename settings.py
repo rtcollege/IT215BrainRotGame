@@ -3,12 +3,12 @@ from pygame.math import Vector2 as vector
 
 # Game settings
 # Base resolution for scaling
-BASE_WIDTH = 960
-BASE_HEIGHT = 540
+BASE_WIDTH = 1280
+BASE_HEIGHT = 720
 
 # Current window size
-WINDOW_WIDTH = 800  # You can adjust this
-WINDOW_HEIGHT = 450  # You can adjust this
+WINDOW_WIDTH = 1280  # You can adjust this
+WINDOW_HEIGHT = 720  # You can adjust this
 
 # Calculate scale factors
 SCALE_X = WINDOW_WIDTH / BASE_WIDTH
