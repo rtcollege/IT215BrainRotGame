@@ -54,6 +54,21 @@ class Game:
                     
             self.display_surface.fill("purple")
             self.ui.update(dt)
+            
+            # Handle button clicks
+            mouse_pos = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.ui.play_button.check_input(mouse_pos):
+                        print("Play clicked")
+                    elif self.ui.settings_button.check_input(mouse_pos):
+                        print("Settings clicked")
+                    elif self.ui.quit_button.check_input(mouse_pos):
+                        pygame.quit()
+                        sys.exit()
 
             pygame.display.update()
             
