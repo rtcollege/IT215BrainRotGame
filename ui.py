@@ -79,8 +79,18 @@ class UI:
         self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
         self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
         
-        # Back button
-        self.back_button = Button(None, (WINDOW_WIDTH/2, 600), "Back", self.font, "white", "#b68f40")
+        # Back button - positioned with padding from bottom-left corner
+        padding = 20  # padding from window edges
+        button_text = self.font.render("Back", True, "white")
+        button_height = button_text.get_height()
+        self.back_button = Button(
+            None, 
+            (padding + button_text.get_width()/2, WINDOW_HEIGHT - padding - button_height/2), 
+            "Back", 
+            self.font, 
+            "white", 
+            "#b68f40"
+        )
 
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()
