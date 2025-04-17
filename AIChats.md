@@ -544,7 +544,69 @@
         self.back_button = Button(
             None, 
             (x_pos, y_pos), 
-        
+
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        Can you increase the size of the Title text on both the main menu and settings scene?   
+    
+    Response:
+        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 60)  # Bigger font for titles
+        self.current_scene = 'main_menu'
+        self.difficulty = 'medium'
+        self.volume = 50
+    
+        # Main menu setup
+        self.title_text = self.title_font.render("Brain Rot Game", True, "white")
+        self.title_rect = self.title_text.get_rect(midtop=(WINDOW_WIDTH/2, 100))
+    
+        # Create buttons
+        button_y_start = 300
+        button_y_spacing = 100
+    
+        self.play_button = Button(None, (WINDOW_WIDTH/2, button_y_start), "Play", self.font, "white", "#b68f40")
+        self.settings_button = Button(None, (WINDOW_WIDTH/2, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
+        self.quit_button = Button(None, (WINDOW_WIDTH/2, button_y_start + 2 * button_y_spacing), "Quit", self.font, "white", "#b68f40")
+    
+        # Settings scene setup
+        self.settings_title = self.title_font.render("Settings", True, "white")
+
+#
+
+    Model: Replit AI Assistant
+
+    Who: Ryan
+
+    Prompt:
+        Can you change it so that the Title's on both scenes are on the left side. 
+
+    Response:
+
+#
+
+    Model: Replit AI Assistant
+
+    Who: Ryan
+
+    Prompt:
+        Can you increase the size of the Title text on both the main menu and settings scene?   
+
+    Response:
+
+#
+
+    Model: Replit AI Assistant
+
+    Who: Ryan
+
+    Prompt:
+        Can you increase the size of the Title text on both the main menu and settings scene?   
+
+    Response:
 
 # settings.py
 
