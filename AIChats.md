@@ -316,10 +316,47 @@
     Who: Ryan
 
     Prompt:
-        
+        Make the main menu use the button class for the three buttons.
 
     Response:
+        def run(self):
+        """Main game loop"""
+        while True:
+            # Delta time
+            dt = self.clock.tick(FPS) / 1000
     
+            # Handle pygame events
+            mouse_pos = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.ui.play_button.check_input(mouse_pos):
+                        print("Play clicked")
+                    elif self.ui.settings_button.check_input(mouse_pos):
+                        print("Settings clicked")
+                    elif self.ui.quit_button.check_input(mouse_pos):
+                        pygame.quit()
+                        sys.exit()
+    
+            self.display_surface.fill("purple")
+            self.ui.update(dt)
+            pygame.display.update()
+
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        
+    
+    Response:
+
+#
+
 
 # settings.py
 
