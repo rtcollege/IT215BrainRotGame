@@ -481,10 +481,21 @@
     Who: Ryan
     
     Prompt:
-        
+        In the settings scene, move the back button to the bottom left corner. It can also be cut off if the window is not big enough, is there a way to fix that?
     
     Response:
-        
+        # Back button - positioned with padding from bottom-left corner
+        padding = 20  # padding from window edges
+        button_text = self.font.render("Back", True, "white")
+        button_height = button_text.get_height()
+        self.back_button = Button(
+            None, 
+            (padding + button_text.get_width()/2, WINDOW_HEIGHT - padding - button_height/2), 
+            "Back", 
+            self.font, 
+            "white", 
+            "#b68f40"
+        )
     
 # settings.py
 
