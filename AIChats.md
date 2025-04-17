@@ -593,6 +593,75 @@
     Who: Ryan
 
     Prompt:
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+
+    Response:
+            button_x = 200  # Left alignment position
+            button_y_start = 300
+            button_y_spacing = 100
+    
+            self.play_button = Button(None, (button_x, button_y_start), "Play", self.font, "white", "#b68f40")
+            self.settings_button = Button(None, (button_x, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
+            self.credits_button = Button(None, (button_x, button_y_start + 2 * button_y_spacing), "Credits", self.font, "white", "#b68f40")
+            self.quit_button = Button(None, (button_x, button_y_start + 3 * button_y_spacing), "Quit", self.font, "white", "#b68f40")
+    
+            # Settings scene setup
+            self.settings_title = self.title_font.render("Settings", True, "white")
+            self.settings_title_rect = self.settings_title.get_rect(topleft=(50, 100))
+    
+            # Volume slider
+            self.volume_text = self.font.render("Volume", True, "white")
+            self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - 100, 250, 200, 20)
+            self.volume_slider = pygame.Rect(WINDOW_WIDTH/2 - 100 + (self.volume * 2), 245, 20, 30)
+    
+            # Difficulty buttons
+            diff_y = 400
+            self.easy_button = Button(None, (WINDOW_WIDTH/2 - 200, diff_y), "Easy", self.font, "white", "#b68f40")
+            self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
+            self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
+    
+            # Back button - positioned with safe padding from bottom-left corner
+            padding = 60  # increased padding from window edges
+            button_text = self.font.render("Back", True, "white")
+            button_height = button_text.get_height()
+            button_width = button_text.get_width()
+            # Ensure button position respects minimum window boundaries
+            x_pos = max(padding + button_width/2, button_width + padding)
+            y_pos = min(WINDOW_HEIGHT - padding - button_height/2, WINDOW_HEIGHT - button_height - padding)
+            self.back_button = Button(
+                None, 
+                (x_pos, y_pos), 
+                "Back", 
+                self.font, 
+                "white", 
+                "#b68f40"
+            )
+    
+        def update(self, dt):
+            mouse_pos = pygame.mouse.get_pos()
+    
+            if self.current_scene == 'main_menu':
+                # Draw title
+                self.display_surface.blit(self.title_text, self.title_rect)
+    
+                # Update and draw buttons
+                self.play_button.update(self.display_surface)
+                self.settings_button.update(self.display_surface)
+                self.credits_button.update(self.display_surface)
+                self.quit_button.update(self.display_surface)
+    
+                # Update button colors based on hover
+                self.play_button.change_color(mouse_pos)
+                self.settings_button.change_color(mouse_pos)
+                self.credits_button.change_color(mouse_pos)
+                
+#
+
+    Model: Replit AI Assistant
+
+    Who: Ryan
+
+    Prompt:
         Can you increase the size of the Title text on both the main menu and settings scene?   
 
     Response:
@@ -604,7 +673,18 @@
     Who: Ryan
 
     Prompt:
-        Can you increase the size of the Title text on both the main menu and settings scene?   
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+
+    Response:
+
+#
+
+    Model: Replit AI Assistant
+
+    Who: Ryan
+
+    Prompt:
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
 
     Response:
 
