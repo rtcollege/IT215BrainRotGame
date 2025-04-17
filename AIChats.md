@@ -963,10 +963,11 @@
     Who: Ryan
     
     Prompt:
+        When I go to a lower resolution like 960 by 540, everything scales fine, except the text, "Difficulty:" and "Volume:" in the settings scene. Both of the texts lower their vertical position.
         
-    
     Response:
-    
+        text_height = self.volume_text.get_height()
+        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250 - text_height/2)) #Corrected line
 
 #
 
