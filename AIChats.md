@@ -530,25 +530,20 @@
     Who: Ryan
 
     Prompt:
-        Running the code in my project results in the following:
-
-        pygame 2.5.2 (SDL 2.28.2, Python 3.10.16)
-        Hello from the pygame community. https://www.pygame.org/contribute.html
-        Traceback (most recent call last):
-          File "/home/runner/workspace/main.py", line 79, in <module>
-            game = Game()
-          File "/home/runner/workspace/main.py", line 24, in __init__
-            self.ui = UI(self.font, self.ui_frames)
-          File "/home/runner/workspace/ui.py", line 63, in __init__
-            self.play_button = Button(None, (WINDOW_WIDTH/2, button_y_start), "Play", self.font, "white", "#b68f40")
-          File "/home/runner/workspace/button.py", line 21, in __init__
-            self.rect = pygame.Rect(
-        NameError: name 'pygame' is not defined
-
-        If applicable, propose a fix immediately.
-        
+        This works perfectly. But as a result of this change, the back button in the settings scene is very close to the edge. It also seems that there might be a race condition or formatting error when the the button is clicked quickly or the window is to small horizonally.        
 
     Response:
+        # Back button - positioned with safe padding from bottom-left corner
+        padding = 60  # increased padding from window edges
+        button_text = self.font.render("Back", True, "white")
+        button_height = button_text.get_height()
+        button_width = button_text.get_width()
+        # Ensure button position respects minimum window boundaries
+        x_pos = max(padding + button_width/2, button_width + padding)
+        y_pos = min(WINDOW_HEIGHT - padding - button_height/2, WINDOW_HEIGHT - button_height - padding)
+        self.back_button = Button(
+            None, 
+            (x_pos, y_pos), 
         
 
 # settings.py
