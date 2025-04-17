@@ -82,17 +82,10 @@ class UI:
         self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
         self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
         
-        # Back button - positioned with safe padding from bottom-left corner
-        padding = 10  # increased padding from window edges
-        button_text = self.font.render("Back", True, "white")
-        button_height = button_text.get_height()
-        button_width = button_text.get_width()
-        # Ensure button position respects minimum window boundaries
-        x_pos = max(padding + button_width/2, button_width + padding)
-        y_pos = min(WINDOW_HEIGHT - padding - button_height/2, WINDOW_HEIGHT - button_height - padding)
+        # Back button - positioned at the same x position as main menu buttons
         self.back_button = Button(
             None, 
-            (x_pos, y_pos), 
+            (button_x, button_y_start + 4 * button_y_spacing), 
             "Back", 
             self.font, 
             "white", 
