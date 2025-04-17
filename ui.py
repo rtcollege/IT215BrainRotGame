@@ -80,7 +80,8 @@ class UI:
         # Difficulty buttons
         diff_y = 400
         self.difficulty_text = self.font.render("Difficulty:", True, "white")
-        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y))
+        text_height = self.difficulty_text.get_height()
+        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y - text_height/2))
         self.easy_button = Button(None, (WINDOW_WIDTH/2 - 200, diff_y), "Easy", self.font, "white", "#b68f40")
         self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
         self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
