@@ -58,7 +58,7 @@ class UI:
         self.title_rect = self.title_text.get_rect(topleft=(50, 100))
         
         # Create buttons
-        button_x = 200  # Left alignment position
+        button_x = 50  # Left alignment position
         button_y_start = 300
         button_y_spacing = 100
         
