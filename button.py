@@ -1,3 +1,4 @@
+
 class Button:
     def __init__(self, image, position, text_input, font, base_color, hovering_color):
         self.image = image
@@ -7,14 +8,30 @@ class Button:
         self.base_color, self.hovering_color = base_color, hovering_color
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, self.base_color)
+        
+        # Add padding to text area
+        self.padding_x = 40
+        self.padding_y = 20
+        
         if self.image is not None:
-            self.image = pygame.transform.scale(self.image, (self.text.get_width() + 20, self.text.get_height() + 20))
-        self.rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+            self.image = pygame.transform.scale(self.image, 
+                (self.text.get_width() + self.padding_x, self.text.get_height() + self.padding_y))
+            self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        else:
+            self.rect = pygame.Rect(
+                self.x_pos - (self.text.get_width() + self.padding_x) // 2,
+                self.y_pos - (self.text.get_height() + self.padding_y) // 2,
+                self.text.get_width() + self.padding_x,
+                self.text.get_height() + self.padding_y
+            )
+        
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
     def update(self, screen):
         if self.image is not None:
             screen.blit(self.image, self.rect)
+        else:
+            pygame.draw.rect(screen, self.base_color, self.rect, 2)  # Draw button outline
         screen.blit(self.text, self.text_rect)
 
     def check_input(self, position):
