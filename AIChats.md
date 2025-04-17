@@ -720,11 +720,59 @@
     Who: Ryan
     
     Prompt:
-        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+        Perfect, now add text to the left of the buttons horizontally saying, "Difficulty:" in the settings scene. The text should line up with the left edge of the main menu buttons. You should do this as well for the volume slider.
     
     Response:
-        # Create buttons
-        button_x = 50  # Left alignment position
+        # Volume slider
+        self.volume_text = self.font.render("Volume:", True, "white")
+        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250))
+        self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - 100, 250, 200, 20)
+        self.volume_slider = pygame.Rect(WINDOW_WIDTH/2 - 100 + (self.volume * 2), 245, 20, 30)
+        
+        # Difficulty buttons
+        diff_y = 400
+        self.difficulty_text = self.font.render("Difficulty:", True, "white")
+        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y))
+        self.easy_button = Button(None, (WINDOW_WIDTH/2 - 200, diff_y), "Easy", self.font, "white", "#b68f40")
+        self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
+        self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
+        
+        # Back button - positioned at the same x position as main menu buttons
+        self.back_button = Button(
+            None, 
+            (button_x, button_y_start + 3 * button_y_spacing), 
+            "Back", 
+            self.font, 
+            "white", 
+            "#b68f40"
+        )
+
+    def update(self, dt):
+        mouse_pos = pygame.mouse.get_pos()
+        
+        if self.current_scene == 'main_menu':
+            # Draw title
+            self.display_surface.blit(self.title_text, self.title_rect)
+            
+            # Update and draw buttons
+            self.play_button.update(self.display_surface)
+            self.settings_button.update(self.display_surface)
+            self.credits_button.update(self.display_surface)
+            self.quit_button.update(self.display_surface)
+            
+            # Update button colors based on hover
+            self.play_button.change_color(mouse_pos)
+            self.settings_button.change_color(mouse_pos)
+            self.credits_button.change_color(mouse_pos)
+            self.quit_button.change_color(mouse_pos)
+            
+        elif self.current_scene == 'settings':
+            # Draw settings title
+            self.display_surface.blit(self.settings_title, self.settings_title_rect)
+            
+            # Draw volume label and slider
+            self.display_surface.blit(self.volume_text, self.volume_text_rect)
+            self.display_surface.blit(self.difficulty_text, self.difficulty_text_rect)
 
 #
 
