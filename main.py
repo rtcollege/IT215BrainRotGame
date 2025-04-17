@@ -3,7 +3,6 @@ from data import Data
 from debug import debug
 from timer import Timer
 from ui import UI
-from scene import Scene
 
 
 class Game:
