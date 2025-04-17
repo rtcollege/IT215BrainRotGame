@@ -12,6 +12,7 @@ class Game:
         
         # Create the display surface
         self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.display_surface.game = self
         pygame.display.set_caption("Game")
         
         # Create clock for framerate
@@ -20,6 +21,9 @@ class Game:
         # Load assets
         self.import_assets()
 
+        # Game settings
+        self.difficulty = 'medium'
+        
         # Initialize UI
         self.ui = UI(self.font, self.ui_frames)
         self.data = Data(self.ui)
@@ -62,11 +66,11 @@ class Game:
                             sys.exit()
                     elif self.ui.current_scene == 'settings':
                         if self.ui.easy_button.check_input(mouse_pos):
-                            self.ui.difficulty = 'easy'
+                            self.difficulty = 'easy'
                         elif self.ui.medium_button.check_input(mouse_pos):
-                            self.ui.difficulty = 'medium'
+                            self.difficulty = 'medium'
                         elif self.ui.hard_button.check_input(mouse_pos):
-                            self.ui.difficulty = 'hard'
+                            self.difficulty = 'hard'
                         elif self.ui.back_button.check_input(mouse_pos):
                             self.ui.current_scene = 'main_menu'
                     
