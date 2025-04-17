@@ -85,7 +85,7 @@ class UI:
         # Back button - positioned at the same x position as main menu buttons
         self.back_button = Button(
             None, 
-            (button_x, button_y_start + 4 * button_y_spacing), 
+            (button_x, button_y_start + 3 * button_y_spacing), 
             "Back", 
             self.font, 
             "white", 
