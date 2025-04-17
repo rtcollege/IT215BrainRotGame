@@ -82,17 +82,9 @@ class UI:
         self.difficulty_text = self.font.render("Difficulty:", True, "white")
         text_height = self.difficulty_text.get_height()
         self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y - text_height/2))
-        
-        # Create centered difficulty buttons
-        button_text = self.font.render("Easy", True, "white")
-        button_width = button_text.get_width() + 40  # Adding padding
-        spacing = 50  # Space between buttons
-        total_width = (button_width * 3) + (spacing * 2)
-        start_x = (WINDOW_WIDTH - total_width) // 2
-        
-        self.easy_button = Button(None, (start_x + button_width//2, diff_y), "Easy", self.font, "white", "#b68f40")
-        self.medium_button = Button(None, (start_x + button_width + spacing + button_width//2, diff_y), "Medium", self.font, "white", "#b68f40")
-        self.hard_button = Button(None, (start_x + 2 * (button_width + spacing) + button_width//2, diff_y), "Hard", self.font, "white", "#b68f40")
+        self.easy_button = Button(None, (WINDOW_WIDTH/2 - 200, diff_y), "Easy", self.font, "white", "#b68f40")
+        self.medium_button = Button(None, (WINDOW_WIDTH/2, diff_y), "Medium", self.font, "white", "#b68f40")
+        self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
         
         # Back button - positioned at the same x position as main menu buttons
         self.back_button = Button(
