@@ -196,7 +196,60 @@
             # Delta time
             dt = self.clock.tick(FPS) / 1000
 
+#
+
+        Model: Replit AI Assistant
+        
+        Who: Ryan
+        
+        Prompt:
+            Make a versatile button class that takes in stuff like; self, image, postion, text, font, base color, hovering color. It should have an update method, a method for input checking, and a change color method.
+        
+        Response:
+            class Button:
+            def __init__(self, image, position, text_input, font, base_color, hovering_color):
+                self.image = image
+                self.x_pos = position[0]
+                self.y_pos = position[1]
+                self.font = font
+                self.base_color, self.hovering_color = base_color, hovering_color
+                self.text_input = text_input
+                self.text = self.font.render(self.text_input, True, self.base_color)
+                if self.image is not None:
+                    self.image = pygame.transform.scale(self.image, (self.text.get_width() + 20, self.text.get_height() + 20))
+                self.rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+                self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+            
+            def update(self, screen):
+                if self.image is not None:
+                    screen.blit(self.image, self.rect)
+                screen.blit(self.text, self.text_rect)
+            
+            def check_input(self, position):
+                if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+                    return True
+                return False
+            
+            def change_color(self, position):
+                if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+                    self.text = self.font.render(self.text_input, True, self.hovering_color)
+                else:
+                    self.text = self.font.render(self.text_input, True, self.base_color)
+
+#
+
+Model: Replit AI Assistant
+
+Who:
+
+Prompt:
+    Make a main menu that has the title in the top middle of "Brain Rot Game" with 3 buttons below it stacked vertically in the center. Those buttons should be play, settings, and quit.
+
+Response:
+    
+
 # settings.py
+
 
     Model: Replit AI Assistant
     

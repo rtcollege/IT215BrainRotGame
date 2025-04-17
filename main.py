@@ -3,6 +3,7 @@ from data import Data
 from debug import debug
 from timer import Timer
 from ui import UI
+from scene import Scene
 
 
 class Game:
@@ -23,6 +24,7 @@ class Game:
         # Initialize UI
         self.ui = UI(self.font, self.ui_frames)
         self.data = Data(self.ui)
+
         
         
     def import_assets(self):
@@ -51,8 +53,7 @@ class Game:
                     sys.exit()
                     
             self.display_surface.fill("purple")
-            self.current_stage.run(dt)
-            pygame.ui.update(dt)
+            self.ui.update(dt)
 
             pygame.display.update()
             
