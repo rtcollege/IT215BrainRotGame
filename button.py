@@ -12,8 +12,9 @@ class Button:
         self.text = self.font.render(self.text_input, True, self.base_color)
         
         # Add padding to text area
-        self.padding_x = 40
-        self.padding_y = 20
+        from settings import SCALE_X, SCALE_Y
+        self.padding_x = int(40 * SCALE_X)
+        self.padding_y = int(20 * SCALE_Y)
         
         if self.image is not None:
             self.image = pygame.transform.scale(self.image, 
