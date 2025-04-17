@@ -1,9 +1,9 @@
-
-import pygame
-import settings
-from ui import UI
+from settings import *
+from data import Data
+from debug import debug
 from timer import Timer
-import debug
+from ui import UI
+
 
 class Game:
     def __init__(self):
@@ -11,70 +11,51 @@ class Game:
         pygame.init()
         
         # Create the display surface
-        self.display_surface = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
+        self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Game")
-        
-        # Game state
-        self.state = settings.MENU
-        self.running = True
         
         # Create clock for framerate
         self.clock = pygame.time.Clock()
-        
-        # Initialize UI
-        self.ui = UI()
-        
-        # Initialize sprite groups
-        self.all_sprites = pygame.sprite.Group()
-        
+
         # Load assets
         self.import_assets()
 
+        # Initialize UI
+        self.ui = UI(self.font, self.ui_frames)
+        self.data = Data(self.ui)
+        
+        
     def import_assets(self):
-        """Placeholder for asset importing"""
-        pass
-
-    def handle_events(self):
-        """Handle pygame events"""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
-
-    def update(self):
-        """Update game state"""
-        if self.state == settings.PLAYING:
-            self.all_sprites.update()
-
-    def render(self):
-        """Render game objects"""
-        self.display_surface.fill(settings.BLACK)
+        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 40)
         
-        if self.state == settings.MENU:
-            # Render menu
-            pass
-        elif self.state == settings.PLAYING:
-            self.all_sprites.draw(self.display_surface)
-        
-        # Debug info
-        debug.debug()
-        
-        pygame.display.update()
+        self.ui_frames = {
+            'currency': pygame.image.load('graphics/ui/currency.png').convert_alpha()
+        }
+
+    
 
     def check_game_over(self):
         """Check for game over conditions"""
         pass
-
+    
     def run(self):
         """Main game loop"""
-        while self.running:
-            self.handle_events()
-            self.update()
-            self.render()
-            self.check_game_over()
-            self.clock.tick(60)
+        while True:
+            # Delta time
+            dt = self.clock.tick(FPS) / 1000
+            
+            # Handle pygame events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                    
+            self.display_surface.fill("purple")
+            self.current_stage.run(dt)
+            pygame.ui.update(dt)
+
+            pygame.display.update()
+            
 
 if __name__ == '__main__':
     game = Game()

@@ -1,10 +1,9 @@
-import settings
-import sprites
-import timer
+from settings import *
+from timer import Timer
 
 class UI:
-    def __init__(self):
-        self.font = settings.FONT
-        self.background_frame = sprites.BackgroundFrame()
-        self.play_button = sprites.PlayButton()
-        self.quit_button = sprites.QuitButton()
+    def __init__(self, font, frames):
+        self.display_surface = pygame.display.get_surface()
+        self.sprites = pygame.sprite.Group()
+        self.font = font
+        

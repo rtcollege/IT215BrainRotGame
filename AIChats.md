@@ -1,8 +1,203 @@
-# AI Chats: 
+# AI Chats:
+
 # main.py
 
+    Model: Replit AI Assistant
     
+    Who: Ryan
+    
+    Prompt: 
+        I want you to implement a class "Game" in main.py. It's init method should initialize pygame, the display_surface, ui and everything you see fit. It should also have some placeholder methods for the time being like run, check game over, import assets, etc.
+    
+    Response:
+            import pygame
+            import settings
+            from ui import UI
+            from timer import Timer
+            import debug
+            
+            class Game:
+                def __init__(self):
+                    # Initialize Pygame
+                    pygame.init()
+            
+                    # Create the display surface
+                    self.display_surface = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
+                    pygame.display.set_caption("Game")
+            
+                    # Game state
+                    self.state = settings.MENU
+                    self.running = True
+            
+                    # Create clock for framerate
+                    self.clock = pygame.time.Clock()
+            
+                    # Initialize UI
+                    self.ui = UI()
+            
+                    # Initialize sprite groups
+                    self.all_sprites = pygame.sprite.Group()
+            
+                    # Load assets
+                    self.import_assets()
+            
+                def import_assets(self):
+                    """Placeholder for asset importing"""
+                    pass
+            
+                def handle_events(self):
+                    """Handle pygame events"""
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            self.running = False
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE:
+                                self.running = False
+            
+                def update(self):
+                    """Update game state"""
+                    if self.state == settings.PLAYING:
+                        self.all_sprites.update()
+            
+                def render(self):
+                    """Render game objects"""
+                    self.display_surface.fill(settings.BLACK)
+            
+                    if self.state == settings.MENU:
+                        # Render menu
+                        pass
+                    elif self.state == settings.PLAYING:
+                        self.all_sprites.draw(self.display_surface)
+            
+                    # Debug info
+                    debug.debug()
+            
+                    pygame.display.update()
+            
+                def check_game_over(self):
+                    """Check for game over conditions"""
+                    pass
+            
+                def run(self):
+                    """Main game loop"""
+                    while self.running:
+                        self.handle_events()
+                        self.update()
+                        self.render()
+                        self.check_game_over()
+                        self.clock.tick(60)
+                
+            if __name__ == '__main__':
+                game = Game()
+                game.run()
+        
+#
+    
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        As it is not detecting the filepath in import_assets, use something like the os join method to make sure everything gets 
+        
+    
+    Response:
+        from settings import *
+        from ui import UI
+        from timer import Timer
+        import debug
+
+        class Game:
+            def __init__(self):
+                # Initialize Pygame
+                pygame.init()
+
+                # Create the display surface
+                self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+                pygame.display.set_caption("Game")
+
+                # Create clock for framerate
+                self.clock = pygame.time.Clock()
+
+                # Load assets
+                self.import_assets()
+
+                # Initialize UI
+                self.ui = UI(self.font, self.ui_frames)
+                self.data = Data(self.ui)
+
+
+            def import_assets(self):
+                self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 40)
+
+
+            def check_game_over(self):
+                """Check for game over conditions"""
+                pass
+
+            def run(self):
+                """Main game loop"""
+                while True:
+                    # Handle pygame events
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+
+                    # Update game state
+                    if self.state == settings.PLAYING:
+                        self.all_sprites.update()
+
+                    # Render game objects
+                    self.display_surface.fill(settings.BLACK)
+
+                    if self.state == settings.MENU:
+                        # Render menu
+                        pass
+                    elif self.state == settings.PLAYING:
+                        self.all_sprites.draw(self.display_surface)
+
+                    # Debug info
+                    debug.debug()
+
+                    pygame.display.update()
+
+                    self.check_game_over()
+                    self.clock.tick(60)
+
+        if __name__ == '__main__':
+            game = Game()
+            game.run()
+
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        After this, make a dictionary that will hold all of the ui_frames images like 'currency' : imageimport then 'health' etc.    
+    
+    Response:
+        self.ui_frames = {
+            'currency': pygame.image.load('graphics/ui/currency.png').convert_alpha(),
+            'health': pygame.image.load('graphics/ui/health.png').convert_alpha(),
+        }
+#
+        
+        Model: Replit AI Assistant
+        
+        Who: Ryan
+        
+        Prompt:
+            Make a dt variable and set it so that we limit the fps to 60
+
+        Response:
+            # Delta time
+            dt = self.clock.tick(FPS) / 1000
+
 # settings.py
+
     Model: Replit AI Assistant
     
     Who: Ryan
@@ -98,9 +293,17 @@
         GRAPHICS_DIR = f'{ASSET_DIR}/graphics'
         SOUND_DIR = f'{ASSET_DIR}/sound'
         MUSIC_DIR = f'{ASSET_DIR}/music'
-
-
-
+#
+    
+    Model: Replit AI Assistant
+    
+    Who:
+    
+    Prompt:
+        
+    
+    Response:
+        
 
 # ui.py
     
@@ -122,10 +325,30 @@
                 self.background_frame = sprites.BackgroundFrame()
                 self.play_button = sprites.PlayButton()
                 self.quit_button = sprites.QuitButton()
-    
-    
-# sprites.py
+#
 
+    Model: Replit AI Assistant
+
+    Who:
+
+    Prompt:
+        
+
+    Response:
+        
+
+# sprites.py
+    
+    Model: Replit AI Assistant
+    
+    Who:
+    
+    Prompt:
+        
+    
+    Response:
+        
+    
 # debug.py
 
     Model: Replit AI Assistant
@@ -138,7 +361,18 @@
     Response:
         def debug():
             display_surface = pygame.display.get_surface()
-
+#
+    
+    Model: Replit AI Assistant
+    
+    Who:
+    
+    Prompt:
+        
+    
+    Response:
+        
+    
 #
 
     Model: Replit AI Assistant
@@ -155,8 +389,19 @@
 
     def debug():
         display_surface = pygame.display.get_surface()
-    
-    
+
+#
+
+    Model: Replit AI Assistant
+
+    Who:
+
+    Prompt:
+        
+
+    Response:
+        
+
 # timer.py
 
     Model: Replit AI Assistant
@@ -222,4 +467,75 @@
                     if self.function:
                         self.function()
                     self.deactivate()
+#
     
+    Model: Replit AI Assistant
+    
+    Who:
+    
+    Prompt:
+        
+    
+    Response:
+
+# Data
+    
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        You should declare the methods as properties. Ex: Two definitions of currency with one @property and the other @currency.setter    
+    
+    Response:
+        I want you to implement a class "Data" in data.py. It should have an init method that initializes everything it needs, along with getter/setter methods for variables we will use like currency/health.
+
+    class Data:
+        def __init__(self, currency=0, health=100):
+            self.currency = currency
+            self.health = health
+
+        def get_currency(self):
+            return self._currency
+
+        def set_currency(self, currency):
+            self._currency = currency
+
+        def get_health(self):
+            return self._health
+
+        def set_health(self, health):
+            self._health = health
+
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        You should declare the methods as properties. Ex: Two definitions of currency with one @property and the other @currency.setter    
+        
+    Response:
+        class Data:
+            def __init__(self, currency=0, health=100):
+                self.currency = currency
+                self.health = health
+        
+            @property
+            def currency(self):
+                return self._currency
+        
+            @currency.setter
+            def currency(self, currency):
+                self._currency = currency
+        
+            @property
+            def health(self):
+                return self._health
+        
+            @health.setter
+            def health(self, health):
+                self._health = health
+
+                
