@@ -83,7 +83,7 @@ class UI:
         self.hard_button = Button(None, (WINDOW_WIDTH/2 + 200, diff_y), "Hard", self.font, "white", "#b68f40")
         
         # Back button - positioned with safe padding from bottom-left corner
-        padding = 60  # increased padding from window edges
+        padding = 10  # increased padding from window edges
         button_text = self.font.render("Back", True, "white")
         button_height = button_text.get_height()
         button_width = button_text.get_width()

@@ -665,6 +665,14 @@
         Make it so that the buttons are not aligned by the middle of the button, but the left of their button box.   
 
     Response:
+        self.rect = pygame.Rect(
+                self.x_pos,
+                self.y_pos - (self.text.get_height() + self.padding_y) // 2,
+                self.text.get_width() + self.padding_x,
+                self.text.get_height() + self.padding_y
+            )
+
+        self.text_rect = self.text.get_rect(midleft=(self.x_pos + self.padding_x//2, self.y_pos))
 
 #
 
@@ -673,7 +681,7 @@
     Who: Ryan
 
     Prompt:
-        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+        Move the buttons much father to the left please
 
     Response:
 
@@ -687,7 +695,61 @@
         Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
 
     Response:
+        # Create buttons
+        button_x = 50  # Left alignment position
 
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+    
+    Response:
+        # Create buttons
+        button_x = 50  # Left alignment position
+
+#
+    
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+    
+    Response:
+        # Create buttons
+        button_x = 50  # Left alignment position
+
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+    
+    Response:
+        # Create buttons
+        button_x = 50  # Left alignment position
+
+#
+
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        Can you move the buttons to the left side as well on the main menu. You should also add a button below settings for Credits
+    
+    Response:
+        # Create buttons
+        button_x = 50  # Left alignment position
+    
 # settings.py
 
 
