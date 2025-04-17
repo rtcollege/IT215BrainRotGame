@@ -40,6 +40,10 @@ class UI:
         slider_handle_width = int(20 * SCALE_X)
         slider_handle_height = int(30 * SCALE_Y)
 
+        self.slider_width = int(200 * SCALE_X)
+        self.volume_slider.x = int(WINDOW_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
+
+
         self.volume_rect = pygame.Rect(WINDOW_WIDTH/2 - slider_width/2, int(250 * SCALE_Y), slider_width, slider_height)
         self.volume_slider = pygame.Rect(
             WINDOW_WIDTH/2 - slider_width/2 + (self.volume * slider_width/100),
@@ -117,6 +121,6 @@ class UI:
             # Handle volume slider dragging
             if pygame.mouse.get_pressed()[0]:
                 if self.volume_rect.collidepoint(mouse_pos):
-                    self.volume = (mouse_pos[0] - (WINDOW_WIDTH/2 - slider_width/2)) // (slider_width/100)
+                    self.volume = (mouse_pos[0] - (WINDOW_WIDTH/2 - self.slider_width/2)) // (self.slider_width/100)
                     self.volume = max(0, min(100, self.volume))
-                    self.volume_slider.x = WINDOW_WIDTH/2 - slider_width/2 + (self.volume * slider_width/100)
+                    self.volume_slider.x = int(WINDOW_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
