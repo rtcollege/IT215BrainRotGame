@@ -55,7 +55,7 @@ class UI:
         
         # Main menu setup
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
-        self.title_rect = self.title_text.get_rect(midtop=(WINDOW_WIDTH/2, 100))
+        self.title_rect = self.title_text.get_rect(topleft=(50, 100))
         
         # Create buttons
         button_y_start = 300
@@ -67,7 +67,7 @@ class UI:
         
         # Settings scene setup
         self.settings_title = self.title_font.render("Settings", True, "white")
-        self.settings_title_rect = self.settings_title.get_rect(midtop=(WINDOW_WIDTH/2, 100))
+        self.settings_title_rect = self.settings_title.get_rect(topleft=(50, 100))
         
         # Volume slider
         self.volume_text = self.font.render("Volume", True, "white")
