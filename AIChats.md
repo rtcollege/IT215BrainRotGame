@@ -585,7 +585,7 @@
         Can you change it so that the Title's on both scenes are on the left side. 
 
     Response:
-
+        self.title_rect = self.title_text.get_rect(topleft=(50, 100))
 #
 
     Model: Replit AI Assistant
