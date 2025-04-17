@@ -662,7 +662,7 @@
     Who: Ryan
 
     Prompt:
-        Can you increase the size of the Title text on both the main menu and settings scene?   
+        Make it so that the buttons are not aligned by the middle of the button, but the left of their button box.   
 
     Response:
 
