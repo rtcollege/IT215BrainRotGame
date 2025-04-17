@@ -46,15 +46,6 @@ class Game:
             dt = self.clock.tick(FPS) / 1000
             
             # Handle pygame events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                    
-            self.display_surface.fill("purple")
-            self.ui.update(dt)
-            
-            # Handle button clicks
             mouse_pos = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -68,7 +59,9 @@ class Game:
                     elif self.ui.quit_button.check_input(mouse_pos):
                         pygame.quit()
                         sys.exit()
-
+                    
+            self.display_surface.fill("purple")
+            self.ui.update(dt)
             pygame.display.update()
             
 
