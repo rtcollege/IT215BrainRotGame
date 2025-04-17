@@ -52,13 +52,23 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.ui.play_button.check_input(mouse_pos):
-                        print("Play clicked")
-                    elif self.ui.settings_button.check_input(mouse_pos):
-                        print("Settings clicked")
-                    elif self.ui.quit_button.check_input(mouse_pos):
-                        pygame.quit()
-                        sys.exit()
+                    if self.ui.current_scene == 'main_menu':
+                        if self.ui.play_button.check_input(mouse_pos):
+                            print("Play clicked")
+                        elif self.ui.settings_button.check_input(mouse_pos):
+                            self.ui.current_scene = 'settings'
+                        elif self.ui.quit_button.check_input(mouse_pos):
+                            pygame.quit()
+                            sys.exit()
+                    elif self.ui.current_scene == 'settings':
+                        if self.ui.easy_button.check_input(mouse_pos):
+                            self.ui.difficulty = 'easy'
+                        elif self.ui.medium_button.check_input(mouse_pos):
+                            self.ui.difficulty = 'medium'
+                        elif self.ui.hard_button.check_input(mouse_pos):
+                            self.ui.difficulty = 'hard'
+                        elif self.ui.back_button.check_input(mouse_pos):
+                            self.ui.current_scene = 'main_menu'
                     
             self.display_surface.fill("purple")
             self.ui.update(dt)
