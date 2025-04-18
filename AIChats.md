@@ -971,16 +971,116 @@
 
 #
 
-Model: Replit AI Assistant
-
-Who: Ryan
-
-Prompt:
-
-
-Response:
-
-
+    Model: Replit AI Assistant
+    
+    Who: Ryan
+    
+    Prompt:
+        Add a resolution option in the settings scene. It should have text to the left below "Difficulty:", and a drop down menu that holds a few resolutions like, 960x540, 1280x720, 1920x1080 etc etc. These should change the window width/height variables in the settings file respectively.
+    
+    Response:
+        settings.py:
+            # Available resolutions
+            RESOLUTIONS = [
+                (960, 540),
+                (1280, 720),
+                (1600, 900),
+                (1920, 1080)
+            ]
+        ui.py:
+            # Resolution selector
+                res_y = diff_y + int(100 * SCALE_Y)
+                self.resolution_text = self.font.render("Resolution:", True, "white")
+                text_height = self.resolution_text.get_height()
+                self.resolution_text_rect = self.resolution_text.get_rect(topleft=(50, (res_y * SCALE_Y) - (text_height/2) * SCALE_Y))
+    
+                self.resolution_buttons = []
+                current_res = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
+                for i, (width, height) in enumerate(RESOLUTIONS):
+                    res_button = Button(
+                        None, 
+                        (WINDOW_WIDTH/2 + (i - len(RESOLUTIONS)/2 + 0.5) * button_spacing, int(res_y * SCALE_Y)),
+                        f"{width}x{height}",
+                        self.font,
+                        "white",
+                        "#b68f40"
+                    )
+                    self.resolution_buttons.append((res_button, (width, height)))
+    
+                # Back button - positioned at the same x position as main menu buttons
+                self.back_button = Button(
+                    None, 
+                    (button_x, button_y_start + 3 * button_y_spacing), 
+                    "Back", 
+                    self.font, 
+                    "white", 
+                    "#b68f40"
+                )
+    
+            def update(self, dt):
+                mouse_pos = pygame.mouse.get_pos()
+    
+                if self.current_scene == 'main_menu':
+                    # Draw title
+                    self.display_surface.blit(self.title_text, self.title_rect)
+    
+                    # Update and draw buttons
+                    self.play_button.update(self.display_surface)
+                    self.settings_button.update(self.display_surface)
+                    self.credits_button.update(self.display_surface)
+                    self.quit_button.update(self.display_surface)
+    
+                    # Update button colors based on hover
+                    self.play_button.change_color(mouse_pos)
+                    self.settings_button.change_color(mouse_pos)
+                    self.credits_button.change_color(mouse_pos)
+                    self.quit_button.change_color(mouse_pos)
+    
+                elif self.current_scene == 'settings':
+                    # Draw settings title
+                    self.display_surface.blit(self.settings_title, self.settings_title_rect)
+    
+                    # Draw volume label and slider
+                    self.display_surface.blit(self.volume_text, self.volume_text_rect)
+                    self.display_surface.blit(self.difficulty_text, self.difficulty_text_rect)
+                    pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
+                    pygame.draw.rect(self.display_surface, "white", self.volume_slider)
+    
+                    # Draw difficulty buttons
+                    self.easy_button.update(self.display_surface)
+                    self.medium_button.update(self.display_surface)
+                    self.hard_button.update(self.display_surface)
+    
+                    # Draw button borders based on selection
+                    if self.difficulty == 'easy':
+                        pygame.draw.rect(self.display_surface, "white", self.easy_button.rect, 3)
+                    elif self.difficulty == 'medium':
+                        pygame.draw.rect(self.display_surface, "white", self.medium_button.rect, 3)
+                    elif self.difficulty == 'hard':
+                        pygame.draw.rect(self.display_surface, "white", self.hard_button.rect, 3)
+    
+                    # Draw resolution text and buttons
+                    self.display_surface.blit(self.resolution_text, self.resolution_text_rect)
+                    current_res = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
+                    for button, (width, height) in self.resolution_buttons:
+                        button.update(self.display_surface)
+                        if current_res == f"{width}x{height}":
+                            pygame.draw.rect(self.display_surface, "white", button.rect, 3)
+        main.py:
+            # Check resolution buttons
+            for button, (width, height) in self.ui.resolution_buttons:
+                if button.check_input(mouse_pos):
+                    pygame.display.set_mode((width, height))
+                    settings.WINDOW_WIDTH = width
+                    settings.WINDOW_HEIGHT = height
+                    settings.SCALE_X = width / settings.BASE_WIDTH
+                    settings.SCALE_Y = height / settings.BASE_HEIGHT
+                    self.ui = UI(self.font, self.ui_frames)
+                    self.ui.current_scene = 'settings'
+                    self.ui.difficulty = self.data.difficulty
+                    break
+    
+    
 #
 
 Model: Replit AI Assistant

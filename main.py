@@ -81,8 +81,8 @@ class Game:
                                 self.ui.current_scene = 'settings'
                                 self.ui.difficulty = self.data.difficulty
                                 break
-                        elif self.ui.back_button.check_input(mouse_pos):
-                            self.ui.current_scene = 'main_menu'
+                            elif self.ui.back_button.check_input(mouse_pos):
+                                self.ui.current_scene = 'main_menu'
                     
             self.display_surface.fill("gray")
             self.ui.update(dt)
