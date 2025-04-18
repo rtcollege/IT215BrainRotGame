@@ -69,6 +69,18 @@ class Game:
                             self.ui.difficulty = 'medium'
                         elif self.ui.hard_button.check_input(mouse_pos):
                             self.ui.difficulty = 'hard'
+                        # Check resolution buttons
+                        for button, (width, height) in self.ui.resolution_buttons:
+                            if button.check_input(mouse_pos):
+                                pygame.display.set_mode((width, height))
+                                settings.WINDOW_WIDTH = width
+                                settings.WINDOW_HEIGHT = height
+                                settings.SCALE_X = width / settings.BASE_WIDTH
+                                settings.SCALE_Y = height / settings.BASE_HEIGHT
+                                self.ui = UI(self.font, self.ui_frames)
+                                self.ui.current_scene = 'settings'
+                                self.ui.difficulty = self.data.difficulty
+                                break
                         elif self.ui.back_button.check_input(mouse_pos):
                             self.ui.current_scene = 'main_menu'
                     

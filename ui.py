@@ -63,6 +63,25 @@ class UI:
         self.medium_button = Button(None, (WINDOW_WIDTH/2, int(diff_y * SCALE_Y)), "Medium", self.font, "white", "#b68f40")
         self.hard_button = Button(None, (WINDOW_WIDTH/2 + button_spacing, int(diff_y * SCALE_Y)), "Hard", self.font, "white", "#b68f40")
 
+        # Resolution selector
+        res_y = diff_y + int(100 * SCALE_Y)
+        self.resolution_text = self.font.render("Resolution:", True, "white")
+        text_height = self.resolution_text.get_height()
+        self.resolution_text_rect = self.resolution_text.get_rect(topleft=(50, (res_y * SCALE_Y) - (text_height/2) * SCALE_Y))
+        
+        self.resolution_buttons = []
+        current_res = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
+        for i, (width, height) in enumerate(RESOLUTIONS):
+            res_button = Button(
+                None, 
+                (WINDOW_WIDTH/2 + (i - len(RESOLUTIONS)/2 + 0.5) * button_spacing, int(res_y * SCALE_Y)),
+                f"{width}x{height}",
+                self.font,
+                "white",
+                "#b68f40"
+            )
+            self.resolution_buttons.append((res_button, (width, height)))
+
         # Back button - positioned at the same x position as main menu buttons
         self.back_button = Button(
             None, 
@@ -114,6 +133,14 @@ class UI:
                 pygame.draw.rect(self.display_surface, "white", self.medium_button.rect, 3)
             elif self.difficulty == 'hard':
                 pygame.draw.rect(self.display_surface, "white", self.hard_button.rect, 3)
+
+            # Draw resolution text and buttons
+            self.display_surface.blit(self.resolution_text, self.resolution_text_rect)
+            current_res = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
+            for button, (width, height) in self.resolution_buttons:
+                button.update(self.display_surface)
+                if current_res == f"{width}x{height}":
+                    pygame.draw.rect(self.display_surface, "white", button.rect, 3)
 
             # Update back button
             self.back_button.update(self.display_surface)

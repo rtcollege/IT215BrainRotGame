@@ -6,6 +6,14 @@ from pygame.math import Vector2 as vector
 BASE_WIDTH = 1280
 BASE_HEIGHT = 720
 
+# Available resolutions
+RESOLUTIONS = [
+    (960, 540),
+    (1280, 720),
+    (1600, 900),
+    (1920, 1080)
+]
+
 # Current window size
 WINDOW_WIDTH = 1280  # You can adjust this
 WINDOW_HEIGHT = 720  # You can adjust this
