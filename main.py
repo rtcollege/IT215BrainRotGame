@@ -1,3 +1,4 @@
+import settings
 from settings import *
 from data import Data
 from debug import debug
