@@ -1088,7 +1088,7 @@ Model: Replit AI Assistant
 Who: Ryan
 
 Prompt:
-    While it does change the window size. The UI does not get resized after a resolution change.
+    Make a recalculate_layout method. This method should recalculate and set the postion of all of the buttons, and should be called after a resolution change occus. Then modify the current solution of recreating the UI to instead use this method.
 
 Response:
     
