@@ -12,6 +12,10 @@ class UI:
         self.current_scene = 'main_menu'
         self.difficulty = 'medium'
         self.volume = 50
+        self.W_WIDTH = WINDOW_WIDTH
+        self.W_HEIGHT = WINDOW_HEIGHT
+        self.sX = SCALE_X
+        self.sY = SCALE_Y
 
         # Create default font objects (will be scaled later)
         self.font = font
@@ -39,89 +43,90 @@ class UI:
 
     def recalculate_layout(self):
         # Update fonts with new scale
-        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(SCALE_X, SCALE_Y)))
-        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_title_size * min(SCALE_X, SCALE_Y)))
-
-        # Update font in all buttons
-        for button in [self.play_button, self.settings_button, self.credits_button, self.quit_button,
-                       self.easy_button, self.medium_button, self.hard_button, self.back_button]:
-            button.font = self.font
-            button.text = button.font.render(button.text_input, True, button.base_color)
-            button.set_position((button.x_pos, button.y_pos))  # Recalculate rects
-
-        for res_button, _ in self.resolution_buttons:
-            res_button.font = self.font
-            res_button.text = res_button.font.render(res_button.text_input, True, res_button.base_color)
-            res_button.set_position((res_button.x_pos, res_button.y_pos))
-
+        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(self.sX, self.sY)))
+        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_title_size * min(self.sX, self.sY)))
 
         # Layout positions
-        button_x = int(50 * SCALE_X)
-        button_y_start = int(300 * SCALE_Y)
-        button_y_spacing = int(100 * SCALE_Y)
+        button_x = int(50 * self.sX)
+        button_y_start = int(300 * self.sY)
+        button_y_spacing = int(100 * self.sY)
 
         # Main menu title
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
-        self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * SCALE_Y)))
+        self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
 
         # Main menu buttons
+        self.play_button.update_font(self.font)
         self.play_button.set_position((button_x, button_y_start))
+
+        self.settings_button.update_font(self.font)
         self.settings_button.set_position((button_x, button_y_start + button_y_spacing))
+
+        self.credits_button.update_font(self.font)
         self.credits_button.set_position((button_x, button_y_start + 2 * button_y_spacing))
+
+        self.quit_button.update_font(self.font)
         self.quit_button.set_position((button_x, button_y_start + 3 * button_y_spacing))
 
         # Settings title
         self.settings_title = self.title_font.render("Settings", True, "white")
-        self.settings_title_rect = self.settings_title.get_rect(topleft=(button_x, int(100 * SCALE_Y)))
+        self.settings_title_rect = self.settings_title.get_rect(topleft=(button_x, int(100 * self.sY)))
 
         # Volume slider
-        volume_y = int(250 * SCALE_Y)
+        volume_y = int(250 * self.sY)
         self.volume_text = self.font.render("Volume:", True, "white")
         text_height = self.volume_text.get_height()
         self.volume_text_rect = self.volume_text.get_rect(topleft=(button_x, volume_y - text_height // 2))
 
-        self.slider_width = int(200 * SCALE_X)
-        slider_height = int(20 * SCALE_Y)
-        slider_handle_width = int(20 * SCALE_X)
-        slider_handle_height = int(30 * SCALE_Y)
+        self.slider_width = int(200 * self.sX)
+        slider_height = int(20 * self.sY)
+        slider_handle_width = int(20 * self.sX)
+        slider_handle_height = int(30 * self.sY)
 
         self.volume_rect = pygame.Rect(
-            WINDOW_WIDTH // 2 - self.slider_width // 2,
+            self.W_WIDTH // 2 - self.slider_width // 2,
             volume_y,
             self.slider_width,
             slider_height
         )
         self.volume_slider = pygame.Rect(
-            WINDOW_WIDTH // 2 - self.slider_width // 2 + (self.volume * self.slider_width // 100),
+            self.W_WIDTH // 2 - self.slider_width // 2 + (self.volume * self.slider_width // 100),
             volume_y + (slider_height // 2) - (slider_handle_height // 2),
             slider_handle_width,
             slider_handle_height
         )
 
         # Difficulty section
-        diff_y = int(400 * SCALE_Y)
-        button_spacing = int(200 * SCALE_X)
+        diff_y = int(400 * self.sY)
+        button_spacing = int(200 * self.sX)
         self.difficulty_text = self.font.render("Difficulty:", True, "white")
         text_height = self.difficulty_text.get_height()
         self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(button_x, diff_y - text_height // 2))
 
-        self.easy_button.set_position((WINDOW_WIDTH // 2 - button_spacing, diff_y))
-        self.medium_button.set_position((WINDOW_WIDTH // 2, diff_y))
-        self.hard_button.set_position((WINDOW_WIDTH // 2 + button_spacing, diff_y))
+        self.easy_button.update_font(self.font)
+        self.easy_button.set_position((self.W_WIDTH // 2 - button_spacing, diff_y))
+
+        self.medium_button.update_font(self.font)
+        self.medium_button.set_position((self.W_WIDTH // 2, diff_y))
+
+        self.hard_button.update_font(self.font)
+        self.hard_button.set_position((self.W_WIDTH // 2 + button_spacing, diff_y))
 
         # Resolution section
-        res_y = diff_y + int(100 * SCALE_Y)
+        res_y = diff_y + int(100 * self.sY)
         self.resolution_text = self.font.render("Resolution:", True, "white")
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - text_height // 2))
 
         for i, (button, _) in enumerate(self.resolution_buttons):
+            button.update_font(self.font)
             button.set_position((
-                WINDOW_WIDTH // 2 + (i - len(self.resolution_buttons)/2 + 0.5) * button_spacing,
+                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2 + 0.5) * button_spacing,
                 res_y
             ))
 
         # Back button (same position as quit)
+        self.back_button.update_font(self.font)
         self.back_button.set_position((button_x, button_y_start + 3 * button_y_spacing))
 
 
@@ -170,7 +175,7 @@ class UI:
 
             # Draw resolution text and buttons
             self.display_surface.blit(self.resolution_text, self.resolution_text_rect)
-            current_res = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
+            current_res = f"{self.W_WIDTH}x{self.W_HEIGHT}"
             for button, (width, height) in self.resolution_buttons:
                 button.update(self.display_surface)
                 if current_res == f"{width}x{height}":
@@ -183,6 +188,6 @@ class UI:
             # Handle volume slider dragging
             if pygame.mouse.get_pressed()[0]:
                 if self.volume_rect.collidepoint(mouse_pos):
-                    self.volume = (mouse_pos[0] - (WINDOW_WIDTH/2 - self.slider_width/2)) // (self.slider_width/100)
+                    self.volume = (mouse_pos[0] - (self.W_WIDTH/2 - self.slider_width/2)) // (self.slider_width/100)
                     self.volume = max(0, min(100, self.volume))
-                    self.volume_slider.x = int(WINDOW_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
+                    self.volume_slider.x = int(self.W_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))

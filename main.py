@@ -60,6 +60,8 @@ class Game:
                             print("Volume:", self.ui.volume)
                         elif self.ui.settings_button.check_input(mouse_pos):
                             self.ui.current_scene = 'settings'
+                        elif self.ui.credits_button.check_input(mouse_pos):
+                            self.ui.credits_button.set_position((100, 100))
                         elif self.ui.quit_button.check_input(mouse_pos):
                             pygame.quit()
                             sys.exit()
@@ -75,11 +77,15 @@ class Game:
                         for button, (width, height) in self.ui.resolution_buttons:
                             if button.check_input(mouse_pos):
                                 pygame.display.set_mode((width, height))
-                                settings.WINDOW_WIDTH = width
-                                settings.WINDOW_HEIGHT = height
-                                settings.SCALE_X = width / settings.BASE_WIDTH
-                                settings.SCALE_Y = height / settings.BASE_HEIGHT
+                                self.ui.W_WIDTH = width
+                                self.ui.W_HEIGHT = height
+                                self.ui.sX = width / settings.BASE_WIDTH
+                                self.ui.sY = height / settings.BASE_HEIGHT
                                 self.ui.recalculate_layout()
+                                self.ui.volume_slider.x = int(
+                                    settings.WINDOW_WIDTH / 2 - self.ui.slider_width / 2 +
+                                    (self.ui.volume * self.ui.slider_width / 100)
+                                )
                                 break
 
             self.display_surface.fill("gray")

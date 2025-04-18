@@ -61,3 +61,24 @@ class Button:
                 self.text.get_height() + self.padding_y
             )
         self.text_rect = self.text.get_rect(midleft=(self.x_pos + self.padding_x//2, self.y_pos))
+
+    def update_font(self, new_font):
+        self.font = new_font
+        self.text = self.font.render(self.text_input, True, self.base_color)
+
+        # Update the rect based on new text size
+        if self.image is not None:
+            self.image = pygame.transform.scale(self.image, 
+                (self.text.get_width() + self.padding_x, self.text.get_height() + self.padding_y))
+            self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        else:
+            self.rect = pygame.Rect(
+                self.x_pos,
+                self.y_pos - (self.text.get_height() + self.padding_y) // 2,
+                self.text.get_width() + self.padding_x,
+                self.text.get_height() + self.padding_y
+            )
+
+        # Recalculate the text_rect position after font change
+        self.text_rect = self.text.get_rect(midleft=(self.x_pos + self.padding_x//2, self.y_pos))
+
