@@ -6,13 +6,18 @@ class UI:
     def __init__(self, font, frames):
         self.display_surface = pygame.display.get_surface()
         self.sprites = pygame.sprite.Group()
-        base_font_size = 40
-        base_title_size = 60
-        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(base_font_size * min(SCALE_X, SCALE_Y)))
-        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(base_title_size * min(SCALE_X, SCALE_Y)))
+        self.base_font_size = 40
+        self.base_title_size = 60
+        self.frames = frames
         self.current_scene = 'main_menu'
         self.difficulty = 'medium'
         self.volume = 50
+        self.recalculate_layout()
+
+    def recalculate_layout(self):
+        # Recalculate fonts
+        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(SCALE_X, SCALE_Y)))
+        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_title_size * min(SCALE_X, SCALE_Y)))
 
         # Main menu setup
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")

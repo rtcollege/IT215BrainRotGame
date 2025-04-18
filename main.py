@@ -81,11 +81,9 @@ class Game:
                                 # Reimport font with new scaling
                                 self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                     int(40 * min(settings.SCALE_X, settings.SCALE_Y)))
-                                # Recreate UI with new scaling
-                                self.ui = UI(self.font, self.ui_frames)
+                                # Recalculate UI layout with new scaling
+                                self.ui.recalculate_layout()
                                 self.ui.current_scene = 'settings'
-                                self.ui.difficulty = self.data.difficulty
-                                self.ui.volume = self.data.volume
 
                                 # Update slider position to match new volume
                                 self.ui.volume_slider.x = int(
