@@ -35,7 +35,7 @@ class UI:
         # Volume slider
         self.volume_text = self.font.render("Volume:", True, "white")
         text_height = self.volume_text.get_height()
-        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, 250 - text_height/2)) #Corrected line
+        self.volume_text_rect = self.volume_text.get_rect(topleft=(50, (250 * SCALE_Y) - (text_height/2) * SCALE_Y))
         slider_width = int(200 * SCALE_X)
         slider_height = int(20 * SCALE_Y)
         slider_handle_width = int(20 * SCALE_X)
@@ -57,7 +57,7 @@ class UI:
         diff_y = 400
         self.difficulty_text = self.font.render("Difficulty:", True, "white")
         text_height = self.difficulty_text.get_height()
-        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, diff_y - text_height/2))
+        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(50, (diff_y * SCALE_Y) - (text_height/2) * SCALE_Y))
         button_spacing = int(200 * SCALE_X)  # Consistent spacing between buttons
         self.easy_button = Button(None, (WINDOW_WIDTH/2 - button_spacing, int(diff_y * SCALE_Y)), "Easy", self.font, "white", "#b68f40")
         self.medium_button = Button(None, (WINDOW_WIDTH/2, int(diff_y * SCALE_Y)), "Medium", self.font, "white", "#b68f40")
