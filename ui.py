@@ -68,20 +68,19 @@ class UI:
         self.resolution_text = self.font.render("Resolution:", True, "white")
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(50, (res_y * SCALE_Y) - (text_height/2) * SCALE_Y))
-
+        
         self.resolution_buttons = []
         current_res = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}"
         for i, (width, height) in enumerate(RESOLUTIONS):
-                    button_x = WINDOW_WIDTH/2 + (i - len(RESOLUTIONS)/2) * button_spacing
-                    res_button = Button(
-                        None, 
-                        (button_x, int(res_y * SCALE_Y)),
-                        f"{width}x{height}",
-                        self.font,
-                        "white",
-                        "#b68f40"
-                    )
-                    self.resolution_buttons.append((res_button, (width, height)))
+            res_button = Button(
+                None, 
+                (WINDOW_WIDTH/2 + (i - len(RESOLUTIONS)/2 + 0.5) * button_spacing, int(res_y * SCALE_Y)),
+                f"{width}x{height}",
+                self.font,
+                "white",
+                "#b68f40"
+            )
+            self.resolution_buttons.append((res_button, (width, height)))
 
         # Back button - positioned at the same x position as main menu buttons
         self.back_button = Button(
