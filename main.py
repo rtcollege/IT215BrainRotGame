@@ -86,6 +86,11 @@ class Game:
                                 self.ui.current_scene = 'settings'
                                 self.ui.difficulty = self.data.difficulty
                                 self.ui.volume = self.data.volume
+
+                                # Update slider position to match new volume
+                                self.ui.volume_slider.x = int(
+                                    WINDOW_WIDTH/2 - self.ui.slider_width/2 + (self.ui.volume * self.ui.slider_width / 100)
+                                )
                                 break
                             elif self.ui.back_button.check_input(mouse_pos):
                                 self.ui.current_scene = 'main_menu'

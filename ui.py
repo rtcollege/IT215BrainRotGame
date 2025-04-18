@@ -91,6 +91,7 @@ class UI:
             "white", 
             "#b68f40"
         )
+        
 
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()

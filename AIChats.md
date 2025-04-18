@@ -1091,7 +1091,7 @@ Prompt:
     While it does change the window size. The UI does not get resized after a resolution change.
 
 Response:
-
+    
 
 #
 
