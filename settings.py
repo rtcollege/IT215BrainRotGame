@@ -15,8 +15,8 @@ RESOLUTIONS = [
 ]
 
 # Current window size
-WINDOW_WIDTH = 960  # You can adjust this
-WINDOW_HEIGHT = 540  # You can adjust this
+WINDOW_WIDTH = 1280  # You can adjust this
+WINDOW_HEIGHT = 720  # You can adjust this
 
 # Calculate scale factors
 SCALE_X = WINDOW_WIDTH / BASE_WIDTH

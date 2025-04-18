@@ -63,36 +63,32 @@ class Game:
                         elif self.ui.quit_button.check_input(mouse_pos):
                             pygame.quit()
                             sys.exit()
-                    elif self.ui.current_scene == 'settings':
-                        if self.ui.easy_button.check_input(mouse_pos):
-                            self.ui.difficulty = 'easy'
-                        elif self.ui.medium_button.check_input(mouse_pos):
-                            self.ui.difficulty = 'medium'
-                        elif self.ui.hard_button.check_input(mouse_pos):
-                            self.ui.difficulty = 'hard'
-                        # Check resolution buttons
-                        for button, (width, height) in self.ui.resolution_buttons:
-                            if button.check_input(mouse_pos):
-                                pygame.display.set_mode((width, height))
-                                settings.WINDOW_WIDTH = width
-                                settings.WINDOW_HEIGHT = height
-                                settings.SCALE_X = width / settings.BASE_WIDTH
-                                settings.SCALE_Y = height / settings.BASE_HEIGHT
-                                # Reimport font with new scaling
-                                self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
-                                    int(40 * min(settings.SCALE_X, settings.SCALE_Y)))
-                                # Recalculate UI layout with new scaling
-                                self.ui.recalculate_layout()
-                                self.ui.current_scene = 'settings'
-
-                                # Update slider position to match new volume
-                                self.ui.volume_slider.x = int(
-                                    WINDOW_WIDTH/2 - self.ui.slider_width/2 + (self.ui.volume * self.ui.slider_width / 100)
-                                )
-                                break
-                            elif self.ui.back_button.check_input(mouse_pos):
+                        elif self.ui.current_scene == 'settings':
+                            if self.ui.easy_button.check_input(mouse_pos):
+                                self.ui.difficulty = 'easy'
+                            elif self.ui.medium_button.check_input(mouse_pos):
+                                self.ui.difficulty = 'medium'
+                            elif self.ui.hard_button.check_input(mouse_pos):
+                                self.ui.difficulty = 'hard'
+                            for button, (width, height) in self.ui.resolution_buttons:
+                                if button.check_input(mouse_pos):
+                                    pygame.display.set_mode((width, height))
+                                    settings.WINDOW_WIDTH = width
+                                    settings.WINDOW_HEIGHT = height
+                                    settings.SCALE_X = width / settings.BASE_WIDTH
+                                    settings.SCALE_Y = height / settings.BASE_HEIGHT
+    
+                                    self.ui.recalculate_layout()
+                                    self.ui.current_scene = 'settings'
+    
+                                    self.ui.volume_slider.x = int(
+                                        settings.WINDOW_WIDTH / 2 - self.ui.slider_width / 2 +
+                                        (self.ui.volume * self.ui.slider_width / 100)
+                                    )
+                                    break
+                            if self.ui.back_button.check_input(mouse_pos):
                                 self.ui.current_scene = 'main_menu'
-                    
+                                
             self.display_surface.fill("gray")
             self.ui.update(dt)
             pygame.display.update()
