@@ -19,8 +19,75 @@ class UI:
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(SCALE_X, SCALE_Y)))
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_title_size * min(SCALE_X, SCALE_Y)))
 
+        # Calculate scaled positions
+        button_x = int(50 * SCALE_X)
+        button_y_start = int(300 * SCALE_Y)
+        button_y_spacing = int(100 * SCALE_Y)
+
         # Main menu setup
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
+        self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * SCALE_Y)))
+
+        # Update button positions
+        self.play_button.set_position((button_x, button_y_start))
+        self.settings_button.set_position((button_x, button_y_start + button_y_spacing))
+        self.credits_button.set_position((button_x, button_y_start + 2 * button_y_spacing))
+        self.quit_button.set_position((button_x, button_y_start + 3 * button_y_spacing))
+
+        # Settings scene elements
+        self.settings_title = self.title_font.render("Settings", True, "white")
+        self.settings_title_rect = self.settings_title.get_rect(topleft=(button_x, int(100 * SCALE_Y)))
+
+        # Volume slider
+        volume_y = int(250 * SCALE_Y)
+        self.volume_text = self.font.render("Volume:", True, "white")
+        text_height = self.volume_text.get_height()
+        self.volume_text_rect = self.volume_text.get_rect(topleft=(button_x, volume_y - (text_height/2)))
+        
+        self.slider_width = int(200 * SCALE_X)
+        slider_height = int(20 * SCALE_Y)
+        slider_handle_width = int(20 * SCALE_X)
+        slider_handle_height = int(30 * SCALE_Y)
+        
+        self.volume_rect = pygame.Rect(
+            WINDOW_WIDTH/2 - self.slider_width/2,
+            volume_y,
+            self.slider_width,
+            slider_height
+        )
+        
+        self.volume_slider = pygame.Rect(
+            WINDOW_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100),
+            volume_y - slider_handle_height/2 + slider_height/2,
+            slider_handle_width,
+            slider_handle_height
+        )
+
+        # Difficulty section
+        diff_y = int(400 * SCALE_Y)
+        button_spacing = int(200 * SCALE_X)
+        self.difficulty_text = self.font.render("Difficulty:", True, "white")
+        text_height = self.difficulty_text.get_height()
+        self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(button_x, diff_y - (text_height/2)))
+        
+        self.easy_button.set_position((WINDOW_WIDTH/2 - button_spacing, diff_y))
+        self.medium_button.set_position((WINDOW_WIDTH/2, diff_y))
+        self.hard_button.set_position((WINDOW_WIDTH/2 + button_spacing, diff_y))
+
+        # Resolution section
+        res_y = diff_y + int(100 * SCALE_Y)
+        self.resolution_text = self.font.render("Resolution:", True, "white")
+        text_height = self.resolution_text.get_height()
+        self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - (text_height/2)))
+        
+        for i, (button, _) in enumerate(self.resolution_buttons):
+            button.set_position((
+                WINDOW_WIDTH/2 + (i - len(RESOLUTIONS)/2 + 0.5) * button_spacing,
+                res_y
+            ))
+
+        # Back button
+        self.back_button.set_position((button_x, button_y_start + 3 * button_y_spacing))
         self.title_rect = self.title_text.get_rect(topleft=(50, 100))
 
         # Create buttons

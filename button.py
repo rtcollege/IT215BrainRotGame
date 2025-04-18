@@ -47,3 +47,17 @@ class Button:
             self.text = self.font.render(self.text_input, True, self.hovering_color)
         else:
             self.text = self.font.render(self.text_input, True, self.base_color)
+            
+    def set_position(self, new_pos):
+        self.x_pos = new_pos[0]
+        self.y_pos = new_pos[1]
+        if self.image is not None:
+            self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        else:
+            self.rect = pygame.Rect(
+                self.x_pos,
+                self.y_pos - (self.text.get_height() + self.padding_y) // 2,
+                self.text.get_width() + self.padding_x,
+                self.text.get_height() + self.padding_y
+            )
+        self.text_rect = self.text.get_rect(midleft=(self.x_pos + self.padding_x//2, self.y_pos))
