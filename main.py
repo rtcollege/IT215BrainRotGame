@@ -82,10 +82,9 @@ class Game:
                                 self.ui.sX = width / settings.BASE_WIDTH
                                 self.ui.sY = height / settings.BASE_HEIGHT
                                 self.ui.recalculate_layout()
-                                self.ui.volume_slider.x = int(
-                                    settings.WINDOW_WIDTH / 2 - self.ui.slider_width / 2 +
-                                    (self.ui.volume * self.ui.slider_width / 100)
-                                )
+                                # Update volume slider position using UI's values
+                                slider_x = self.ui.W_WIDTH // 2 - self.ui.slider_width // 2 + int((self.ui.volume / 100) * self.ui.slider_width)
+                                self.ui.volume_slider.x = slider_x
                                 break
 
             self.display_surface.fill("gray")
