@@ -1,14 +1,15 @@
 class Data:
+
     def __init__(self, ui):
         self.ui = ui
         self._currency = 5
         self._health = 100
         self.difficulty = 'medium'
+        self.volume = 50
 
         self.unlocked_level = 0
         self.current_level = 0
 
-    
     @property
     def currency(self):
         return self._currency
