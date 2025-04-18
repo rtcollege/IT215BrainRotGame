@@ -89,8 +89,10 @@ class UI:
             self.slider_width,
             slider_height
         )
+        # Calculate slider position based on volume percentage
+        slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
         self.volume_slider = pygame.Rect(
-            self.W_WIDTH // 2 - self.slider_width // 2 + (self.volume * self.slider_width // 100),
+            slider_x,
             volume_y + (slider_height // 2) - (slider_handle_height // 2),
             slider_handle_width,
             slider_handle_height
