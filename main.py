@@ -51,12 +51,15 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    if self.ui.current_scene == 'gameplay':
+                        self.ui.is_paused = not self.ui.is_paused
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.ui.current_scene == 'main_menu':
                         if self.ui.play_button.check_input(mouse_pos):
-                            print("Play clicked")
-                            print("Difficulty:", self.ui.difficulty)
-                            print("Volume:", self.ui.volume)
+                            self.ui.current_scene = 'gameplay'
+                            self.ui.is_paused = False
                         elif self.ui.settings_button.check_input(mouse_pos):
                             self.ui.current_scene = 'settings'
                         elif self.ui.credits_button.check_input(mouse_pos):
@@ -73,6 +76,15 @@ class Game:
                             self.ui.difficulty = 'medium'
                         elif self.ui.hard_button.check_input(mouse_pos):
                             self.ui.difficulty = 'hard'
+                    elif self.ui.current_scene == 'gameplay' and self.ui.is_paused:
+                        if self.ui.resume_button.check_input(mouse_pos):
+                            self.ui.is_paused = False
+                        elif self.ui.pause_settings_button.check_input(mouse_pos):
+                            self.ui.current_scene = 'settings'
+                        elif self.ui.pause_credits_button.check_input(mouse_pos):
+                            self.ui.current_scene = 'credits'
+                        elif self.ui.pause_quit_button.check_input(mouse_pos):
+                            self.ui.current_scene = 'main_menu'
                         for button, (width, height) in self.ui.resolution_buttons:
                             if button.check_input(mouse_pos):
                                 pygame.display.set_mode((width, height))

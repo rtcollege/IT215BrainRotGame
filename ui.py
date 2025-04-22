@@ -10,6 +10,7 @@ class UI:
         self.base_title_size = 60
         self.frames = frames
         self.current_scene = 'main_menu'
+        self.is_paused = False
         self.difficulty = 'medium'
         self.volume = 50
         self.W_WIDTH = WINDOW_WIDTH
@@ -134,6 +135,14 @@ class UI:
         # Credits scene setup
         self.credits_title = self.title_font.render("Credits", True, "white")
         self.credits_title_rect = self.credits_title.get_rect(topleft=(button_x, int(100 * self.sY)))
+
+        # Pause menu setup
+        self.pause_title = self.title_font.render("Paused", True, "white")
+        self.pause_title_rect = self.pause_title.get_rect(topleft=(button_x, int(100 * self.sY)))
+        self.resume_button = Button(None, (button_x, button_y_start), "Resume", self.font, "white", "#b68f40")
+        self.pause_settings_button = Button(None, (button_x, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
+        self.pause_credits_button = Button(None, (button_x, button_y_start + 2 * button_y_spacing), "Credits", self.font, "white", "#b68f40")
+        self.pause_quit_button = Button(None, (button_x, button_y_start + 3 * button_y_spacing), "Quit", self.font, "white", "#b68f40")
         
         # Credits text
         credits_lines = ["Lead Developer: John Doe",
@@ -216,6 +225,27 @@ class UI:
             # Update back button
             self.back_button.update(self.display_surface)
             self.back_button.change_color(mouse_pos)
+
+            elif self.current_scene == 'gameplay':
+            if self.is_paused:
+                # Draw semi-transparent overlay
+                overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
+                overlay.fill((0, 0, 0))
+                overlay.set_alpha(128)
+                self.display_surface.blit(overlay, (0, 0))
+                
+                # Draw pause menu
+                self.display_surface.blit(self.pause_title, self.pause_title_rect)
+                self.resume_button.update(self.display_surface)
+                self.pause_settings_button.update(self.display_surface)
+                self.pause_credits_button.update(self.display_surface)
+                self.pause_quit_button.update(self.display_surface)
+                
+                # Update button colors
+                self.resume_button.change_color(mouse_pos)
+                self.pause_settings_button.change_color(mouse_pos)
+                self.pause_credits_button.change_color(mouse_pos)
+                self.pause_quit_button.change_color(mouse_pos)
 
             # Handle volume slider dragging
             if pygame.mouse.get_pressed()[0]:
