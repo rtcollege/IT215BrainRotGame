@@ -86,8 +86,10 @@ class Game:
                         if self.ui.resume_button.check_input(mouse_pos):
                             self.ui.is_paused = False
                         elif self.ui.pause_settings_button.check_input(mouse_pos):
+                            self.ui.previous_scene = 'gameplay'
                             self.ui.current_scene = 'settings'
                         elif self.ui.pause_credits_button.check_input(mouse_pos):
+                            self.ui.previous_scene = 'gameplay'
                             self.ui.current_scene = 'credits'
                         elif self.ui.pause_main_menu_button.check_input(mouse_pos):
                             self.ui.current_scene = 'main_menu'
