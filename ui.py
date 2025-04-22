@@ -183,11 +183,23 @@ class UI:
             # Draw settings title
             self.display_surface.blit(self.settings_title, self.settings_title_rect)
 
-            # Draw volume label and slider
+            # Draw volume label, slider and value
             self.display_surface.blit(self.volume_text, self.volume_text_rect)
             self.display_surface.blit(self.difficulty_text, self.difficulty_text_rect)
             pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
             pygame.draw.rect(self.display_surface, "white", self.volume_slider)
+
+            # Display volume value
+            volume_value = self.font.render(f"{int(self.volume)}%", True, "white")
+            volume_value_rect = volume_value.get_rect(midleft=(self.volume_rect.right + 20, self.volume_rect.centery))
+            self.display_surface.blit(volume_value, volume_value_rect)
+
+            # Handle slider dragging
+            if pygame.mouse.get_pressed()[0]:
+                if self.volume_rect.collidepoint(mouse_pos):
+                    self.volume = (mouse_pos[0] - (self.W_WIDTH/2 - self.slider_width/2)) / (self.slider_width/100)
+                    self.volume = max(0, min(100, self.volume))
+                    self.volume_slider.x = int(self.W_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
 
             # Draw difficulty buttons
             self.easy_button.update(self.display_surface)
