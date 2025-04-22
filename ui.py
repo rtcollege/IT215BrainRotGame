@@ -45,7 +45,7 @@ class UI:
     def recalculate_layout(self):
         # Update fonts with new scale
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(self.sX, self.sY)))
-        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_title_size * min(self.sX, self.sY)))
+        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(self.sX, self.sY)))
 
         # Layout positions
         button_x = int(50 * self.sX)
@@ -298,8 +298,8 @@ class UI:
                             pygame.display.set_mode((width, height))
                             self.W_WIDTH = width
                             self.W_HEIGHT = height
-                            self.sX = width / settings.BASE_WIDTH
-                            self.sY = height / settings.BASE_HEIGHT
+                            self.sX = width / BASE_WIDTH
+                            self.sY = height / BASE_HEIGHT
                             self.recalculate_layout()
                             slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
                             self.volume_slider.x = slider_x
