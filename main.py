@@ -1,3 +1,4 @@
+
 import settings
 from settings import *
 from data import Data
@@ -24,16 +25,12 @@ class Game:
         self.ui = UI(self.font, self.ui_frames)
         self.data = Data(self.ui)
 
-
-
     def import_assets(self):
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 40)
 
         self.ui_frames = {
             'currency': pygame.image.load('graphics/ui/currency.png').convert_alpha()
         }
-
-
 
     def check_game_over(self):
         """Check for game over conditions"""
@@ -47,10 +44,8 @@ class Game:
                 pygame.quit()
                 sys.exit()
             
-            # Handle events for all sprites that have handle_events method
-            for sprite in self.sprites.values():
-                if hasattr(sprite, 'handle_events'):
-                    sprite.handle_events(event)
+            # Pass events to UI
+            self.ui.handle_events(event)
 
     def run(self):
         """Main game loop"""
