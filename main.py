@@ -60,7 +60,7 @@ class Game:
                         elif self.ui.settings_button.check_input(mouse_pos):
                             self.ui.current_scene = 'settings'
                         elif self.ui.credits_button.check_input(mouse_pos):
-                            print("Credits clicked")
+                            self.ui.current_scene = 'credits'
                         elif self.ui.quit_button.check_input(mouse_pos):
                             pygame.quit()
                             sys.exit()
