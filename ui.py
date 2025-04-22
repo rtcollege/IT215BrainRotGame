@@ -7,6 +7,68 @@ class UI:
         self.display_surface = pygame.display.get_surface()
         self.sprites = pygame.sprite.Group()
         self.base_font_size = 40
+        
+    def handle_events(self, event):
+        """Handle UI-specific events"""
+        mouse_pos = pygame.mouse.get_pos()
+        
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            if self.current_scene == 'gameplay':
+                self.is_paused = not self.is_paused
+            elif self.current_scene in ['settings', 'credits']:
+                temp_scene = self.current_scene
+                self.current_scene = self.previous_scene
+                self.previous_scene = temp_scene
+                
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.current_scene == 'main_menu':
+                if self.play_button.check_input(mouse_pos):
+                    self.previous_scene = self.current_scene
+                    self.current_scene = 'gameplay'
+                    self.is_paused = False
+                elif self.settings_button.check_input(mouse_pos):
+                    self.previous_scene = self.current_scene
+                    self.current_scene = 'settings'
+                elif self.credits_button.check_input(mouse_pos):
+                    self.previous_scene = self.current_scene
+                    self.current_scene = 'credits'
+                elif self.quit_button.check_input(mouse_pos):
+                    pygame.quit()
+                    sys.exit()
+            elif self.current_scene == 'settings' or self.current_scene == 'credits':
+                if self.back_button.check_input(mouse_pos):
+                    temp_scene = self.current_scene
+                    self.current_scene = self.previous_scene
+                    self.previous_scene = temp_scene
+                elif self.current_scene == 'settings':
+                    if self.easy_button.check_input(mouse_pos):
+                        self.difficulty = 'easy'
+                    elif self.medium_button.check_input(mouse_pos):
+                        self.difficulty = 'medium'
+                    elif self.hard_button.check_input(mouse_pos):
+                        self.difficulty = 'hard'
+                    for button, (width, height) in self.resolution_buttons:
+                        if button.check_input(mouse_pos):
+                            pygame.display.set_mode((width, height))
+                            self.W_WIDTH = width
+                            self.W_HEIGHT = height
+                            self.sX = width / settings.BASE_WIDTH
+                            self.sY = height / settings.BASE_HEIGHT
+                            self.recalculate_layout()
+                            slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
+                            self.volume_slider.x = slider_x
+                            break
+            elif self.current_scene == 'gameplay' and self.is_paused:
+                if self.resume_button.check_input(mouse_pos):
+                    self.is_paused = False
+                elif self.pause_settings_button.check_input(mouse_pos):
+                    self.previous_scene = 'gameplay'
+                    self.current_scene = 'settings'
+                elif self.pause_credits_button.check_input(mouse_pos):
+                    self.previous_scene = 'gameplay'
+                    self.current_scene = 'credits'
+                elif self.pause_main_menu_button.check_input(mouse_pos):
+                    self.current_scene = 'main_menu'
         self.base_title_size = 60
         self.frames = frames
         self.current_scene = 'main_menu'
