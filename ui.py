@@ -10,6 +10,7 @@ class UI:
         self.base_title_size = 60
         self.frames = frames
         self.current_scene = 'main_menu'
+        self.previous_scene = 'main_menu'
         self.is_paused = False
         self.difficulty = 'medium'
         self.volume = 50

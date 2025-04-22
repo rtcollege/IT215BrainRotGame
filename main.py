@@ -58,22 +58,24 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.ui.current_scene == 'main_menu':
                         if self.ui.play_button.check_input(mouse_pos):
+                            self.ui.previous_scene = self.ui.current_scene
                             self.ui.current_scene = 'gameplay'
                             self.ui.is_paused = False
                         elif self.ui.settings_button.check_input(mouse_pos):
+                            self.ui.previous_scene = self.ui.current_scene
                             self.ui.current_scene = 'settings'
                         elif self.ui.credits_button.check_input(mouse_pos):
+                            self.ui.previous_scene = self.ui.current_scene
                             self.ui.current_scene = 'credits'
                         elif self.ui.quit_button.check_input(mouse_pos):
                             pygame.quit()
                             sys.exit()
                     elif self.ui.current_scene == 'settings' or self.ui.current_scene == 'credits':
                         if self.ui.back_button.check_input(mouse_pos):
-                            # If we came from pause menu, go back to gameplay
-                            if self.ui.is_paused:
-                                self.ui.current_scene = 'gameplay'
-                            else:
-                                self.ui.current_scene = 'main_menu'
+                            # Store current scene before changing
+                            temp_scene = self.ui.current_scene
+                            self.ui.current_scene = self.ui.previous_scene
+                            self.ui.previous_scene = temp_scene
                         elif self.ui.current_scene == 'settings' and self.ui.easy_button.check_input(mouse_pos):
                             self.ui.difficulty = 'easy'
                         elif self.ui.medium_button.check_input(mouse_pos):
