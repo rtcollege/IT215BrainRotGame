@@ -293,6 +293,11 @@ class UI:
                         self.difficulty = 'medium'
                     elif self.hard_button.check_input(mouse_pos):
                         self.difficulty = 'hard'
+                    elif pygame.mouse.get_pressed()[0]:
+                        if self.volume_rect.collidepoint(mouse_pos):
+                            self.volume = (mouse_pos[0] - (self.W_WIDTH/2 - self.slider_width/2)) / (self.slider_width/100)
+                            self.volume = max(0, min(100, self.volume))
+                            self.volume_slider.x = int(self.W_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
                     for button, (width, height) in self.resolution_buttons:
                         if button.check_input(mouse_pos):
                             pygame.display.set_mode((width, height))
