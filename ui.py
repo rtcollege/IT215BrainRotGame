@@ -131,6 +131,24 @@ class UI:
         self.back_button.update_font(self.font)
         self.back_button.set_position((button_x, button_y_start + 3 * button_y_spacing))
 
+        # Credits scene setup
+        self.credits_title = self.title_font.render("Credits", True, "white")
+        self.credits_title_rect = self.credits_title.get_rect(topleft=(button_x, int(100 * self.sY)))
+        
+        # Credits text
+        credits_lines = ["Lead Developer: John Doe",
+                        "Art Director: Jane Smith",
+                        "Sound Designer: Mike Johnson",
+                        "Level Designer: Sarah Wilson"]
+        self.credits_texts = []
+        self.credits_rects = []
+        
+        for i, line in enumerate(credits_lines):
+            text = self.font.render(line, True, "white")
+            rect = text.get_rect(center=(self.W_WIDTH//2, self.W_HEIGHT//2 - 100 + i * 50 * self.sY))
+            self.credits_texts.append(text)
+            self.credits_rects.append(rect)
+
 
 
     def update(self, dt):
@@ -183,6 +201,18 @@ class UI:
                 if current_res == f"{width}x{height}":
                     pygame.draw.rect(self.display_surface, "white", button.rect, 3)
 
+            # Update back button
+            self.back_button.update(self.display_surface)
+            self.back_button.change_color(mouse_pos)
+            
+        elif self.current_scene == 'credits':
+            # Draw credits title
+            self.display_surface.blit(self.credits_title, self.credits_title_rect)
+            
+            # Draw credits text
+            for text, rect in zip(self.credits_texts, self.credits_rects):
+                self.display_surface.blit(text, rect)
+                
             # Update back button
             self.back_button.update(self.display_surface)
             self.back_button.change_color(mouse_pos)
