@@ -69,7 +69,11 @@ class Game:
                             sys.exit()
                     elif self.ui.current_scene == 'settings' or self.ui.current_scene == 'credits':
                         if self.ui.back_button.check_input(mouse_pos):
-                            self.ui.current_scene = 'main_menu'
+                            # If we came from pause menu, go back to gameplay
+                            if self.ui.is_paused:
+                                self.ui.current_scene = 'gameplay'
+                            else:
+                                self.ui.current_scene = 'main_menu'
                         elif self.ui.current_scene == 'settings' and self.ui.easy_button.check_input(mouse_pos):
                             self.ui.difficulty = 'easy'
                         elif self.ui.medium_button.check_input(mouse_pos):
