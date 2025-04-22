@@ -54,6 +54,11 @@ class Game:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     if self.ui.current_scene == 'gameplay':
                         self.ui.is_paused = not self.ui.is_paused
+                    elif self.ui.current_scene in ['settings', 'credits']:
+                        # Store current scene before changing
+                        temp_scene = self.ui.current_scene
+                        self.ui.current_scene = self.ui.previous_scene
+                        self.ui.previous_scene = temp_scene
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.ui.current_scene == 'main_menu':
