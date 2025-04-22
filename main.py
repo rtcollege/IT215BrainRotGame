@@ -64,10 +64,10 @@ class Game:
                         elif self.ui.quit_button.check_input(mouse_pos):
                             pygame.quit()
                             sys.exit()
-                    elif self.ui.current_scene == 'settings':
+                    elif self.ui.current_scene == 'settings' or self.ui.current_scene == 'credits':
                         if self.ui.back_button.check_input(mouse_pos):
                             self.ui.current_scene = 'main_menu'
-                        elif self.ui.easy_button.check_input(mouse_pos):
+                        elif self.ui.current_scene == 'settings' and self.ui.easy_button.check_input(mouse_pos):
                             self.ui.difficulty = 'easy'
                         elif self.ui.medium_button.check_input(mouse_pos):
                             self.ui.difficulty = 'medium'
