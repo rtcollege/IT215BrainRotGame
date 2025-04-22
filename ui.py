@@ -226,7 +226,7 @@ class UI:
             self.back_button.update(self.display_surface)
             self.back_button.change_color(mouse_pos)
 
-            elif self.current_scene == 'gameplay':
+        elif self.current_scene == 'gameplay':
             if self.is_paused:
                 # Draw semi-transparent overlay
                 overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
