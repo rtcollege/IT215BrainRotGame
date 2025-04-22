@@ -2,7 +2,6 @@ import settings
 from settings import *
 from data import Data
 from debug import debug
-from timer import Timer
 from ui import UI
 
 
@@ -61,7 +60,7 @@ class Game:
                         elif self.ui.settings_button.check_input(mouse_pos):
                             self.ui.current_scene = 'settings'
                         elif self.ui.credits_button.check_input(mouse_pos):
-                            self.ui.credits_button.set_position((100, 100))
+                            print("Credits clicked")
                         elif self.ui.quit_button.check_input(mouse_pos):
                             pygame.quit()
                             sys.exit()
