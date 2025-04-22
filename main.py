@@ -87,7 +87,7 @@ class Game:
                             self.ui.current_scene = 'settings'
                         elif self.ui.pause_credits_button.check_input(mouse_pos):
                             self.ui.current_scene = 'credits'
-                        elif self.ui.pause_quit_button.check_input(mouse_pos):
+                        elif self.ui.pause_main_menu_button.check_input(mouse_pos):
                             self.ui.current_scene = 'main_menu'
                         for button, (width, height) in self.ui.resolution_buttons:
                             if button.check_input(mouse_pos):

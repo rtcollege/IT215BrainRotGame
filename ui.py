@@ -142,7 +142,7 @@ class UI:
         self.resume_button = Button(None, (button_x, button_y_start), "Resume", self.font, "white", "#b68f40")
         self.pause_settings_button = Button(None, (button_x, button_y_start + button_y_spacing), "Settings", self.font, "white", "#b68f40")
         self.pause_credits_button = Button(None, (button_x, button_y_start + 2 * button_y_spacing), "Credits", self.font, "white", "#b68f40")
-        self.pause_quit_button = Button(None, (button_x, button_y_start + 3 * button_y_spacing), "Quit", self.font, "white", "#b68f40")
+        self.pause_main_menu_button = Button(None, (button_x, button_y_start + 3 * button_y_spacing), "Main Menu", self.font, "white", "#b68f40")
         
         # Credits text
         credits_lines = ["Lead Developer: John Doe",
@@ -239,13 +239,13 @@ class UI:
                 self.resume_button.update(self.display_surface)
                 self.pause_settings_button.update(self.display_surface)
                 self.pause_credits_button.update(self.display_surface)
-                self.pause_quit_button.update(self.display_surface)
+                self.pause_main_menu_button.update(self.display_surface)
                 
                 # Update button colors
                 self.resume_button.change_color(mouse_pos)
                 self.pause_settings_button.change_color(mouse_pos)
                 self.pause_credits_button.change_color(mouse_pos)
-                self.pause_quit_button.change_color(mouse_pos)
+                self.pause_main_menu_button.change_color(mouse_pos)
 
             # Handle volume slider dragging
             if pygame.mouse.get_pressed()[0]:
