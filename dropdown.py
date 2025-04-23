@@ -3,12 +3,20 @@ import pygame
 
 class Dropdown:
     def __init__(self, x, y, width, height, options, font, default_option=None):
-        self.rect = pygame.Rect(x, y, width, height)
+        from settings import SCALE_X, SCALE_Y
+        self.padding_x = int(40 * SCALE_X)
+        self.padding_y = int(20 * SCALE_Y)
+        
+        # Calculate proper height based on text and padding
+        text_height = font.render(options[0], True, "#ffffff").get_height()
+        adjusted_height = text_height + self.padding_y
+        
+        self.rect = pygame.Rect(x, y, width, adjusted_height)
         self.options = options
         self.font = font
         self.is_open = False
         self.selected_option = default_option if default_option else options[0]
-        self.option_height = height
+        self.option_height = adjusted_height
         self.hover_index = -1
         
         # Create background rects for all options
@@ -47,7 +55,7 @@ class Dropdown:
                 pygame.draw.rect(surface, "#b68f40", option_rect, 2, border_radius=10)
                 
                 text = self.font.render(option, True, "#ffffff")
-                text_rect = text.get_rect(midleft=(option_rect.x + 10, option_rect.centery))
+                text_rect = text.get_rect(midleft=(option_rect.x + self.padding_x//2, option_rect.centery))
                 surface.blit(text, text_rect)
                 
     def handle_event(self, event):
