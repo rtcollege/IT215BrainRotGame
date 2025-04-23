@@ -106,14 +106,17 @@ class UI:
         text_height = self.difficulty_text.get_height()
         self.difficulty_text_rect = self.difficulty_text.get_rect(topleft=(button_x, diff_y - text_height // 2))
 
+        # Position buttons evenly with equal spacing between centers
         self.easy_button.update_font(self.font)
-        self.easy_button.set_position((self.W_WIDTH/2 - 1.5 * button_spacing, diff_y))
-
         self.medium_button.update_font(self.font)
-        self.medium_button.set_position((self.W_WIDTH/2, diff_y))
-
         self.hard_button.update_font(self.font)
-        self.hard_button.set_position((self.W_WIDTH/2 + 1.5 * button_spacing, diff_y))
+        
+        total_width = button_spacing * 2  # Total width between first and last button
+        center_x = self.W_WIDTH/2
+        
+        self.easy_button.set_position((center_x - button_spacing, diff_y))
+        self.medium_button.set_position((center_x, diff_y))
+        self.hard_button.set_position((center_x + button_spacing, diff_y))
 
         # Resolution section
         res_y = diff_y + int(100 * self.sY)
