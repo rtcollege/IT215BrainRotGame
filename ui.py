@@ -131,10 +131,11 @@ class UI:
         
         # Create dropdown menu
         dropdown_width = int(200 * self.sX)
-        dropdown_height = int(40 * self.sY)
+        dropdown_height = text_height + int(20 * self.sY)  # Match button height
+        spacing_after_text = int(40 * self.sX)  # Increase spacing after text
         self.resolution_dropdown = Dropdown(
-            button_x + self.resolution_text.get_width() + int(20 * self.sX),
-            res_y - dropdown_height//2,
+            button_x + self.resolution_text.get_width() + spacing_after_text,
+            res_y,
             dropdown_width,
             dropdown_height,
             resolution_options,
