@@ -38,18 +38,8 @@ class Dropdown:
         
         # Draw dropdown options if open
         if self.is_open:
-            # Get index of selected option
-            selected_index = self.options.index(self.selected_option)
-            
-            # Draw options below the selected option
             for i, option in enumerate(self.options):
-                if option == self.selected_option:
-                    continue
-                    
-                # Calculate position below selected option
-                y_offset = (i if i < selected_index else i + 1) * self.option_height
-                option_rect = pygame.Rect(self.rect.x, self.rect.y + y_offset, self.rect.width, self.rect.height)
-                
+                option_rect = self.option_rects[i]
                 if i == self.hover_index:
                     pygame.draw.rect(surface, "#5a5a5a", option_rect, 0, border_radius=10)
                 else:
