@@ -48,7 +48,7 @@ class UI:
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(self.sX, self.sY)))
 
         # Layout positions
-        button_x = int(30 * self.sX)  # Moved starting position more left
+        button_x = int(50 * self.sX)
         button_y_start = int(300 * self.sY)
         button_y_spacing = int(100 * self.sY)
 
@@ -85,7 +85,7 @@ class UI:
         slider_handle_height = int(30 * self.sY)
 
         self.volume_rect = pygame.Rect(
-            button_x + int(200 * self.sX),  # Position relative to left alignment
+            self.W_WIDTH // 2 - self.slider_width // 2,
             volume_y,
             self.slider_width,
             slider_height
@@ -124,16 +124,12 @@ class UI:
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - text_height // 2))
 
-        # Calculate available width for resolution buttons
-        resolution_text_width = self.resolution_text.get_width()
-        right_padding = int(50 * self.sX)  # Right edge padding
-        available_width = self.W_WIDTH - (button_x + resolution_text_width + right_padding)
-        button_spacing = available_width / (len(self.resolution_buttons) + 1)
-        
         for i, (button, _) in enumerate(self.resolution_buttons):
             button.update_font(self.font)
-            x_pos = button_x + resolution_text_width + button_spacing * (i + 1)
-            button.set_position((x_pos, res_y))
+            button.set_position((
+                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2) * (button_spacing * 1.5),
+                res_y
+            ))
 
         # Back button (same position as quit)
         self.back_button.update_font(self.font)
