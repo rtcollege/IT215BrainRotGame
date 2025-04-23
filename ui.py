@@ -48,7 +48,7 @@ class UI:
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(self.base_font_size * min(self.sX, self.sY)))
 
         # Layout positions
-        button_x = int(50 * self.sX)
+        button_x = int(30 * self.sX)  # Moved starting position more left
         button_y_start = int(300 * self.sY)
         button_y_spacing = int(100 * self.sY)
 
@@ -85,7 +85,7 @@ class UI:
         slider_handle_height = int(30 * self.sY)
 
         self.volume_rect = pygame.Rect(
-            self.W_WIDTH // 2 - self.slider_width // 2,
+            button_x + int(200 * self.sX),  # Position relative to left alignment
             volume_y,
             self.slider_width,
             slider_height
