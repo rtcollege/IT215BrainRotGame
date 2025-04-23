@@ -22,8 +22,10 @@ class Dropdown:
         # Create background rects for all options
         self.option_rects = []
         for i in range(len(options)):
+            # Start options below the button
+            y_pos = y + self.rect.height + (i * height)
             self.option_rects.append(
-                pygame.Rect(x, y + (i * height), width, height)
+                pygame.Rect(x, y_pos, width, height)
             )
             
     def draw(self, surface):
