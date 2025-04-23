@@ -163,6 +163,20 @@ class UI:
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()
 
+        # Create gradient background
+        background = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
+        color1 = pygame.Color("#2c2c2c")
+        color2 = pygame.Color("#1a1a1a")
+        for y in range(self.W_HEIGHT):
+            color = pygame.Color(
+                int(color1.r + (color2.r - color1.r) * y/self.W_HEIGHT),
+                int(color1.g + (color2.g - color1.g) * y/self.W_HEIGHT),
+                int(color1.b + (color2.b - color1.b) * y/self.W_HEIGHT)
+            )
+            pygame.draw.line(background, color, (0, y), (self.W_WIDTH, y))
+        self.display_surface.blit(background, (0, 0))
+
+
         if self.current_scene == 'main_menu':
             # Draw title
             self.display_surface.blit(self.title_text, self.title_rect)
