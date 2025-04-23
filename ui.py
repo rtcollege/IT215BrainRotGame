@@ -111,10 +111,10 @@ class UI:
         self.easy_button.update_font(self.font)
         self.medium_button.update_font(self.font)
         self.hard_button.update_font(self.font)
-        
+
         total_width = button_spacing * 2  # Total width between first and last button
         center_x = self.W_WIDTH/2
-        
+
         self.easy_button.set_position((center_x - button_spacing, diff_y))
         self.medium_button.set_position((center_x, diff_y))
         self.hard_button.set_position((center_x + button_spacing, diff_y))
@@ -124,25 +124,25 @@ class UI:
         self.resolution_text = self.font.render("Resolution:", True, "white")
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - text_height // 2))
-        
+
         # Create resolution options list
         resolution_options = [f"{width}x{height}" for width, height in RESOLUTIONS]
         current_res = f"{self.W_WIDTH}x{self.W_HEIGHT}"
-        
+
         # Create dropdown menu
         dropdown_width = int(220 * self.sX)
         dropdown_height = int(40 * self.sY)  # Match button height
         spacing_after_text = int(40 * self.sX)  # Increase spacing after text
         self.resolution_dropdown = Dropdown(
             button_x + self.resolution_text.get_width() + spacing_after_text,
-            res_y,
+            res_y - dropdown_height//2,
             dropdown_width,
             dropdown_height,
             resolution_options,
             self.font,
             current_res
         )
-        
+
         # Create apply button
         self.apply_button = Button(
             None,
