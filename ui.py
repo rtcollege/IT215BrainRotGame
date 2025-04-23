@@ -1,6 +1,7 @@
 from settings import *
 from timer import Timer
 from button import Button
+from dropdown import Dropdown
 
 class UI:
     def __init__(self, font, frames):
