@@ -4,7 +4,7 @@ from button import Button
 from dropdown import Dropdown
 
 class UI:
-    def __init__(self, font, frames, data): # Added data parameter
+    def __init__(self, font, frames):
         self.display_surface = pygame.display.get_surface()
         self.sprites = pygame.sprite.Group()
         self.base_font_size = 40
@@ -12,8 +12,8 @@ class UI:
         self.current_scene = 'main_menu'
         self.previous_scene = 'main_menu'
         self.is_paused = False
-        self.difficulty = data.difficulty # Updated to use data.difficulty
-        self.volume = data.volume # Updated to use data.volume
+        self.difficulty = 'medium'
+        self.volume = 50
         self.W_WIDTH = WINDOW_WIDTH
         self.W_HEIGHT = WINDOW_HEIGHT
         self.sX = SCALE_X
@@ -111,10 +111,10 @@ class UI:
         self.easy_button.update_font(self.font)
         self.medium_button.update_font(self.font)
         self.hard_button.update_font(self.font)
-
+        
         total_width = button_spacing * 2  # Total width between first and last button
         center_x = self.W_WIDTH/2
-
+        
         self.easy_button.set_position(((center_x - (self.easy_button.text.get_width()) // 2) - button_spacing, diff_y))
         self.medium_button.set_position((center_x - (self.medium_button.text.get_width() // 2), diff_y))
         self.hard_button.set_position((center_x - (self.hard_button.text.get_width() // 2) + button_spacing, diff_y))
@@ -124,11 +124,11 @@ class UI:
         self.resolution_text = self.font.render("Resolution:", True, "white")
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - text_height // 2))
-
+        
         # Create resolution options list
         resolution_options = [f"{width}x{height}" for width, height in RESOLUTIONS]
         current_res = f"{self.W_WIDTH}x{self.W_HEIGHT}"
-
+        
         # Create dropdown menu
         dropdown_width = int(220 * self.sX)
         dropdown_height = int(40 * self.sY)  # Match button height
@@ -142,8 +142,8 @@ class UI:
             self.font,
             current_res
         )
-
-
+        
+        
         # Create apply button
         self.apply_button = Button(
             None,
