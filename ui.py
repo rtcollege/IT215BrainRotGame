@@ -115,7 +115,7 @@ class UI:
         center_x = self.W_WIDTH/2
         
         self.easy_button.set_position((center_x - button_spacing, diff_y))
-        self.medium_button.set_position((center_x - button_spacing / 12.5, diff_y))
+        self.medium_button.set_position((center_x, diff_y))
         self.hard_button.set_position((center_x + button_spacing, diff_y))
 
         # Resolution section
@@ -127,7 +127,7 @@ class UI:
         for i, (button, _) in enumerate(self.resolution_buttons):
             button.update_font(self.font)
             button.set_position((
-                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2) * (button_spacing * 1.5),
+                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2 + 0.5) * button_spacing,
                 res_y
             ))
 
