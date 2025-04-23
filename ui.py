@@ -115,7 +115,7 @@ class UI:
         center_x = self.W_WIDTH/2
         
         self.easy_button.set_position((center_x - button_spacing, diff_y))
-        self.medium_button.set_position((center_x, diff_y))
+        self.medium_button.set_position((center_x - button_spacing / 12.5, diff_y))
         self.hard_button.set_position((center_x + button_spacing, diff_y))
 
         # Resolution section
