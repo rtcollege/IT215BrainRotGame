@@ -124,12 +124,16 @@ class UI:
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - text_height // 2))
 
+        # Calculate available width for resolution buttons
+        resolution_text_width = self.resolution_text.get_width()
+        right_padding = int(50 * self.sX)  # Right edge padding
+        available_width = self.W_WIDTH - (button_x + resolution_text_width + right_padding)
+        button_spacing = available_width / (len(self.resolution_buttons) + 1)
+        
         for i, (button, _) in enumerate(self.resolution_buttons):
             button.update_font(self.font)
-            button.set_position((
-                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2 + 0.5) * button_spacing,
-                res_y
-            ))
+            x_pos = button_x + resolution_text_width + button_spacing * (i + 1)
+            button.set_position((x_pos, res_y))
 
         # Back button (same position as quit)
         self.back_button.update_font(self.font)
