@@ -7,8 +7,9 @@ class Button:
         self.x_pos = position[0]
         self.y_pos = position[1]
         self.font = font
-        self.base_color = "#4a4a4a"  # Darker base color
+        self.base_color = "#ffffff"  # White text
         self.hovering_color = "#b68f40"  # Warm gold hover color
+        self.button_color = "#4a4a4a"  # Button background color
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, self.base_color)
         
@@ -35,8 +36,8 @@ class Button:
         if self.image is not None:
             screen.blit(self.image, self.rect)
         else:
-            # Draw button with fill and outline
-            pygame.draw.rect(screen, self.base_color, self.rect, 0, border_radius=10)
+            # Draw button with consistent background and outline
+            pygame.draw.rect(screen, self.button_color, self.rect, 0, border_radius=10)
             pygame.draw.rect(screen, self.hovering_color, self.rect, 2, border_radius=10)
         screen.blit(self.text, self.text_rect)
 
