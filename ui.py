@@ -123,13 +123,33 @@ class UI:
         self.resolution_text = self.font.render("Resolution:", True, "white")
         text_height = self.resolution_text.get_height()
         self.resolution_text_rect = self.resolution_text.get_rect(topleft=(button_x, res_y - text_height // 2))
-
-        for i, (button, _) in enumerate(self.resolution_buttons):
-            button.update_font(self.font)
-            button.set_position((
-                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2 + 0.5) * button_spacing,
-                res_y
-            ))
+        
+        # Create resolution options list
+        resolution_options = [f"{width}x{height}" for width, height in RESOLUTIONS]
+        current_res = f"{self.W_WIDTH}x{self.W_HEIGHT}"
+        
+        # Create dropdown menu
+        dropdown_width = int(200 * self.sX)
+        dropdown_height = int(40 * self.sY)
+        self.resolution_dropdown = Dropdown(
+            button_x + self.resolution_text.get_width() + int(20 * self.sX),
+            res_y - dropdown_height//2,
+            dropdown_width,
+            dropdown_height,
+            resolution_options,
+            self.font,
+            current_res
+        )
+        
+        # Create apply button
+        self.apply_button = Button(
+            None,
+            (self.resolution_dropdown.rect.right + int(20 * self.sX), res_y),
+            "Apply",
+            self.font,
+            "white",
+            "#b68f40"
+        )
 
         # Back button (same position as quit)
         self.back_button.update_font(self.font)
@@ -231,13 +251,11 @@ class UI:
             elif self.difficulty == 'hard':
                 pygame.draw.rect(self.display_surface, "white", self.hard_button.rect, 3)
 
-            # Draw resolution text and buttons
+            # Draw resolution text and dropdown
             self.display_surface.blit(self.resolution_text, self.resolution_text_rect)
-            current_res = f"{self.W_WIDTH}x{self.W_HEIGHT}"
-            for button, (width, height) in self.resolution_buttons:
-                button.update(self.display_surface)
-                if current_res == f"{width}x{height}":
-                    pygame.draw.rect(self.display_surface, "white", button.rect, 3)
+            self.resolution_dropdown.draw(self.display_surface)
+            self.apply_button.update(self.display_surface)
+            self.apply_button.change_color(mouse_pos)
 
             # Update back button
             self.back_button.update(self.display_surface)
@@ -327,17 +345,19 @@ class UI:
                             self.volume = (mouse_pos[0] - (self.W_WIDTH/2 - self.slider_width/2)) / (self.slider_width/100)
                             self.volume = max(0, min(100, self.volume))
                             self.volume_slider.x = int(self.W_WIDTH/2 - self.slider_width/2 + (self.volume * self.slider_width/100))
-                    for button, (width, height) in self.resolution_buttons:
-                        if button.check_input(mouse_pos):
-                            pygame.display.set_mode((width, height))
-                            self.W_WIDTH = width
-                            self.W_HEIGHT = height
-                            self.sX = width / BASE_WIDTH
-                            self.sY = height / BASE_HEIGHT
-                            self.recalculate_layout()
-                            slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
-                            self.volume_slider.x = slider_x
-                            break
+                    # Handle resolution dropdown
+                    self.resolution_dropdown.handle_event(event)
+                    if self.apply_button.check_input(mouse_pos):
+                        selected_res = self.resolution_dropdown.selected_option
+                        width, height = map(int, selected_res.split('x'))
+                        pygame.display.set_mode((width, height))
+                        self.W_WIDTH = width
+                        self.W_HEIGHT = height
+                        self.sX = width / BASE_WIDTH
+                        self.sY = height / BASE_HEIGHT
+                        self.recalculate_layout()
+                        slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
+                        self.volume_slider.x = slider_x
             elif self.current_scene == 'gameplay' and self.is_paused:
                 if self.resume_button.check_input(mouse_pos):
                     self.is_paused = False
