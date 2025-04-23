@@ -38,9 +38,22 @@ class Dropdown:
         
         # Draw dropdown options if open
         if self.is_open:
-            for i, option in enumerate(self.options):
-                option_rect = self.option_rects[i]
-                if i == self.hover_index:
+            # Get current selected index and reorder options
+            selected_index = self.options.index(self.selected_option)
+            reordered_options = self.options[selected_index:] + self.options[:selected_index]
+            
+            for i, option in enumerate(reordered_options):
+                if i == 0:  # Skip the selected option as it's already shown
+                    continue
+                    
+                option_rect = pygame.Rect(
+                    self.rect.x,
+                    self.rect.y + (i * self.option_height),
+                    self.rect.width,
+                    self.option_height
+                )
+                
+                if option == self.options[self.hover_index]:
                     pygame.draw.rect(surface, "#5a5a5a", option_rect, 0, border_radius=10)
                 else:
                     pygame.draw.rect(surface, "#4a4a4a", option_rect, 0, border_radius=10)
