@@ -115,9 +115,9 @@ class UI:
         total_width = button_spacing * 2  # Total width between first and last button
         center_x = self.W_WIDTH/2
         
-        self.easy_button.set_position((center_x - button_spacing, diff_y))
-        self.medium_button.set_position((center_x, diff_y))
-        self.hard_button.set_position((center_x + button_spacing, diff_y))
+        self.easy_button.set_position(((center_x - (self.easy_button.text.get_width()) // 2) - button_spacing, diff_y))
+        self.medium_button.set_position((center_x - (self.medium_button.text.get_width() // 2), diff_y))
+        self.hard_button.set_position((center_x - (self.hard_button.text.get_width() // 2) + button_spacing, diff_y))
 
         # Resolution section
         res_y = diff_y + int(100 * self.sY)
@@ -142,6 +142,7 @@ class UI:
             self.font,
             current_res
         )
+        
         
         # Create apply button
         self.apply_button = Button(

@@ -11,7 +11,7 @@ class Dropdown:
         text_height = font.render(options[0], True, "#ffffff").get_height()
         adjusted_height = text_height + self.padding_y
         
-        self.rect = pygame.Rect(x, y, width, adjusted_height)
+        self.rect = pygame.Rect(x, (y - (text_height + self.padding_y) // 2), width, adjusted_height)
         self.options = options
         self.font = font
         self.is_open = False
@@ -23,7 +23,7 @@ class Dropdown:
         self.option_rects = []
         for i in range(len(options)):
             # Start options below the button
-            y_pos = y + self.rect.height + (i * height)
+            y_pos = (y - (text_height + self.padding_y) // 2) + self.rect.height + (i * height)
             self.option_rects.append(
                 pygame.Rect(x, y_pos, width, height)
             )

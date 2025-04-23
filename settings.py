@@ -10,7 +10,8 @@ BASE_HEIGHT = 720
 RESOLUTIONS = [
     (960, 540),
     (1280, 720),
-    (1600, 900)
+    (1600, 900),
+    (1920, 1080)
 ]
 
 # Current window size
