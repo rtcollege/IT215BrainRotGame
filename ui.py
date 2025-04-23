@@ -127,7 +127,7 @@ class UI:
         for i, (button, _) in enumerate(self.resolution_buttons):
             button.update_font(self.font)
             button.set_position((
-                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2) * (button_spacing * 1.5),
+                self.W_WIDTH // 2 + (i - len(self.resolution_buttons)/2 + 0.5) * button_spacing,
                 res_y
             ))
 
