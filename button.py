@@ -7,7 +7,7 @@ class Button:
         self.x_pos = position[0]
         self.y_pos = position[1]
         self.font = font
-        self.base_color = "#ffffff"  # Light text color
+        self.base_color = "#4a4a4a"  # Darker base color
         self.hovering_color = "#b68f40"  # Warm gold hover color
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, self.base_color)
