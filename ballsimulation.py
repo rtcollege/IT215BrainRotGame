@@ -1,4 +1,3 @@
-
 import pygame
 import pygame.gfxdraw
 from math import sin, cos, radians, degrees
@@ -48,7 +47,7 @@ class BallSimulation:
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
-        
+
         # Create spawn button
         from pygame.font import Font
         font = Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
@@ -69,7 +68,7 @@ class BallSimulation:
         self.angle = (self.angle + self.rotation_speed) % 360
         start_angle = radians(self.angle)
         end_angle = radians((self.angle + 330) % 360)  # 330 degrees creates a 30-degree gap
-        
+
         # Draw arc with scaled thickness
         for i in range(self.line_thickness):
             pygame.gfxdraw.arc(self.display_surface, 
@@ -87,7 +86,7 @@ class BallSimulation:
             dx = ball.x - self.center_x
             dy = ball.y - self.center_y
             distance = (dx * dx + dy * dy) ** 0.5
-            
+
             if distance > self.radius - ball.radius:
                 # Simple bounce
                 angle = degrees(cos(dx / distance))
@@ -96,19 +95,19 @@ class BallSimulation:
                 # Move ball back to circle boundary
                 ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
                 ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
-            
+
             # Remove balls that are too far outside
             if distance > self.radius * 2:
                 self.balls.remove(ball)
                 continue
-                
+
             ball.draw(self.display_surface)
 
         # Update and draw spawn button
         self.spawn_button.update(self.display_surface)
         mouse_pos = pygame.mouse.get_pos()
         self.spawn_button.change_color(mouse_pos)
-        
+
         # Check for button click
         if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
             self.spawn_ball()
