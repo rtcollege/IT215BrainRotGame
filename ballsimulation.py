@@ -2,6 +2,27 @@
 import pygame
 import pygame.gfxdraw
 from math import sin, cos, radians, degrees
+import random
+from button import Button
+
+class Ball:
+    def __init__(self, x, y, radius):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        angle = random.uniform(0, 2 * 3.14159)  # Random direction
+        speed = random.uniform(1, 3)  # Random initial speed
+        self.vel_x = cos(angle) * speed
+        self.vel_y = sin(angle) * speed
+        self.gravity = 0.5
+
+    def update(self, dt):
+        self.vel_y += self.gravity * dt
+        self.x += self.vel_x * dt * 60
+        self.y += self.vel_y * dt * 60
+
+    def draw(self, surface):
+        pygame.draw.circle(surface, (255, 255, 255), (int(self.x), int(self.y)), self.radius)
 
 class BallSimulation:
     def __init__(self, display_surface, sX, sY):
@@ -13,6 +34,8 @@ class BallSimulation:
         self.angle = 0
         self.rotation_speed = 2
         self.color = (182, 143, 64)  # RGB values for #b68f40
+        self.balls = []
+        self.spawn_button = None
         self.recalculate_layout(sX, sY)
 
     def recalculate_layout(self, sX, sY):
@@ -25,6 +48,16 @@ class BallSimulation:
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
+        
+        # Create spawn button
+        from pygame.font import Font
+        font = Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
+        self.spawn_button = Button(None, 
+                                 (self.box_x, self.box_y + self.box_height + 20), 
+                                 "Spawn Ball", 
+                                 font, 
+                                 "white", 
+                                 "#b68f40")
 
     def update(self, dt, sX, sY):
         # Draw container box with scaled thickness
@@ -46,3 +79,41 @@ class BallSimulation:
                             int(degrees(start_angle)), 
                             int(degrees(end_angle)), 
                             self.color)
+
+        # Update and draw balls
+        for ball in self.balls[:]:
+            ball.update(dt)
+            # Check collision with circle
+            dx = ball.x - self.center_x
+            dy = ball.y - self.center_y
+            distance = (dx * dx + dy * dy) ** 0.5
+            
+            if distance > self.radius - ball.radius:
+                # Simple bounce
+                angle = degrees(cos(dx / distance))
+                ball.vel_x *= -0.8
+                ball.vel_y *= -0.8
+                # Move ball back to circle boundary
+                ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
+                ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
+            
+            # Remove balls that are too far outside
+            if distance > self.radius * 2:
+                self.balls.remove(ball)
+                continue
+                
+            ball.draw(self.display_surface)
+
+        # Update and draw spawn button
+        self.spawn_button.update(self.display_surface)
+        mouse_pos = pygame.mouse.get_pos()
+        self.spawn_button.change_color(mouse_pos)
+        
+        # Check for button click
+        if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
+            self.spawn_ball()
+
+    def spawn_ball(self):
+        ball_radius = int(10 * min(SCALE_X, SCALE_Y))
+        new_ball = Ball(self.center_x, self.center_y, ball_radius)
+        self.balls.append(new_ball)
