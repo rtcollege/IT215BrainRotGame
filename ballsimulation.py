@@ -2,10 +2,9 @@
 import pygame
 import pygame.gfxdraw
 from math import sin, cos, radians, degrees
-from settings import SCALE_X, SCALE_Y
 
 class BallSimulation:
-    def __init__(self, display_surface):
+    def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
         self.base_radius = 100
         self.base_box_width = 200
@@ -14,24 +13,24 @@ class BallSimulation:
         self.angle = 0
         self.rotation_speed = 2
         self.color = (182, 143, 64)  # RGB values for #b68f40
-        self.recalculate_layout()
+        self.recalculate_layout(sX, sY)
 
-    def recalculate_layout(self):
+    def recalculate_layout(self, sX, sY):
         # Scale all dimensions
-        self.radius = int(self.base_radius * min(SCALE_X, SCALE_Y))
-        self.box_width = int(self.base_box_width * SCALE_X)
-        self.box_height = int(self.base_box_height * SCALE_Y)
-        self.box_x = int(self.base_box_x * SCALE_X)
+        self.radius = int(self.base_radius * min(sX, sY))
+        self.box_width = int(self.base_box_width * sX)
+        self.box_height = int(self.base_box_height * sY)
+        self.box_x = int(self.base_box_x * sX)
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
-        self.line_thickness = max(1, int(3 * min(SCALE_X, SCALE_Y)))
+        self.line_thickness = max(1, int(3 * min(sX, sY)))
 
-    def update(self, dt):
+    def update(self, dt, sX, sY):
         # Draw container box with scaled thickness
         pygame.draw.rect(self.display_surface, '#cccccc', 
                         (self.box_x, self.box_y, self.box_width, self.box_height), 
-                        max(1, int(1 * min(SCALE_X, SCALE_Y))))
+                        max(1, int(1 * min(sX, sY))))
 
         # Update angle and draw hollow circle with cutout
         self.angle = (self.angle + self.rotation_speed) % 360

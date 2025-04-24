@@ -3,6 +3,7 @@ from timer import Timer
 from button import Button
 from dropdown import Dropdown
 from math import sin, cos, radians
+from ballsimulation import BallSimulation
 
 class UI:
     def __init__(self, font, frames):
@@ -12,18 +13,19 @@ class UI:
         self.frames = frames # Initialize frames here
         
         # Initialize ball simulation
-        from ballsimulation import BallSimulation
-        self.ball_sim = BallSimulation(self.display_surface)
-        self.ball_sim.recalculate_layout()  # Initial layout calculation
         self.current_scene = 'main_menu'
         self.previous_scene = 'main_menu'
         self.is_paused = False
         self.difficulty = 'medium'
-        self.volume = 50
+        self.volume = 75
         self.W_WIDTH = WINDOW_WIDTH
         self.W_HEIGHT = WINDOW_HEIGHT
         self.sX = SCALE_X
         self.sY = SCALE_Y
+        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY)
+        self.ball_sim.recalculate_layout(self.sX, self.sY)  # Initial layout calculation
+
+
 
         # Create default font objects (will be scaled later)
         self.font = font
@@ -190,6 +192,9 @@ class UI:
             self.credits_texts.append(text)
             self.credits_rects.append(rect)
 
+        # Recalculate ball simulation layout
+        self.ball_sim.recalculate_layout(self.sX, self.sY)
+
 
 
     def update(self, dt):
@@ -284,7 +289,7 @@ class UI:
 
         elif self.current_scene == 'gameplay':
             if not self.is_paused:
-                self.ball_sim.update(dt)
+                self.ball_sim.update(dt, self.sX, self.sY)
 
             if self.is_paused:
                 # Draw semi-transparent overlay
