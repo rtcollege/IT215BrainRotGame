@@ -1,6 +1,7 @@
 
 import pygame
-from math import sin, cos, radians
+import pygame.gfxdraw
+from math import sin, cos, radians, degrees
 
 class BallSimulation:
     def __init__(self, display_surface):
@@ -33,4 +34,25 @@ class BallSimulation:
             self.radius * 2, 
             self.radius * 2
         )
-        pygame.draw.arc(self.display_surface, self.color, rect, start_angle, end_angle, 3)
+        # Draw anti-aliased arc
+        pygame.gfxdraw.arc(self.display_surface, 
+                          self.center_x, 
+                          self.center_y, 
+                          self.radius, 
+                          int(degrees(start_angle)), 
+                          int(degrees(end_angle)), 
+                          self.color)
+        pygame.gfxdraw.arc(self.display_surface, 
+                          self.center_x, 
+                          self.center_y, 
+                          self.radius-1, 
+                          int(degrees(start_angle)), 
+                          int(degrees(end_angle)), 
+                          self.color)
+        pygame.gfxdraw.arc(self.display_surface, 
+                          self.center_x, 
+                          self.center_y, 
+                          self.radius-2, 
+                          int(degrees(start_angle)), 
+                          int(degrees(end_angle)), 
+                          self.color)
