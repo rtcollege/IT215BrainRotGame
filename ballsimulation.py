@@ -1,6 +1,6 @@
 import pygame
 import pygame.gfxdraw
-from math import sin, cos, radians, degrees
+from math import sin, cos, radians, degrees, atan2
 import random
 from button import Button
 
@@ -88,13 +88,25 @@ class BallSimulation:
             distance = (dx * dx + dy * dy) ** 0.5
 
             if distance > self.radius - ball.radius:
-                # Simple bounce
-                angle = degrees(cos(dx / distance))
-                ball.vel_x *= -0.8
-                ball.vel_y *= -0.8
-                # Move ball back to circle boundary
-                ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
-                ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
+                # Calculate angle of ball relative to circle center
+                ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
+                # Check if ball is not in the gap (gap is 30 degrees)
+                gap_start = self.angle
+                gap_end = (self.angle + 30) % 360
+                in_gap = False
+                
+                if gap_start < gap_end:
+                    in_gap = gap_start <= ball_angle <= gap_end
+                else:  # Gap crosses 0 degrees
+                    in_gap = ball_angle >= gap_start or ball_angle <= gap_end
+                
+                if not in_gap:
+                    # Simple bounce
+                    ball.vel_x *= -0.8
+                    ball.vel_y *= -0.8
+                    # Move ball back to circle boundary
+                    ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
+                    ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
 
             
             # Remove balls that are too far outside
