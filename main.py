@@ -1,10 +1,11 @@
+
 from settings import *
 from data import Data
 from debug import debug
 from ui import UI
 
 
-class Game:
+class Main:
     def __init__(self):
         # Initialize Pygame
         pygame.init()
@@ -61,5 +62,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game()
-    game.run()
+    main = Main()
+    main.run()
