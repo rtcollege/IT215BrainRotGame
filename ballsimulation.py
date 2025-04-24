@@ -13,7 +13,7 @@ class Ball:
         speed = random.uniform(1, 3)
         self.vel_x = cos(angle) * speed
         self.vel_y = sin(angle) * speed
-        self.gravity = 1
+        self.gravity = 3
         # Store grid cell for spatial partitioning
         self.cell_x = 0
         self.cell_y = 0
