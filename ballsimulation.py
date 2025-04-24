@@ -5,9 +5,9 @@ from math import sin, cos, radians
 class BallSimulation:
     def __init__(self, display_surface):
         self.display_surface = display_surface
-        self.radius = 30
-        self.box_width = 200
-        self.box_height = 300
+        self.radius = 50
+        self.box_width = 150
+        self.box_height = 200
         self.box_x = 50
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
