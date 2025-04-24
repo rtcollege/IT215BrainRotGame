@@ -6,10 +6,10 @@ from math import sin, cos, radians, degrees
 class BallSimulation:
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
-        self.base_radius = 100
-        self.base_box_width = 200
-        self.base_box_height = 300
-        self.base_box_x = 50
+        self.base_radius = 150
+        self.base_box_width = int(display_surface.get_width() * 2/3)
+        self.base_box_height = int(display_surface.get_height() * 2/3)
+        self.base_box_x = (display_surface.get_width() - int(display_surface.get_width() * 2/3)) // 2
         self.angle = 0
         self.rotation_speed = 2
         self.color = (182, 143, 64)  # RGB values for #b68f40
