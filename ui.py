@@ -289,7 +289,7 @@ class UI:
                 # Draw semi-transparent overlay
                 overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
                 overlay.fill((0, 0, 0))
-                overlay.set_alpha(128)
+                overlay.set_alpha(96)  # Reduced opacity from 128 to 96
                 self.display_surface.blit(overlay, (0, 0))
 
                 # Draw pause menu
