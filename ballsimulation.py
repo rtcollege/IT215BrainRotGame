@@ -96,8 +96,12 @@ class BallSimulation:
                 ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
                 ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
 
-            # Remove balls that are too far outside
-            if distance > self.radius * 2:
+            # Check if ball is in the gap
+            angle_deg = (degrees(cos(dx / distance)) + 360) % 360
+            in_gap = abs(angle_deg - self.angle) < 30
+
+            # Remove balls that are outside and in gap, or too far outside
+            if (distance > self.radius and in_gap) or distance > self.radius * 2:
                 self.balls.remove(ball)
                 continue
 
@@ -108,9 +112,12 @@ class BallSimulation:
         mouse_pos = pygame.mouse.get_pos()
         self.spawn_button.change_color(mouse_pos)
 
-        # Check for button click
-        if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
-            self.spawn_ball(sX, sY)
+        # Check for button click using mousebuttondown event
+        self.spawn_button.update(self.display_surface)
+        
+    def handle_click(self, mouse_pos):
+        if self.spawn_button.check_input(mouse_pos):
+            self.spawn_ball()
 
     def spawn_ball(self):
         ball_radius = int(10 * min(self.display_surface.get_width()/1920, self.display_surface.get_height()/1080))
