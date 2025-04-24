@@ -1,3 +1,4 @@
+
 import pygame
 import pygame.gfxdraw
 from math import sin, cos, radians, degrees, atan2
@@ -9,11 +10,14 @@ class Ball:
         self.x = x
         self.y = y
         self.radius = radius
-        angle = random.uniform(0, 2 * 3.14159)  # Random direction
-        speed = random.uniform(1, 3)  # Random initial speed
+        angle = random.uniform(0, 2 * 3.14159)
+        speed = random.uniform(1, 3)
         self.vel_x = cos(angle) * speed
         self.vel_y = sin(angle) * speed
         self.gravity = 1
+        # Store grid cell for spatial partitioning
+        self.cell_x = 0
+        self.cell_y = 0
 
     def update(self, dt):
         self.vel_y += self.gravity * dt
@@ -27,18 +31,50 @@ class BallSimulation:
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
         self.base_radius = 150
-        self.base_box_width = int(display_surface.get_width() / 3)  # One third of screen width
-        self.base_box_height = int(display_surface.get_height() * 2/3 + display_surface.get_height() // 6)  # Two thirds of screen height
-        self.base_box_x = 50  # Fixed left position
+        self.base_box_width = int(display_surface.get_width() / 3)
+        self.base_box_height = int(display_surface.get_height() * 2/3 + display_surface.get_height() // 6)
+        self.base_box_x = 50
         self.angle = 0
         self.rotation_speed = 2
-        self.color = (182, 143, 64)  # RGB values for #b68f40
+        self.color = (182, 143, 64)
         self.balls = []
         self.spawn_button = None
+        
+        # Grid parameters for spatial partitioning
+        self.cell_size = 50  # Size of each grid cell
+        self.grid = {}  # Dictionary to store balls in grid cells
+        
         self.recalculate_layout(sX, sY)
+        
+        # Precalculate sin/cos values for rotation
+        self.angle_cache = {}
+        for angle in range(360):
+            rad = radians(angle)
+            self.angle_cache[angle] = (cos(rad), sin(rad))
+
+    def get_grid_pos(self, x, y):
+        return (int(x // self.cell_size), int(y // self.cell_size))
+
+    def update_grid(self):
+        self.grid.clear()
+        for ball in self.balls:
+            cell_x, cell_y = self.get_grid_pos(ball.x, ball.y)
+            ball.cell_x, ball.cell_y = cell_x, cell_y
+            cell_key = (cell_x, cell_y)
+            if cell_key not in self.grid:
+                self.grid[cell_key] = []
+            self.grid[cell_key].append(ball)
+
+    def get_nearby_balls(self, ball):
+        nearby = []
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                cell_key = (ball.cell_x + dx, ball.cell_y + dy)
+                if cell_key in self.grid:
+                    nearby.extend(self.grid[cell_key])
+        return nearby
 
     def recalculate_layout(self, sX, sY):
-        # Scale all dimensions
         self.radius = int(self.base_radius * min(sX, sY))
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
@@ -48,7 +84,6 @@ class BallSimulation:
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
 
-        # Create spawn button
         from pygame.font import Font
         font = Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
         self.spawn_button = Button(None, 
@@ -59,69 +94,61 @@ class BallSimulation:
                                  "#b68f40")
 
     def update(self, dt, sX, sY):
-        # Draw container box with scaled thickness
         pygame.draw.rect(self.display_surface, '#cccccc', 
                         (self.box_x, self.box_y, self.box_width, self.box_height), 
                         max(1, int(1 * min(sX, sY))))
 
-        # Update angle and draw hollow circle with cutout
+        # Update rotating circle
         self.angle = (self.angle + self.rotation_speed) % 360
-        start_angle = radians(self.angle)
-        end_angle = radians((self.angle + 330) % 360)  # 330 degrees creates a 30-degree gap
-
-        # Draw arc with scaled thickness
+        cos_val, sin_val = self.angle_cache[self.angle]
+        
+        # Draw arc efficiently
         for i in range(self.line_thickness):
             pygame.gfxdraw.arc(self.display_surface, 
                             self.center_x, 
                             self.center_y, 
                             self.radius - i, 
-                            int(degrees(start_angle)), 
-                            int(degrees(end_angle)), 
+                            self.angle, 
+                            (self.angle + 330) % 360, 
                             self.color)
 
-        # Update and draw balls
-        for ball in self.balls[:]:
+        # Update ball positions and grid
+        for ball in self.balls:
             ball.update(dt)
-            # Check collision with circle
+        self.update_grid()
+
+        # Check collisions using spatial partitioning
+        for ball in self.balls[:]:
             dx = ball.x - self.center_x
             dy = ball.y - self.center_y
-            distance = (dx * dx + dy * dy) ** 0.5
-
-            if distance > self.radius - ball.radius:
-                # Calculate angle of ball relative to circle center
+            distance_sq = dx * dx + dy * dy
+            radius_diff = self.radius - ball.radius
+            
+            if distance_sq > radius_diff * radius_diff:
                 ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
-                # Check if ball is not in the gap (gap is 30 degrees)
                 gap_start = self.angle
                 gap_end = (self.angle + 30) % 360
-                in_gap = False
                 
-                if gap_start < gap_end:
-                    in_gap = gap_start <= ball_angle <= gap_end
-                else:  # Gap crosses 0 degrees
-                    in_gap = ball_angle >= gap_start or ball_angle <= gap_end
+                in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
+                        (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
                 
                 if not in_gap:
-                    # Simple bounce
                     ball.vel_x *= -0.8
                     ball.vel_y *= -0.8
-                    # Move ball back to circle boundary
-                    ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
-                    ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
+                    distance = distance_sq ** 0.5
+                    ball.x = self.center_x + (dx / distance) * radius_diff
+                    ball.y = self.center_y + (dy / distance) * radius_diff
 
-            
-            # Remove balls that are too far outside
-            if distance > self.radius * 2:
+            if distance_sq > (self.radius * 2) * (self.radius * 2):
                 self.balls.remove(ball)
                 continue
 
             ball.draw(self.display_surface)
 
-        # Update and draw spawn button
         self.spawn_button.update(self.display_surface)
         mouse_pos = pygame.mouse.get_pos()
         self.spawn_button.change_color(mouse_pos)
 
-        # Check for button click
         if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
             self.spawn_ball(sX, sY)
 
