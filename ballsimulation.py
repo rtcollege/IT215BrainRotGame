@@ -34,7 +34,7 @@ class BallSimulation:
         self.base_box_height = int(display_surface.get_height() * 2/3 + display_surface.get_height() // 6)
         self.base_box_x = 50
         self.angle = 0
-        self.rotation_speed = 2
+        self.rotation_speed = 1
         self.color = (182, 143, 64)
         self.balls = []
         self.circles = [{'radius': self.base_radius, 'active': True}] # Initialize with one circle
