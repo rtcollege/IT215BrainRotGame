@@ -40,6 +40,8 @@ class BallSimulation:
         self.circles = [{'radius': self.base_radius, 'active': True}] # Initialize with one circle
         self.spawn_button = None
         self.add_circle_button = None # Add a button for adding circles
+        self.spawn_pressed = False
+        self.circle_pressed = False
 
         # Grid parameters for spatial partitioning
         self.cell_size = 50  # Size of each grid cell
@@ -160,11 +162,17 @@ class BallSimulation:
         self.add_circle_button.change_color(mouse_pos) # Change color for new button
 
 
-        if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
-            self.spawn_ball(sX, sY)
-
-        if pygame.mouse.get_pressed()[0] and self.add_circle_button.check_input(mouse_pos):
-            self.add_circle(sX, sY)
+        mouse_pressed = pygame.mouse.get_pressed()[0]
+        if mouse_pressed:
+            if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
+                self.spawn_ball(sX, sY)
+                self.spawn_pressed = True
+            if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
+                self.add_circle(sX, sY)
+                self.circle_pressed = True
+        else:
+            self.spawn_pressed = False
+            self.circle_pressed = False
 
 
     def spawn_ball(self, sX, sY):
