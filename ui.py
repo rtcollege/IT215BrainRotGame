@@ -11,18 +11,9 @@ class UI:
         self.base_font_size = 40
         self.frames = frames # Initialize frames here
         
-        # Ball simulation properties
-        self.radius = 30
-        self.box_width = 200
-        self.box_height = 300
-        self.box_x = 50
-        self.box_y = (self.display_surface.get_height() - self.box_height) // 2
-        self.center_x = self.box_x + self.box_width // 2
-        self.center_y = self.box_y + self.box_height // 2
-        self.angle = 0
-        self.rotation_speed = 2
-        self.ball_color = '#b68f40'
-        self.orbit_radius = 20
+        # Initialize ball simulation
+        from ballsimulation import BallSimulation
+        self.ball_sim = BallSimulation(self.display_surface)
         self.current_scene = 'main_menu'
         self.previous_scene = 'main_menu'
         self.is_paused = False
@@ -292,15 +283,7 @@ class UI:
 
         elif self.current_scene == 'gameplay':
             if not self.is_paused:
-                # Draw container box
-                pygame.draw.rect(self.display_surface, 'white', 
-                               (self.box_x, self.box_y, self.box_width, self.box_height), 2)
-
-                # Update angle and draw ball
-                self.angle = (self.angle + self.rotation_speed) % 360
-                orbit_x = self.center_x + cos(radians(self.angle)) * self.orbit_radius
-                orbit_y = self.center_y + sin(radians(self.angle)) * self.orbit_radius
-                pygame.draw.circle(self.display_surface, self.ball_color, (orbit_x, orbit_y), self.radius)
+                self.ball_sim.update(dt)
 
             if self.is_paused:
                 # Draw semi-transparent overlay
