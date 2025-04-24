@@ -20,9 +20,10 @@ class Main:
         # Load assets
         self.import_assets()
 
-        # Initialize UI
+        # Initialize UI and Game
         self.ui = UI(self.font, self.ui_frames)
         self.data = Data(self.ui)
+        self.game = Game(self.ui)
 
     def import_assets(self):
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 40)
@@ -57,6 +58,7 @@ class Main:
 
             # Update game state
             self.display_surface.fill("gray")
+            self.game.update(dt)
             self.ui.update(dt)
             pygame.display.update()
 
