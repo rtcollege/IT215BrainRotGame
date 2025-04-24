@@ -375,6 +375,9 @@ class UI:
                         self.recalculate_layout()
                         slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
                         self.volume_slider.x = slider_x
+            elif self.current_scene == 'gameplay':
+                if not self.is_paused and event.type == pygame.MOUSEBUTTONDOWN:
+                    self.ball_sim.handle_click(mouse_pos)
             elif self.current_scene == 'gameplay' and self.is_paused:
                 if self.resume_button.check_input(mouse_pos):
                     self.is_paused = False
