@@ -127,30 +127,45 @@ class BallSimulation:
 
         # Check collisions using spatial partitioning
         for ball in self.balls[:]:
-            has_collision = False
             for circle_data in self.circles:
                 if not circle_data['active']:
                     continue
+                    
                 dx = ball.x - self.center_x
                 dy = ball.y - self.center_y
                 distance_sq = dx * dx + dy * dy
                 radius_diff = circle_data['radius'] - ball.radius
-                if distance_sq <= radius_diff * radius_diff:
-                    has_collision = True
-                    break
-
-            if not has_collision:
+                
+                if distance_sq > radius_diff * radius_diff:
+                    # Calculate angle to check if ball is in gap
+                    ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
+                    gap_start = self.angle
+                    gap_end = (self.angle + 30) % 360
+                    
+                    in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
+                            (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
+                    
+                    if not in_gap:
+                        # Proper collision response
+                        distance = distance_sq ** 0.5
+                        normal_x = dx / distance
+                        normal_y = dy / distance
+                        
+                        # Calculate reflection
+                        dot_product = (ball.vel_x * normal_x + ball.vel_y * normal_y)
+                        ball.vel_x = (ball.vel_x - 2 * dot_product * normal_x) * 0.8
+                        ball.vel_y = (ball.vel_y - 2 * dot_product * normal_y) * 0.8
+                        
+                        # Prevent sticking by moving ball to circle boundary
+                        ball.x = self.center_x + normal_x * radius_diff
+                        ball.y = self.center_y + normal_y * radius_diff
+            
+            # Remove ball if it's too far from center
+            dx = ball.x - self.center_x
+            dy = ball.y - self.center_y
+            if (dx * dx + dy * dy) > (self.radius * 2) * (self.radius * 2):
                 self.balls.remove(ball)
                 continue
-
-
-            # Collision response (example - bounce)
-            ball.vel_x *= -1
-            ball.vel_y *= -1
-
-            # Move ball slightly to avoid sticking
-            ball.x += ball.vel_x * 0.1
-            ball.y += ball.vel_y * 0.1
 
             ball.draw(self.display_surface)
 
