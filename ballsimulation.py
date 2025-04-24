@@ -8,7 +8,7 @@ class BallSimulation:
         self.display_surface = display_surface
         self.base_radius = 150
         self.base_box_width = int(display_surface.get_width() / 3)  # One third of screen width
-        self.base_box_height = int(display_surface.get_height() * 2/3)  # Two thirds of screen height
+        self.base_box_height = int(display_surface.get_height() * 2/3 + display_surface.get_height() // 6)  # Two thirds of screen height
         self.base_box_x = 50  # Fixed left position
         self.angle = 0
         self.rotation_speed = 2
