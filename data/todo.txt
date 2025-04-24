@@ -1,0 +1,10 @@
+Music:
+  Main Menu
+  
+  After Play button is clicked
+  
+  Dr. Wolf Intro
+  
+  Dr. Wolf Fight
+  
+  Credits
