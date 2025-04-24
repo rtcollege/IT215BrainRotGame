@@ -15,7 +15,7 @@ class BallSimulation:
         self.center_y = self.box_y + self.box_height // 2
         self.angle = 0
         self.rotation_speed = 2
-        self.color = '#b68f40'
+        self.color = (182, 143, 64)  # RGB values for #b68f40
 
     def update(self, dt):
         # Draw container box
