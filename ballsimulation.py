@@ -37,7 +37,9 @@ class BallSimulation:
         self.rotation_speed = 2
         self.color = (182, 143, 64)
         self.balls = []
+        self.circles = [{'radius': self.base_radius, 'active': True}] # Initialize with one circle
         self.spawn_button = None
+        self.add_circle_button = None # Add a button for adding circles
 
         # Grid parameters for spatial partitioning
         self.cell_size = 50  # Size of each grid cell
@@ -91,6 +93,8 @@ class BallSimulation:
                                  font, 
                                  "white", 
                                  "#b68f40")
+        self.add_circle_button = Button(None, (self.box_x + self.spawn_button.rect.width + 20, self.box_y + self.box_height + 20), "Add Circle", font, "white", "#b68f40")
+
 
     def update(self, dt, sX, sY):
         pygame.draw.rect(self.display_surface, '#cccccc', 
@@ -103,65 +107,74 @@ class BallSimulation:
 
         # Draw arc efficiently
         for i in range(self.line_thickness):
-            pygame.gfxdraw.arc(self.display_surface, 
-                            self.center_x, 
-                            self.center_y, 
-                            self.radius - i, 
-                            self.angle, 
-                            (self.angle + 330) % 360, 
-                            self.color)
+            for circle in self.circles:
+                if circle['active']:
+                    pygame.gfxdraw.arc(self.display_surface, 
+                                    self.center_x, 
+                                    self.center_y, 
+                                    circle['radius'] - i, 
+                                    self.angle, 
+                                    (self.angle + 330) % 360, 
+                                    self.color)
 
         # Update ball positions and grid
-        for ball in self.balls:
+        for ball in self.balls[:]:
             ball.update(dt)
+            
         self.update_grid()
 
         # Check collisions using spatial partitioning
         for ball in self.balls[:]:
-            dx = ball.x - self.center_x
-            dy = ball.y - self.center_y
-            distance_sq = dx * dx + dy * dy
-            radius_diff = self.radius - ball.radius
+            has_collision = False
+            for circle_data in self.circles:
+                if not circle_data['active']:
+                    continue
+                dx = ball.x - self.center_x
+                dy = ball.y - self.center_y
+                distance_sq = dx * dx + dy * dy
+                radius_diff = circle_data['radius'] - ball.radius
+                if distance_sq <= radius_diff * radius_diff:
+                    has_collision = True
+                    break
 
-            if distance_sq > radius_diff * radius_diff:
-                ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
-                gap_start = self.angle
-                gap_end = (self.angle + 30) % 360
-
-                in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
-                        (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
-
-                if not in_gap:
-                    # Calculate normal vector at collision point
-                    distance = (dx * dx + dy * dy) ** 0.5
-                    normal_x = dx / distance
-                    normal_y = dy / distance
-
-                    # Calculate relative velocity
-                    dot_product = (ball.vel_x * normal_x + ball.vel_y * normal_y) * 2
-
-                    # Update velocity (reflect)
-                    ball.vel_x = (ball.vel_x - dot_product * normal_x) * 0.8
-                    ball.vel_y = (ball.vel_y - dot_product * normal_y) * 0.8
-
-                    # Move ball back to circle boundary
-                    ball.x = self.center_x + normal_x * (self.radius - ball.radius)
-                    ball.y = self.center_y + normal_y * (self.radius - ball.radius)
-
-            if distance_sq > (self.radius * 2) * (self.radius * 2):
+            if not has_collision:
                 self.balls.remove(ball)
                 continue
 
+
+            # Collision response (example - bounce)
+            ball.vel_x *= -1
+            ball.vel_y *= -1
+
+            # Move ball slightly to avoid sticking
+            ball.x += ball.vel_x * 0.1
+            ball.y += ball.vel_y * 0.1
+
             ball.draw(self.display_surface)
 
+
         self.spawn_button.update(self.display_surface)
+        self.add_circle_button.update(self.display_surface) # Update the new button
         mouse_pos = pygame.mouse.get_pos()
         self.spawn_button.change_color(mouse_pos)
+        self.add_circle_button.change_color(mouse_pos) # Change color for new button
+
 
         if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
             self.spawn_ball(sX, sY)
+
+        if pygame.mouse.get_pressed()[0] and self.add_circle_button.check_input(mouse_pos):
+            self.add_circle(sX, sY)
+
 
     def spawn_ball(self, sX, sY):
         ball_radius = int(10 * min(self.display_surface.get_width()/1920, self.display_surface.get_height()/1080))
         new_ball = Ball(self.center_x, self.center_y, ball_radius)
         self.balls.append(new_ball)
+
+    def add_circle(self, sX, sY):
+        if len(self.circles) >= 10:
+            return  # Limit to 10 circles
+
+        new_radius = max(10, self.circles[-1]['radius'] - 20)  # Reduce radius
+        self.circles.append({'radius': new_radius, 'active': True})
