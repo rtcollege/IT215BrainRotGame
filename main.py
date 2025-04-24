@@ -1,9 +1,7 @@
-
 from settings import *
 from data import Data
 from debug import debug
 from ui import UI
-from game import Game
 
 
 class Main:
@@ -21,10 +19,9 @@ class Main:
         # Load assets
         self.import_assets()
 
-        # Initialize UI and Game
+        # Initialize UI
         self.ui = UI(self.font, self.ui_frames)
         self.data = Data(self.ui)
-        self.game = Game(self.ui)
 
     def import_assets(self):
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 40)
@@ -44,7 +41,7 @@ class Main:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            
+
             # Pass events to UI
             self.ui.handle_events(event)
 
@@ -58,8 +55,8 @@ class Main:
             self.handle_events()
 
             # Update game state
+            self.display_surface.fill("gray")
             self.ui.update(dt)
-            self.game.update(dt)
             pygame.display.update()
 
 
