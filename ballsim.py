@@ -32,17 +32,3 @@ class BallSimulation:
 
         # Draw the ball
         pygame.draw.circle(self.display_surface, self.color, (orbit_x, orbit_y), self.radius)
-
-#Example usage (requires a pygame initialization)
-#pygame.init()
-#screen = pygame.display.set_mode((800, 600))
-#simulation = BallSimulation()
-#running = True
-#while running:
-#    for event in pygame.event.get():
-#        if event.type == pygame.QUIT:
-#            running = False
-#    screen.fill((0,0,0)) #Black background
-#    simulation.update(0) #dt =0 for simplicity
-#    pygame.display.flip()
-#pygame.quit()

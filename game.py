@@ -1,6 +1,6 @@
 
 import pygame
-from ballsimulation import BallSimulation
+from ballsim import BallSimulation
 
 class Game:
     def __init__(self, ui):
@@ -10,5 +10,5 @@ class Game:
         
     def update(self, dt):
         if self.ui.current_scene == 'gameplay' and not self.ui.is_paused:
-            # Update game elements
+            # Draw container box and ball
             self.ball_sim.update(dt)
