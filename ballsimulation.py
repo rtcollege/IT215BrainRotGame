@@ -110,9 +110,9 @@ class BallSimulation:
 
         # Check for button click
         if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
-            self.spawn_ball()
+            self.spawn_ball(sX, sY)
 
-    def spawn_ball(self):
-        ball_radius = int(10 * min(self.sX, self.sY))
+    def spawn_ball(self, sX, sY):
+        ball_radius = int(10 * min(sX, sY))
         new_ball = Ball(self.center_x, self.center_y, ball_radius)
         self.balls.append(new_ball)
