@@ -96,6 +96,7 @@ class BallSimulation:
                 ball.x = self.center_x + (dx / distance) * (self.radius - ball.radius)
                 ball.y = self.center_y + (dy / distance) * (self.radius - ball.radius)
 
+            
             # Remove balls that are too far outside
             if distance > self.radius * 2:
                 self.balls.remove(ball)
@@ -112,7 +113,7 @@ class BallSimulation:
         if pygame.mouse.get_pressed()[0] and self.spawn_button.check_input(mouse_pos):
             self.spawn_ball(sX, sY)
 
-    def spawn_ball(self):
+    def spawn_ball(self, sX, sY):
         ball_radius = int(10 * min(self.display_surface.get_width()/1920, self.display_surface.get_height()/1080))
         new_ball = Ball(self.center_x, self.center_y, ball_radius)
         self.balls.append(new_ball)
