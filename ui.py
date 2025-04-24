@@ -14,6 +14,7 @@ class UI:
         # Initialize ball simulation
         from ballsimulation import BallSimulation
         self.ball_sim = BallSimulation(self.display_surface)
+        self.ball_sim.recalculate_layout()  # Initial layout calculation
         self.current_scene = 'main_menu'
         self.previous_scene = 'main_menu'
         self.is_paused = False
