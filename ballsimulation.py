@@ -1,4 +1,3 @@
-
 import pygame
 import pygame.gfxdraw
 from math import sin, cos, radians, degrees, atan2
@@ -39,13 +38,13 @@ class BallSimulation:
         self.color = (182, 143, 64)
         self.balls = []
         self.spawn_button = None
-        
+
         # Grid parameters for spatial partitioning
         self.cell_size = 50  # Size of each grid cell
         self.grid = {}  # Dictionary to store balls in grid cells
-        
+
         self.recalculate_layout(sX, sY)
-        
+
         # Precalculate sin/cos values for rotation
         self.angle_cache = {}
         for angle in range(360):
@@ -101,7 +100,7 @@ class BallSimulation:
         # Update rotating circle
         self.angle = (self.angle + self.rotation_speed) % 360
         cos_val, sin_val = self.angle_cache[self.angle]
-        
+
         # Draw arc efficiently
         for i in range(self.line_thickness):
             pygame.gfxdraw.arc(self.display_surface, 
@@ -123,21 +122,31 @@ class BallSimulation:
             dy = ball.y - self.center_y
             distance_sq = dx * dx + dy * dy
             radius_diff = self.radius - ball.radius
-            
+
             if distance_sq > radius_diff * radius_diff:
                 ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
                 gap_start = self.angle
                 gap_end = (self.angle + 30) % 360
-                
+
                 in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
                         (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
-                
+
                 if not in_gap:
-                    ball.vel_x *= -0.8
-                    ball.vel_y *= -0.8
-                    distance = distance_sq ** 0.5
-                    ball.x = self.center_x + (dx / distance) * radius_diff
-                    ball.y = self.center_y + (dy / distance) * radius_diff
+                    # Calculate normal vector at collision point
+                    distance = (dx * dx + dy * dy) ** 0.5
+                    normal_x = dx / distance
+                    normal_y = dy / distance
+
+                    # Calculate relative velocity
+                    dot_product = (ball.vel_x * normal_x + ball.vel_y * normal_y) * 2
+
+                    # Update velocity (reflect)
+                    ball.vel_x = (ball.vel_x - dot_product * normal_x) * 0.8
+                    ball.vel_y = (ball.vel_y - dot_product * normal_y) * 0.8
+
+                    # Move ball back to circle boundary
+                    ball.x = self.center_x + normal_x * (self.radius - ball.radius)
+                    ball.y = self.center_y + normal_y * (self.radius - ball.radius)
 
             if distance_sq > (self.radius * 2) * (self.radius * 2):
                 self.balls.remove(ball)
