@@ -113,6 +113,6 @@ class BallSimulation:
             self.spawn_ball()
 
     def spawn_ball(self):
-        ball_radius = int(10 * min(SCALE_X, SCALE_Y))
+        ball_radius = int(10 * min(self.sX, self.sY))
         new_ball = Ball(self.center_x, self.center_y, ball_radius)
         self.balls.append(new_ball)
