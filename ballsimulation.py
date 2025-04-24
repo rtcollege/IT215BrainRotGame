@@ -13,7 +13,7 @@ class Ball:
         speed = random.uniform(1, 3)  # Random initial speed
         self.vel_x = cos(angle) * speed
         self.vel_y = sin(angle) * speed
-        self.gravity = 0.5
+        self.gravity = 1
 
     def update(self, dt):
         self.vel_y += self.gravity * dt
