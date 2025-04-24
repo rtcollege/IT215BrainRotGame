@@ -58,9 +58,8 @@ class Main:
             self.handle_events()
 
             # Update game state
-            self.display_surface.fill("gray")
-            self.game.update(dt)
             self.ui.update(dt)
+            self.game.update(dt)
             pygame.display.update()
 
 
