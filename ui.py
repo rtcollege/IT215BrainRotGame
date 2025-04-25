@@ -1,21 +1,3 @@
-
-class Circle:
-    def __init__(self, radius, active=True):
-        self.radius = radius
-        self.active = active
-
-    def draw(self, surface, center_x, center_y, line_thickness, angle, color, gfxdraw):
-        if self.active:
-            for i in range(line_thickness):
-                gfxdraw.arc(surface, 
-                           center_x, 
-                           center_y, 
-                           self.radius - i, 
-                           angle, 
-                           (angle + 330) % 360, 
-                           color)
-
-
 from settings import *
 from data import Data
 from debug import debug
@@ -431,6 +413,23 @@ class Ball:
     def draw(self, surface):
         pygame.draw.circle(surface, (255, 255, 255), (int(self.x), int(self.y)), self.radius)
 
+class Circle:
+    def __init__(self, radius, active=True):
+        self.radius = radius
+        self.active = active
+
+    def draw(self, surface, center_x, center_y, line_thickness, angle, color, gfxdraw):
+        if self.active:
+            for i in range(line_thickness):
+                gfxdraw.arc(surface, 
+                           center_x, 
+                           center_y, 
+                           self.radius - i, 
+                           angle, 
+                           (angle + 330) % 360, 
+                           color)
+
+
 class BallSimulation:
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
@@ -445,7 +444,6 @@ class BallSimulation:
         self.balls = []
         self.circles = []  # Initialize empty
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
-        import pygame.gfxdraw
 
         self.spawn_button = Button(None, 
              (0,0), 
