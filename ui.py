@@ -388,10 +388,10 @@ class UI:
         right_edge = left_edge + self.slider_width
         clamped_x = max(left_edge, min(right_edge, mouse_x))
         relative_x = clamped_x - left_edge
-        self.volume = (relative_x / self.slider_width) * 100
+        self.volume = ((relative_x / self.slider_width) * 100)
         self.volume = max(0, min(100, self.volume))
         # Update slider position
-        self.volume_slider.x = left_edge + (self.volume * self.slider_width / 100)
+        self.volume_slider.x = int(left_edge + (self.volume * self.slider_width / 100) - self.volume_slider.width // 2)
 
     def handle_settings_click(self, mouse_pos):
         if self.back_button.check_input(mouse_pos):
