@@ -468,6 +468,8 @@ class BallSimulation:
 
     def recalculate_layout(self, sX, sY):
         """Recalculate simulation layout"""
+        self.sX = sX
+        self.sY = sY
         self.radius = int(self.base_radius * min(sX, sY))
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
