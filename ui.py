@@ -82,6 +82,19 @@ class UI:
         button_y_spacing = int(100 * self.sY)
 
         # Update main menu buttons
+
+    def update_volume_slider(self):
+        """Update volume slider position based on current volume"""
+        volume_y = int(250 * self.sY)
+        slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int(
+            (self.volume / 100) * self.slider_width)
+        self.volume_slider = pygame.Rect(
+            slider_x,
+            volume_y - int(5 * self.sY),
+            int(20 * self.sX),
+            int(30 * self.sY)
+        )
+
         menu_buttons = [self.play_button, self.settings_button, 
                        self.credits_button, self.quit_button]
         for i, button in enumerate(menu_buttons):
@@ -135,14 +148,8 @@ class UI:
             int(20 * self.sY)
         )
 
-        slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int(
-            (self.volume / 100) * self.slider_width)
-        self.volume_slider = pygame.Rect(
-            slider_x,
-            volume_y - int(5 * self.sY),
-            int(20 * self.sX),
-            int(30 * self.sY)
-        )
+        # Update volume slider position
+        self.update_volume_slider()
 
     def setup_difficulty_buttons(self, button_x):
         """Set up difficulty selection buttons"""
@@ -345,11 +352,10 @@ class UI:
             self.difficulty = 'medium'
         elif self.hard_button.check_input(mouse_pos):
             self.difficulty = 'hard'
-        elif self.volume_rect.collidepoint(mouse_pos):
-            self.volume = (mouse_pos[0] - (self.W_WIDTH / 2 - self.slider_width / 2)) / (self.slider_width / 100)
+        elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+            self.volume = ((mouse_pos[0] - (self.W_WIDTH / 2 - self.slider_width / 2)) / self.slider_width) * 100
             self.volume = max(0, min(100, self.volume))
-            slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume * self.slider_width / 100))
-            self.volume_slider.x = slider_x
+            self.update_volume_slider()
         elif self.apply_button.check_input(mouse_pos):
             selected_res = self.resolution_dropdown.selected_option
             width, height = map(int, selected_res.split('x'))
@@ -382,6 +388,14 @@ class UI:
         """Switch to a new scene"""
         self.previous_scene = self.current_scene
         self.current_scene = new_scene
+        
+        # Update back button position for different scenes
+        button_x = int(50 * self.sX)
+        button_y_start = int(300 * self.sY)
+        button_y_spacing = int(100 * self.sY)
+        
+        if new_scene in ['settings', 'credits']:
+            self.back_button.set_position((button_x, button_y_start + 3 * button_y_spacing))
 
 
 class BallSimulation:
