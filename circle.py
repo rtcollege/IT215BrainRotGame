@@ -8,7 +8,7 @@ class Circle:
         self.active = active
         self.angle = random.randint(0, 360)
         self.rotation_speed = random.uniform(0.5, 2.0)
-        self.gap_size = min(120, 30 + (radius / 2))
+        self.gap_size = min(90, 30 + (radius / 2))
 
     def update(self, dt):
         self.angle = (self.angle + self.rotation_speed) % 360
