@@ -445,7 +445,7 @@ class Circle:
 class BallSimulation:
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
-        self.base_radius = 150
+        self.base_radius = 200  # Increased base radius
         self.base_padding = 100  # Padding around the circle
         self.base_box_width = self.base_radius * 2 + self.base_padding
         self.base_box_height = self.base_radius * 2 + self.base_padding
