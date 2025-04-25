@@ -535,16 +535,17 @@ class BallSimulation:
                 in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
                         (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
 
-                if distance < radius_diff and not in_gap:
-                    normal_x = dx / distance
-                    normal_y = dy / distance
+                if distance > radius_diff and not in_gap:
+                    normal_x = -dx / distance  # Invert normal for correct bounce direction
+                    normal_y = -dy / distance
 
                     dot_product = (ball.vel_x * normal_x + ball.vel_y * normal_y)
                     ball.vel_x = (ball.vel_x - 2 * dot_product * normal_x) * 0.8
                     ball.vel_y = (ball.vel_y - 2 * dot_product * normal_y) * 0.8
 
-                    ball.x = self.center_x + normal_x * radius_diff
-                    ball.y = self.center_y + normal_y * radius_diff
+                    # Move ball to circle boundary
+                    ball.x = self.center_x + (-normal_x * radius_diff)
+                    ball.y = self.center_y + (-normal_y * radius_diff)
 
             dx = ball.x - self.center_x
             dy = ball.y - self.center_y
