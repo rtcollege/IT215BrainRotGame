@@ -76,10 +76,6 @@ class UI:
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                          int(self.base_font_size * 1.5 * min(self.sX, self.sY)))
 
-        # Main menu title
-        self.title_text = self.title_font.render("Brain Rot Game", True, "white")
-        self.title_rect = self.title_text.get_rect(topleft=(int(50 * self.sX), int(100 * self.sY)))
-
         # Layout constants
         button_x = int(50 * self.sX)
         button_y_start = int(300 * self.sY)
