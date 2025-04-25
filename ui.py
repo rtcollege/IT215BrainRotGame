@@ -497,7 +497,7 @@ class BallSimulation:
 
     def add_circle(self, sX, sY):
         active_circles = sum(1 for c in self.circles if c.active)
-        if active_circles >= 10:
+        if active_circles >= 7:
             return
 
         if not self.circles or active_circles == 0:
@@ -517,7 +517,7 @@ class BallSimulation:
                             new_radius = active_radii[i] - 20
                             break
                     else:  # Last element
-                        new_radius = max(7, active_radii[i] - 20)
+                        new_radius = max(8, active_radii[i] - 20)
 
                 if new_radius >= 7:  # Only add if radius is valid
                     self.circles.append(Circle(new_radius))
