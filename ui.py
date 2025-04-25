@@ -424,9 +424,11 @@ class BallSimulation:
         self.rotation_speed = 1
         self.color = (182, 143, 64)
         self.balls = []
-        self.circles = [{'radius': self.base_radius, 'active': True}]
+        self.circles = []  # Initialize empty
         self.spawn_button = None
         self.add_circle_button = None
+        # Add base circle
+        self.add_circle(1, 1)  # Initial scaling factors don't matter for first circle
         self.spawn_pressed = False
         self.circle_pressed = False
         self.cell_size = 50
@@ -492,8 +494,13 @@ class BallSimulation:
     def add_circle(self, sX, sY):
         if len(self.circles) >= 10:
             return
-        new_radius = max(10, self.circles[-1]['radius'] - 20)
-        self.circles.append({'radius': new_radius, 'active': True})
+        if len(self.circles) == 0:
+            # Base case - first circle
+            self.circles.append({'radius': self.base_radius, 'active': True})
+        else:
+            # Additional circles get progressively smaller
+            new_radius = max(10, self.circles[-1]['radius'] - 20)
+            self.circles.append({'radius': new_radius, 'active': True})
 
     def update(self, dt, sX, sY):
         pygame.draw.rect(self.display_surface, '#cccccc', 
