@@ -4,14 +4,21 @@ import pygame
 
 class Circle:
     def __init__(self, radius, active=True):
+        self.initial_radius = radius
         self.radius = radius
         self.active = active
         self.angle = random.randint(0, 360)
         self.rotation_speed = random.uniform(0.5, 2.0)
         self.gap_size = min(90, 30 + (radius / 2))
+        self.shrink_rate = 5  # Units per second
+        self.min_radius = 20  # Minimum radius allowed
 
     def update(self, dt):
         self.angle = (self.angle + self.rotation_speed) % 360
+        if self.active and self.radius > self.min_radius:
+            self.radius = max(self.min_radius, self.radius - self.shrink_rate * dt)
+            # Update gap size as circle shrinks
+            self.gap_size = min(90, 30 + (self.radius / 2))
 
     def is_in_gap(self, ball_angle):
         gap_start = self.angle
