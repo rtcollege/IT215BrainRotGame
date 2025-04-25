@@ -492,14 +492,16 @@ class BallSimulation:
         self.balls.append(new_ball)
 
     def add_circle(self, sX, sY):
-        if len(self.circles) >= 10:
+        active_circles = sum(1 for circle in self.circles if circle['active'])
+        if active_circles >= 10:
             return
-        if len(self.circles) == 0:
-            # Base case - first circle
+        if len(self.circles) == 0 or active_circles == 0:
+            # Base case - first circle or all circles broken
             self.circles.append({'radius': self.base_radius, 'active': True})
         else:
-            # Additional circles get progressively smaller
-            new_radius = max(10, self.circles[-1]['radius'] - 20)
+            # Get the last active circle's radius
+            last_active_radius = next((circle['radius'] for circle in reversed(self.circles) if circle['active']), self.base_radius)
+            new_radius = max(10, last_active_radius - 20)
             self.circles.append({'radius': new_radius, 'active': True})
 
     def update(self, dt, sX, sY):
