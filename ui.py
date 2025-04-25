@@ -417,9 +417,10 @@ class BallSimulation:
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
         self.base_radius = 150
-        self.base_box_width = int(display_surface.get_width() / 2)
-        self.base_box_height = int(display_surface.get_height() * 2/3 + display_surface.get_height() // 6)
-        self.base_box_x = int(display_surface.get_width() / 4)
+        self.base_padding = 100  # Padding around the circle
+        self.base_box_width = self.base_radius * 2 + self.base_padding * 2
+        self.base_box_height = self.base_radius * 2 + self.base_padding * 2
+        self.base_box_x = (display_surface.get_width() - self.base_box_width) // 2
         self.angle = 0
         self.rotation_speed = 1
         self.color = (182, 143, 64)
