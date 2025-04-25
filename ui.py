@@ -478,7 +478,7 @@ class BallSimulation:
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
-        self.line_thickness = max(1, int(3 * min(sX, sY)))
+        self.line_thickness = max(1, int(12 * min(sX, sY))) #Increased line thickness
 
         # Update font size for buttons
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf",
@@ -505,7 +505,7 @@ class BallSimulation:
         active_circles = sum(1 for c in self.circles if c.active)
         if active_circles >= 10:
             return
-            
+
         if not self.circles or active_circles == 0:
             self.circles.append(Circle(self.base_radius))
         else:
@@ -524,7 +524,7 @@ class BallSimulation:
                             break
                     else:  # Last element
                         new_radius = max(10, active_radii[i] - 20)
-                
+
                 if new_radius >= 10:  # Only add if radius is valid
                     self.circles.append(Circle(new_radius))
 
@@ -539,10 +539,10 @@ class BallSimulation:
             for circle in self.circles:
                 if not circle.active:
                     continue
-                
+
                 distance_to_ring = abs(dist - circle.radius)
                 collision_margin = self.line_thickness + ball.radius
-                
+
                 if distance_to_ring <= collision_margin:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
                     if circle.is_in_gap(angle):
@@ -550,35 +550,35 @@ class BallSimulation:
                         circle.active = False
                         break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
-            
+
             if not colliding_circles:
                 continue
 
             # Handle collision with the nearest circle
             nearest_circle = min(colliding_circles, key=lambda x: x[1])
             circle, distance_to_ring, collision_margin = nearest_circle
-            
+
             # Calculate normalized direction vectors
             norm_dx = dx / dist
             norm_dy = dy / dist
-            
+
             # Calculate tangent vector (perpendicular to normal)
             tang_dx = -norm_dy
             tang_dy = norm_dx
-            
+
             # Decompose velocity into normal and tangential components
             norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
             tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
-            
+
             # Reflect normal component with increased energy loss for multiple collisions
             energy_loss = 0.8 - (0.05 * (len(colliding_circles) - 1))  # More energy loss with more collisions
             energy_loss = max(0.5, energy_loss)  # Don't let it go below 0.5
             norm_vel = -norm_vel * energy_loss
-            
+
             # Reconstruct velocity vector
             ball.vel_x = norm_vel * norm_dx + tang_vel * tang_dx
             ball.vel_y = norm_vel * norm_dy + tang_vel * tang_dy
-            
+
             # Push ball out with increased push for multiple collisions
             penetration = collision_margin - distance_to_ring
             push_multiplier = 1 + (0.2 * (len(colliding_circles) - 1))  # Stronger push with more collisions
