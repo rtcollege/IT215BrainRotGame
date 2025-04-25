@@ -10,7 +10,7 @@ class Circle:
         self.angle = random.randint(0, 360)
         self.rotation_speed = random.uniform(0.5, 2.0)
         self.gap_size = min(90, 30 + (radius / 2))
-        self.shrink_rate = 5  # Units per second
+        self.shrink_rate = 30  # Units per second
         self.min_radius = 20  # Minimum radius allowed
 
     def update(self, dt):
