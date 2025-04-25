@@ -538,6 +538,7 @@ class BallSimulation:
                 if not circle.active:
                     continue
 
+                # Calculate distance to ring surface
                 distance_to_ring = abs(dist - circle.radius)
                 collision_margin = self.line_thickness + ball.radius
 
@@ -548,13 +549,33 @@ class BallSimulation:
                         circle.active = False
                         break
                     else:
+                        # Calculate normalized direction vectors
                         norm_dx = dx / dist
                         norm_dy = dy / dist
-                        dot = ball.vel_x * norm_dx + ball.vel_y * norm_dy
-                        ball.vel_x -= 2 * dot * norm_dx
-                        ball.vel_y -= 2 * dot * norm_dy
-                        ball.x += norm_dx * (collision_margin - distance_to_ring + 1)
-                        ball.y += norm_dy * (collision_margin - distance_to_ring + 1)
+                        
+                        # Calculate tangent vector (perpendicular to normal)
+                        tang_dx = -norm_dy
+                        tang_dy = norm_dx
+                        
+                        # Decompose velocity into normal and tangential components
+                        norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
+                        tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
+                        
+                        # Reflect normal component and preserve tangential component
+                        norm_vel = -norm_vel * 0.8  # Add slight energy loss
+                        
+                        # Reconstruct velocity vector
+                        ball.vel_x = norm_vel * norm_dx + tang_vel * tang_dx
+                        ball.vel_y = norm_vel * norm_dy + tang_vel * tang_dy
+                        
+                        # Push ball out of collision
+                        penetration = collision_margin - distance_to_ring
+                        if dist > circle.radius:  # Ball is outside ring
+                            ball.x -= norm_dx * (penetration + 1)
+                            ball.y -= norm_dy * (penetration + 1)
+                        else:  # Ball is inside ring
+                            ball.x += norm_dx * (penetration + 1)
+                            ball.y += norm_dy * (penetration + 1)
                         break
 
     def update(self, dt, sX, sY):
