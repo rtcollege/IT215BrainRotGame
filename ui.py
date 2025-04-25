@@ -475,6 +475,10 @@ class BallSimulation:
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
         self.box_x = int(self.base_box_x * sX)
+        
+        # Update circles
+        for circle in self.circles:
+            circle.recalculate_layout(sX, sY, self.base_radius)
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
