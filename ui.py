@@ -4,6 +4,8 @@ from debug import debug
 from dropdown import Dropdown
 from timer import Timer
 from button import Button
+from ball import Ball
+from circle import Circle
 from math import sin, cos, radians, hypot, atan2, degrees
 import random
 import pygame.gfxdraw
@@ -442,56 +444,7 @@ class UI:
                     self.current_scene = 'main_menu'
 
 
-class Ball:
 
-    def __init__(self, x, y, radius):
-        self.x = x
-        self.y = y
-        self.radius = radius
-        angle = random.uniform(0, 2 * 3.14159)
-        speed = random.uniform(1, 100)
-        self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
-        self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
-        self.gravity = 540
-        self.cell_x = 0
-        self.cell_y = 0
-        
-    def update(self, dt):
-        self.vel_y += self.gravity * dt
-        self.x += self.vel_x * dt
-        self.y += self.vel_y * dt
-
-    def draw(self, surface):
-        pygame.draw.circle(surface, (255, 255, 255), (int(self.x), int(self.y)), self.radius)
-
-
-class Circle:
-    def __init__(self, radius, active=True):
-        self.radius = radius
-        self.active = active
-        self.angle = random.randint(0, 360)
-        self.rotation_speed = random.uniform(0.5, 2.0)
-        self.gap_size = min(120, 30 + (radius / 2))
-
-    def update(self, dt):
-        self.angle = (self.angle + self.rotation_speed) % 360
-
-    def is_in_gap(self, ball_angle):
-        gap_start = self.angle
-        gap_end = (self.angle + self.gap_size) % 360
-        if gap_start < gap_end:
-            return gap_start <= ball_angle <= gap_end
-        else:
-            return ball_angle >= gap_start or ball_angle <= gap_end
-
-    def draw(self, surface, center_x, center_y, line_thickness, color, gfxdraw):
-        if self.active:
-            for i in range(line_thickness):
-                gfxdraw.arc(surface, int(center_x), int(center_y),
-                            int(self.radius - i),
-                            int((self.angle + self.gap_size) % 360),
-                            int((self.angle + 360) % 360),
-                            color)
 
 class BallSimulation:
     def __init__(self, display_surface, sX, sY):
