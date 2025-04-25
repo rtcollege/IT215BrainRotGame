@@ -471,6 +471,7 @@ class BallSimulation:
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
+        padding = int(50 * min(sX, sY))  # Define padding before using it
 
         font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
         button_spacing = int(50 * min(sX, sY))  # Space between buttons
