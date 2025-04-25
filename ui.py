@@ -171,6 +171,12 @@ class UI:
         button_spacing = int(200 * self.sX)
         center_x = self.W_WIDTH / 2
 
+        # Position difficulty text
+        self.difficulty_text = self.font.render("Difficulty:", True, "white")
+        text_height = self.difficulty_text.get_height()
+        self.difficulty_text_rect = self.difficulty_text.get_rect(
+            topleft=(button_x, diff_y - text_height/2))
+
         for button, x_offset in [(self.easy_button, -1), 
                                 (self.medium_button, 0), 
                                 (self.hard_button, 1)]:
