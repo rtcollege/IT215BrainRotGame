@@ -546,8 +546,9 @@ class BallSimulation:
                 if distance_to_ring <= collision_margin:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
                     if circle.is_in_gap(angle):
-                        # Ball passes through gap without being removed
-                        continue
+                        self.balls.remove(ball)
+                        circle.active = False
+                        break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
 
             if not colliding_circles:
