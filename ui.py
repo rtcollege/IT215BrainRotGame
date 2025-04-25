@@ -76,15 +76,17 @@ class UI:
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                          int(self.base_font_size * 1.5 * min(self.sX, self.sY)))
                                          
-        # Update back button position with safe padding
-        padding = int(60 * min(self.sX, self.sY))  # Scale padding with window size
-        button_text = self.font.render("Back", True, "white")
-        button_height = button_text.get_height()
-        x_pos = max(padding, button_text.get_width() + padding)
-        y_pos = min(self.W_HEIGHT - padding - button_height/2, 
-                   self.W_HEIGHT - button_height - padding)
-        self.back_button = Button(None, (x_pos, y_pos), "Back", 
+        # Update back button position to match main menu buttons
+        back_button_x = int(50 * self.sX)  # Same as button_x
+        back_button_y = button_y_start + 3 * button_y_spacing
+        self.back_button = Button(None, (back_button_x, back_button_y), "Back", 
                                 self.font, "white", "#b68f40")
+
+        # Add difficulty text
+        self.difficulty_text = self.font.render("Difficulty:", True, "white")
+        text_height = self.difficulty_text.get_height()
+        self.difficulty_text_rect = self.difficulty_text.get_rect(
+            topleft=(back_button_x, int(400 * self.sY) - text_height/2))
 
         # Layout constants
         button_x = int(50 * self.sX)
