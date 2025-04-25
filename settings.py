@@ -24,7 +24,7 @@ SCALE_Y = WINDOW_HEIGHT / BASE_HEIGHT
 
 # Other settings
 ANIMATION_SPEED = 10
-FPS = 120
+FPS = 60
 
 # Layers
 Z_LAYERS = {
