@@ -621,7 +621,39 @@ class BallSimulation:
 
         for ball in self.balls[:]:
             ball.update(dt)
-            
+
+            # Check collision with each circle
+            for i, circle in enumerate(self.circles):
+                if not circle.active:
+                    continue
+
+                # Calculate ball's position relative to circle center
+                dx = ball.x - self.center_x
+                dy = ball.y - self.center_y
+                distance = (dx * dx + dy * dy) ** 0.5
+
+                # If ball is near the circle's radius
+                if abs(distance - circle.radius) < ball.radius:
+                    # Calculate ball's angle relative to circle center
+                    angle = (degrees(atan2(dy, dx)) + 360) % 360
+
+                    # If ball is in gap, remove it and mark circle as inactive
+                    if circle.is_in_gap(angle):
+                        self.balls.remove(ball)
+                        circle.active = False
+                        break
+                    else:
+                        # Basic bounce behavior - reverse radial velocity component
+                        radial_angle = atan2(dy, dx)
+                        normal_x = cos(radial_angle)
+                        normal_y = sin(radial_angle)
+
+                        # Calculate dot product of velocity and normal
+                        dot_product = ball.vel_x * normal_x + ball.vel_y * normal_y
+
+                        # Reflect velocity
+                        ball.vel_x = ball.vel_x - 2 * dot_product * normal_x
+                        ball.vel_y = ball.vel_y - 2 * dot_product * normal_y
 
         self.update_grid()
 
@@ -631,7 +663,6 @@ class BallSimulation:
                 continue
 
             ball.draw(self.display_surface)
-
         self.spawn_button.update(self.display_surface)
         self.add_circle_button.update(self.display_surface)
         mouse_pos = pygame.mouse.get_pos()
