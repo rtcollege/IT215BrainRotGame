@@ -224,11 +224,8 @@ class UI:
             self.credits_texts.append(text)
             self.credits_rects.append(rect)
 
-        # Recalculate ball simulation layout with circle rescaling
+        # Recalculate ball simulation layout
         self.ball_sim.recalculate_layout(self.sX, self.sY)
-        # Rescale all circle radii
-        for circle in self.ball_sim.circles:
-            circle.radius = int(circle.radius * min(self.sX, self.sY))
 
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()
