@@ -508,20 +508,15 @@ class BallSimulation:
         return nearby
 
     def recalculate_layout(self, sX, sY):
-        # Update base measurements with proper scaling
-        scale_factor = min(sX, sY)
-        self.radius = int(self.base_radius * scale_factor)
-        self.box_width = int(self.base_box_width * scale_factor)
-        self.box_height = int(self.base_box_height * scale_factor)
-        self.box_x = int(self.base_box_x * scale_factor)
+        # Update base measurements
+        self.radius = int(self.base_radius * min(sX, sY))
+        self.box_width = int(self.base_box_width * sX)
+        self.box_height = int(self.base_box_height * sY)
+        self.box_x = int(self.base_box_x * sX)
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
-        self.line_thickness = max(1, int(3 * scale_factor))
-        
-        # Update all circles' radii with proper scaling
-        for circle in self.circles:
-            circle.radius = int(circle.radius * scale_factor)
+        self.line_thickness = max(1, int(3 * min(sX, sY)))
         
         # Update font size for buttons
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
