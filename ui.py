@@ -564,37 +564,6 @@ class BallSimulation:
         self.update_grid()
 
         for ball in self.balls[:]:
-            for circle_data in self.circles:
-                if not circle_data.active:
-                    continue
-
-                dx = ball.x - self.center_x
-                dy = ball.y - self.center_y
-                distance = (dx * dx + dy * dy) ** 0.5
-                radius_diff = circle_data.radius - ball.radius
-
-                ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
-                in_gap = circle_data.is_in_gap(ball_angle)
-                collision_threshold = 5  # Small threshold for better collision detection
-
-                # If ball passes through gap, mark circle as inactive
-                if in_gap and abs(distance - radius_diff) < collision_threshold:
-                    circle_data.active = False
-                    ball.passed_circles.add(id(circle_data))
-                
-                # Only check collision if ball hasn't passed this circle and circle is active
-                if abs(distance - radius_diff) < collision_threshold and not in_gap and id(circle_data) not in ball.passed_circles and circle_data.active:
-                    normal_x = -dx / distance  # Invert normal for correct bounce direction
-                    normal_y = -dy / distance
-
-                    dot_product = (ball.vel_x * normal_x + ball.vel_y * normal_y)
-                    ball.vel_x = (ball.vel_x - 2 * dot_product * normal_x) * 0.8
-                    ball.vel_y = (ball.vel_y - 2 * dot_product * normal_y) * 0.8
-
-                    # Move ball to circle boundary
-                    ball.x = self.center_x + (-normal_x * radius_diff)
-                    ball.y = self.center_y + (-normal_y * radius_diff)
-
             if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
                 continue
