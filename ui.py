@@ -478,7 +478,7 @@ class BallSimulation:
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
-        self.line_thickness = max(1, int(12 * min(sX, sY))) #Increased line thickness
+        self.line_thickness = max(1, int(6 * min(sX, sY))) #Increased line thickness
 
         # Update font size for buttons
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf",
@@ -588,6 +588,16 @@ class BallSimulation:
             else:  # Ball is inside ring
                 ball.x += norm_dx * (penetration + push_multiplier)
                 ball.y += norm_dy * (penetration + push_multiplier)
+
+            # Clamp ball position to exactly the ring surface
+            target_dist = circle.radius + (collision_margin if dist > circle.radius else -collision_margin)
+            ball.x = self.center_x + norm_dx * target_dist
+            ball.y = self.center_y + norm_dy * target_dist
+
+            # Add drag/friction over time to slow balls
+            drag = 0.98
+            ball.vel_x *= drag
+            ball.vel_y *= drag
 
     def update(self, dt, sX, sY):
         for circle in self.circles:
