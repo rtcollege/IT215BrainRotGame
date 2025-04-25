@@ -385,7 +385,9 @@ class UI:
     def update_volume_from_mouse(self, mouse_x):
         # Calculate volume based on mouse position relative to slider
         left_edge = self.W_WIDTH // 2 - self.slider_width // 2
-        relative_x = mouse_x - left_edge
+        right_edge = left_edge + self.slider_width
+        clamped_x = max(left_edge, min(right_edge, mouse_x))
+        relative_x = clamped_x - left_edge
         self.volume = (relative_x / self.slider_width) * 100
         self.volume = max(0, min(100, self.volume))
         # Update slider position
