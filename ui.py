@@ -426,8 +426,21 @@ class BallSimulation:
         self.color = (182, 143, 64)
         self.balls = []
         self.circles = []  # Initialize empty
-        self.spawn_button = None
-        self.add_circle_button = None
+        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
+
+        self.spawn_button = Button(None, 
+             (0,0), 
+             "Spawn Ball", 
+             self.font, 
+             "white", 
+             "#b68f40")
+        self.add_circle_button = Button(None, 
+                  (0,0), 
+                  "Add Circle", 
+                  self.font, 
+                  "white", 
+                  "#b68f40")
+
         # Add base circle
         self.add_circle(1, 1)  # Initial scaling factors don't matter for first circle
         self.spawn_pressed = False
@@ -439,6 +452,9 @@ class BallSimulation:
         for angle in range(360):
             rad = radians(angle)
             self.angle_cache[angle] = (cos(rad), sin(rad))
+
+        
+        self.recalculate_layout(sX, sY)
 
     def get_grid_pos(self, x, y):
         return (int(x // self.cell_size), int(y // self.cell_size))
@@ -471,8 +487,7 @@ class BallSimulation:
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
-
-        font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
+        
         button_spacing = int(30 * min(sX, sY))  # Reduced spacing between buttons
         button_y = self.box_y + self.box_height + button_spacing  # Position below box
         
@@ -480,13 +495,13 @@ class BallSimulation:
         self.spawn_button = Button(None, 
                                  (self.box_x + button_spacing, button_y), 
                                  "Spawn Ball", 
-                                 font, 
+                                 self.font, 
                                  "white", 
                                  "#b68f40")
         self.add_circle_button = Button(None, 
                                       (self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y), 
                                       "Add Circle", 
-                                      font, 
+                                      self.font, 
                                       "white", 
                                       "#b68f40")
 
