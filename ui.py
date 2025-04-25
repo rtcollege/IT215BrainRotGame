@@ -391,6 +391,11 @@ class UI:
                 elif self.pause_main_menu_button.check_input(mouse_pos):
                     self.current_scene = 'main_menu'
 
+class Circle:
+    def __init__(self, radius, active=True):
+        self.radius = radius
+        self.active = active
+
 class Ball:
     def __init__(self, x, y, radius):
         self.x = x
@@ -510,12 +515,12 @@ class BallSimulation:
             return
         if len(self.circles) == 0 or active_circles == 0:
             # Base case - first circle or all circles broken
-            self.circles.append({'radius': self.base_radius, 'active': True})
+            self.circles.append(Circle(self.base_radius))
         else:
             # Get the last active circle's radius
-            last_active_radius = next((circle['radius'] for circle in reversed(self.circles) if circle['active']), self.base_radius)
+            last_active_radius = next((circle.radius for circle in reversed(self.circles) if circle.active), self.base_radius)
             new_radius = max(10, last_active_radius - 20)
-            self.circles.append({'radius': new_radius, 'active': True})
+            self.circles.append(Circle(new_radius))
 
     def update(self, dt, sX, sY):
         padding = int(50 * min(sX, sY))  # Add padding proportional to circle size
@@ -529,11 +534,11 @@ class BallSimulation:
 
         for i in range(self.line_thickness):
             for circle in self.circles:
-                if circle['active']:
+                if circle.active:
                     pygame.gfxdraw.arc(self.display_surface, 
                                     self.center_x, 
                                     self.center_y, 
-                                    circle['radius'] - i, 
+                                    circle.radius - i, 
                                     self.angle, 
                                     (self.angle + 330) % 360, 
                                     self.color)
@@ -545,13 +550,13 @@ class BallSimulation:
 
         for ball in self.balls[:]:
             for circle_data in self.circles:
-                if not circle_data['active']:
+                if not circle_data.active:
                     continue
 
                 dx = ball.x - self.center_x
                 dy = ball.y - self.center_y
                 distance = (dx * dx + dy * dy) ** 0.5
-                radius_diff = circle_data['radius'] - ball.radius
+                radius_diff = circle_data.radius - ball.radius
 
                 ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
                 gap_start = (self.angle + 330) % 360
@@ -562,7 +567,7 @@ class BallSimulation:
 
                 # If ball passes through gap, mark circle as inactive
                 if in_gap and distance > radius_diff:
-                    circle_data['active'] = False
+                    circle_data.active = False
                     ball.passed_circles.add(id(circle_data))
                 
                 # Only check collision if ball hasn't passed this circle and circle is active
