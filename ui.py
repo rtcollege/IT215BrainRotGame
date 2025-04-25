@@ -488,21 +488,20 @@ class BallSimulation:
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
         
-        button_spacing = int(30 * min(sX, sY))  # Reduced spacing between buttons
-        button_y = self.box_y + self.box_height + button_spacing  # Position below box
+        # Create temporary button to get height for proper spacing
+        temp_button = Button(None, (0, 0), "Temp", self.font, "white", "#b68f40")
+        button_height = temp_button.rect.height
         
-        # Position buttons to the left with smaller spacing
-        self.spawn_button = Button(None, 
-                                 (self.box_x + button_spacing, button_y), 
-                                 "Spawn Ball", 
-                                 self.font, 
-                                 "white", 
-                                 "#b68f40")
-        self.add_circle_button = Button(None, 
-                                      (self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y), 
-                                      "Add Circle", 
-                                      self.font, 
-                                      "white", 
+        button_spacing = int(30 * min(sX, sY))  # Reduced spacing between buttons
+        button_y = self.box_y + self.box_height + button_spacing + button_height//2  # Position below box with proper height offset
+        
+        # Update existing buttons with new positions
+        self.spawn_button.set_position((self.box_x + button_spacing, button_y))
+        self.add_circle_button.set_position((self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y))
+        
+        # Update button fonts in case of resolution change
+        self.spawn_button.update_font(self.font)
+        self.add_circle_button.update_font(self.font) 
                                       "#b68f40")
 
     def spawn_ball(self, sX, sY):
