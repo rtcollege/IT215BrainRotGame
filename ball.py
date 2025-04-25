@@ -28,7 +28,7 @@ class Ball:
             self.vel_y *= scale
             
         # Use smaller substeps for more accurate collision detection
-        substeps = 16
+        substeps = 4
         dt_sub = dt / substeps
         for _ in range(substeps):
             self.x += self.vel_x * dt_sub

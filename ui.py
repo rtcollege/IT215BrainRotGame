@@ -224,8 +224,11 @@ class UI:
             self.credits_texts.append(text)
             self.credits_rects.append(rect)
 
-        # Recalculate ball simulation layout
+        # Recalculate ball simulation layout with circle rescaling
         self.ball_sim.recalculate_layout(self.sX, self.sY)
+        # Rescale all circle radii
+        for circle in self.ball_sim.circles:
+            circle.radius = int(circle.radius * min(self.sX, self.sY))
 
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()
@@ -523,9 +526,9 @@ class BallSimulation:
                             new_radius = active_radii[i] - 20
                             break
                     else:  # Last element
-                        new_radius = max(10, active_radii[i] - 20)
+                        new_radius = max(7, active_radii[i] - 20)
 
-                if new_radius >= 10:  # Only add if radius is valid
+                if new_radius >= 7:  # Only add if radius is valid
                     self.circles.append(Circle(new_radius))
 
     def handle_collisions(self):
@@ -546,8 +549,8 @@ class BallSimulation:
                 if distance_to_ring <= collision_margin:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
                     if circle.is_in_gap(angle):
-                        # Ball passes through gap without being removed
-                        continue
+                        circle.active = False
+                        break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
 
             if not colliding_circles:
@@ -570,7 +573,7 @@ class BallSimulation:
             tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
 
             # Reflect normal component with increased energy loss for multiple collisions
-            energy_loss = 0.8 - (0.05 * (len(colliding_circles) - 1))  # More energy loss with more collisions
+            energy_loss = 0.99 - (0.05 * (len(colliding_circles) - 1))  # More energy loss with more collisions
             energy_loss = max(0.5, energy_loss)  # Don't let it go below 0.5
             norm_vel = -norm_vel * energy_loss
 
