@@ -553,9 +553,7 @@ class BallSimulation:
                     ball.x = self.center_x + (-normal_x * radius_diff)
                     ball.y = self.center_y + (-normal_y * radius_diff)
 
-            dx = ball.x - self.center_x
-            dy = ball.y - self.center_y
-            if (dx * dx + dy * dy) > (self.radius * 2) * (self.radius * 2):
+            if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
                 continue
 
