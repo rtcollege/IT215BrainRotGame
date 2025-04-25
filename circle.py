@@ -17,9 +17,19 @@ class Circle:
         for circle in other_circles:
             if circle != self and circle.active:
                 # Calculate the difference between the radii
-                radii_diff = abs(self.radius - circle.radius)
-                # If the difference is less than minimum spacing, there's a collision
-                if radii_diff < 15:  # Minimum spacing between circles
+                radii_diff = self.radius - circle.radius
+                # If we're smaller and trying to shrink, allow it if there's space below
+                if abs(radii_diff) < 15:  # Minimum spacing between circles
+                    if self.radius < circle.radius:
+                        # Check if there's space below to shrink
+                        has_space_below = True
+                        for other in other_circles:
+                            if other != self and other != circle and other.active:
+                                if abs(other.radius - (self.radius - 5)) < 15:
+                                    has_space_below = False
+                                    break
+                        if has_space_below:
+                            return False
                     return True
         return False
 
