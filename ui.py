@@ -417,16 +417,22 @@ class Circle:
     def __init__(self, radius, active=True):
         self.radius = radius
         self.active = active
+        self.angle = random.randint(0, 360)  # Random starting angle
+        self.rotation_speed = random.uniform(0.5, 2.0)  # Random rotation speed
+        self.gap_offset = random.randint(-30, 30)  # Random gap position offset
 
-    def draw(self, surface, center_x, center_y, line_thickness, angle, color, gfxdraw):
+    def update(self, dt):
+        self.angle = (self.angle + self.rotation_speed) % 360
+
+    def draw(self, surface, center_x, center_y, line_thickness, color, gfxdraw):
         if self.active:
             for i in range(line_thickness):
                 gfxdraw.arc(surface, 
                            center_x, 
                            center_y, 
                            self.radius - i, 
-                           angle, 
-                           (angle + 330) % 360, 
+                           self.angle, 
+                           (self.angle + 330 + self.gap_offset) % 360, 
                            color)
 
 
@@ -541,12 +547,10 @@ class BallSimulation:
                          self.box_width + 2*padding, self.box_height + 2*padding), 
                         max(1, int(2 * min(sX, sY))))
 
-        self.angle = (self.angle + self.rotation_speed) % 360
-        cos_val, sin_val = self.angle_cache[self.angle]
-
         for circle in self.circles:
+            circle.update(dt)
             circle.draw(self.display_surface, self.center_x, self.center_y, 
-                       self.line_thickness, self.angle, self.color, pygame.gfxdraw)
+                       self.line_thickness, self.color, pygame.gfxdraw)
 
         for ball in self.balls[:]:
             ball.update(dt)
