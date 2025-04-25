@@ -530,8 +530,8 @@ class BallSimulation:
                 radius_diff = circle_data['radius'] - ball.radius
 
                 ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
-                gap_start = self.angle
-                gap_end = (self.angle + 30) % 360
+                gap_start = (self.angle + 330) % 360
+                gap_end = self.angle
 
                 in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
                         (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
