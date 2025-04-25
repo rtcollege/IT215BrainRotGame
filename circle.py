@@ -22,7 +22,9 @@ class Circle:
             return ball_angle >= gap_start or ball_angle <= gap_end
 
     def recalculate_layout(self, sX, sY, base_radius):
-        # Update gap size based on current radius
+        # Scale radius based on screen size
+        scale = min(sX, sY)
+        self.radius = int(base_radius * scale)
         self.gap_size = min(90, 30 + (self.radius / 2))
 
     def draw(self, surface, center_x, center_y, line_thickness, color, gfxdraw):
