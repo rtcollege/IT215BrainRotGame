@@ -281,6 +281,11 @@ class UI:
         pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
         pygame.draw.rect(self.display_surface, "white", self.volume_slider)
 
+        # Handle continuous volume slider dragging
+        if pygame.mouse.get_pressed()[0]:  # Left mouse button
+            if self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+                self.update_volume_from_mouse(mouse_pos[0])
+
         volume_value = self.font.render(f"{int(self.volume)}%", True, "white")
         volume_value_rect = volume_value.get_rect(midleft=(self.volume_rect.right + 20, self.volume_rect.centery))
         self.display_surface.blit(volume_value, volume_value_rect)
@@ -373,11 +378,18 @@ class UI:
             self.difficulty = 'medium'
         elif self.hard_button.check_input(mouse_pos):
             self.difficulty = 'hard'
-        elif self.volume_rect.collidepoint(mouse_pos):
-            self.volume = (mouse_pos[0] - (self.W_WIDTH / 2 - self.slider_width / 2)) / (self.slider_width / 100)
-            self.volume = max(0, min(100, self.volume))
-            slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume * self.slider_width / 100))
-            self.volume_slider.x = slider_x
+        elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+            # Update volume based on mouse position
+            self.update_volume_from_mouse(mouse_pos[0])
+
+    def update_volume_from_mouse(self, mouse_x):
+        # Calculate volume based on mouse position relative to slider
+        left_edge = self.W_WIDTH // 2 - self.slider_width // 2
+        relative_x = mouse_x - left_edge
+        self.volume = (relative_x / self.slider_width) * 100
+        self.volume = max(0, min(100, self.volume))
+        # Update slider position
+        self.volume_slider.x = left_edge + (self.volume * self.slider_width / 100)
         elif self.apply_button.check_input(mouse_pos):
             selected_res = self.resolution_dropdown.selected_option
             width, height = map(int, selected_res.split('x'))
