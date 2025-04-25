@@ -505,12 +505,28 @@ class BallSimulation:
         active_circles = sum(1 for c in self.circles if c.active)
         if active_circles >= 10:
             return
+            
         if not self.circles or active_circles == 0:
             self.circles.append(Circle(self.base_radius))
         else:
-            largest_remaining_radius = max((c.radius for c in self.circles if c.active), default=self.base_radius)
-            new_radius = max(10, largest_remaining_radius - 20)
-            self.circles.append(Circle(new_radius))
+            active_radii = sorted([c.radius for c in self.circles if c.active], reverse=True)
+            if not active_radii or active_radii[0] < self.base_radius:
+                # If no active circles or largest active is smaller than base, add base sized circle
+                self.circles.append(Circle(self.base_radius))
+            else:
+                # Find the largest gap in the sequence of radii
+                new_radius = self.base_radius
+                for i in range(len(active_radii)):
+                    if i < len(active_radii) - 1:
+                        gap = active_radii[i] - active_radii[i + 1]
+                        if gap > 20:  # If there's a gap bigger than minimum step
+                            new_radius = active_radii[i] - 20
+                            break
+                    else:  # Last element
+                        new_radius = max(10, active_radii[i] - 20)
+                
+                if new_radius >= 10:  # Only add if radius is valid
+                    self.circles.append(Circle(new_radius))
 
     def handle_collisions(self):
         for ball in self.balls[:]:
