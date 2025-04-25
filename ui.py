@@ -534,49 +534,60 @@ class BallSimulation:
             dy = ball.y - self.center_y
             dist = hypot(dx, dy)
 
+            # Find all colliding circles
+            colliding_circles = []
             for circle in self.circles:
                 if not circle.active:
                     continue
-
-                # Calculate distance to ring surface
+                
                 distance_to_ring = abs(dist - circle.radius)
                 collision_margin = self.line_thickness + ball.radius
-
+                
                 if distance_to_ring <= collision_margin:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
                     if circle.is_in_gap(angle):
                         self.balls.remove(ball)
                         circle.active = False
                         break
-                    else:
-                        # Calculate normalized direction vectors
-                        norm_dx = dx / dist
-                        norm_dy = dy / dist
-                        
-                        # Calculate tangent vector (perpendicular to normal)
-                        tang_dx = -norm_dy
-                        tang_dy = norm_dx
-                        
-                        # Decompose velocity into normal and tangential components
-                        norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
-                        tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
-                        
-                        # Reflect normal component and preserve tangential component
-                        norm_vel = -norm_vel * 0.8  # Add slight energy loss
-                        
-                        # Reconstruct velocity vector
-                        ball.vel_x = norm_vel * norm_dx + tang_vel * tang_dx
-                        ball.vel_y = norm_vel * norm_dy + tang_vel * tang_dy
-                        
-                        # Push ball out of collision
-                        penetration = collision_margin - distance_to_ring
-                        if dist > circle.radius:  # Ball is outside ring
-                            ball.x -= norm_dx * (penetration + 1)
-                            ball.y -= norm_dy * (penetration + 1)
-                        else:  # Ball is inside ring
-                            ball.x += norm_dx * (penetration + 1)
-                            ball.y += norm_dy * (penetration + 1)
-                        break
+                    colliding_circles.append((circle, distance_to_ring, collision_margin))
+            
+            if not colliding_circles:
+                continue
+
+            # Handle collision with the nearest circle
+            nearest_circle = min(colliding_circles, key=lambda x: x[1])
+            circle, distance_to_ring, collision_margin = nearest_circle
+            
+            # Calculate normalized direction vectors
+            norm_dx = dx / dist
+            norm_dy = dy / dist
+            
+            # Calculate tangent vector (perpendicular to normal)
+            tang_dx = -norm_dy
+            tang_dy = norm_dx
+            
+            # Decompose velocity into normal and tangential components
+            norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
+            tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
+            
+            # Reflect normal component with increased energy loss for multiple collisions
+            energy_loss = 0.8 - (0.05 * (len(colliding_circles) - 1))  # More energy loss with more collisions
+            energy_loss = max(0.5, energy_loss)  # Don't let it go below 0.5
+            norm_vel = -norm_vel * energy_loss
+            
+            # Reconstruct velocity vector
+            ball.vel_x = norm_vel * norm_dx + tang_vel * tang_dx
+            ball.vel_y = norm_vel * norm_dy + tang_vel * tang_dy
+            
+            # Push ball out with increased push for multiple collisions
+            penetration = collision_margin - distance_to_ring
+            push_multiplier = 1 + (0.2 * (len(colliding_circles) - 1))  # Stronger push with more collisions
+            if dist > circle.radius:  # Ball is outside ring
+                ball.x -= norm_dx * (penetration + push_multiplier)
+                ball.y -= norm_dy * (penetration + push_multiplier)
+            else:  # Ball is inside ring
+                ball.x += norm_dx * (penetration + push_multiplier)
+                ball.y += norm_dy * (penetration + push_multiplier)
 
     def update(self, dt, sX, sY):
         for circle in self.circles:
