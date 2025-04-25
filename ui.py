@@ -428,11 +428,11 @@ class Circle:
         if self.active:
             for i in range(line_thickness):
                 gfxdraw.arc(surface, 
-                           center_x, 
-                           center_y, 
-                           self.radius - i, 
-                           self.angle, 
-                           (self.angle + 330 + self.gap_offset) % 360, 
+                           int(center_x), 
+                           int(center_y), 
+                           int(self.radius - i), 
+                           int(self.angle), 
+                           int((self.angle + 330 + self.gap_offset) % 360), 
                            color)
 
 
