@@ -20,15 +20,16 @@ class Ball:
     def update(self, dt):
         self.vel_y += self.gravity * dt
         
-        # Limit velocity to max_speed
-        speed = (self.vel_x ** 2 + self.vel_y ** 2) ** 0.5
-        if speed > self.max_speed:
-            scale = self.max_speed / speed
+        # Limit velocity to max_speed using squared comparison (avoid sqrt)
+        speed_squared = self.vel_x ** 2 + self.vel_y ** 2
+        max_speed_squared = self.max_speed ** 2
+        if speed_squared > max_speed_squared:
+            scale = (self.max_speed / (speed_squared ** 0.5))
             self.vel_x *= scale
             self.vel_y *= scale
             
-        # Use smaller substeps for more accurate collision detection
-        substeps = 4
+        # Use fewer substeps for better performance
+        substeps = 2
         dt_sub = dt / substeps
         for _ in range(substeps):
             self.x += self.vel_x * dt_sub

@@ -14,23 +14,26 @@ class Circle:
         self.min_radius = 20  # Minimum radius allowed
 
     def check_collision(self, other_circles):
+        if not other_circles:
+            return False
+            
         for circle in other_circles:
-            if circle != self and circle.active:
-                # Calculate the difference between the radii
-                radii_diff = self.radius - circle.radius
-                # If we're smaller and trying to shrink, allow it if there's space below
-                if abs(radii_diff) < 15:  # Minimum spacing between circles
-                    if self.radius < circle.radius:
-                        # Check if there's space below to shrink
-                        has_space_below = True
-                        for other in other_circles:
-                            if other != self and other != circle and other.active:
-                                if abs(other.radius - (self.radius - 5)) < 15:
-                                    has_space_below = False
-                                    break
-                        if has_space_below:
-                            return False
+            if not circle.active or circle == self:
+                continue
+                
+            radii_diff = abs(self.radius - circle.radius)
+            if radii_diff < 15:
+                if self.radius >= circle.radius:
                     return True
+                    
+                # Quick check for space below
+                target_radius = self.radius - 5
+                return any(
+                    other != self and other != circle and 
+                    other.active and 
+                    abs(other.radius - target_radius) < 15
+                    for other in other_circles
+                )
         return False
 
     def update(self, dt, other_circles=None):
