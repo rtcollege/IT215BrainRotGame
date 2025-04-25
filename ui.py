@@ -621,39 +621,7 @@ class BallSimulation:
 
         for ball in self.balls[:]:
             ball.update(dt)
-
-            # Check collision with each circle
-            for circle in self.circles[:]:
-                if not circle.active:
-                    continue
-
-                # Calculate distance from ball to circle center
-                dx = ball.x - self.center_x
-                dy = ball.y - self.center_y
-                distance = (dx * dx + dy * dy) ** 0.5
-
-                # Calculate ball's angle relative to circle center
-                angle = (degrees(atan2(dy, dx)) + 360) % 360
-
-                # If ball is near the circle's radius
-                if abs(distance - circle.radius) < ball.radius:
-                    if circle.is_in_gap(angle):
-                        # Ball passed through gap, destroy circle
-                        circle.active = False
-                    else:
-                        # Ball hit circle, bounce it
-                        normal_angle = atan2(dy, dx)
-                        normal_x = cos(normal_angle)
-                        normal_y = sin(normal_angle)
-                        
-                        # Reflect velocity vector
-                        dot_product = ball.vel_x * normal_x + ball.vel_y * normal_y
-                        ball.vel_x = ball.vel_x - 2 * dot_product * normal_x
-                        ball.vel_y = ball.vel_y - 2 * dot_product * normal_y
-                        
-                        # Move ball outside circle to prevent sticking
-                        ball.x = self.center_x + (circle.radius + ball.radius) * normal_x
-                        ball.y = self.center_y + (circle.radius + ball.radius) * normal_y
+            
 
         self.update_grid()
 
