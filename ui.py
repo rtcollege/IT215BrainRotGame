@@ -576,7 +576,7 @@ class BallSimulation:
                     ball.passed_circles.add(id(circle_data))
                 
                 # Only check collision if ball hasn't passed this circle and circle is active
-                if distance > radius_diff and not in_gap and id(circle_data) not in ball.passed_circles and circle_data['active']:
+                if distance > radius_diff and not in_gap and id(circle_data) not in ball.passed_circles and circle_data.active:
                     normal_x = -dx / distance  # Invert normal for correct bounce direction
                     normal_y = -dy / distance
 
