@@ -417,9 +417,9 @@ class BallSimulation:
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
         self.base_radius = 150
-        self.base_box_width = int(display_surface.get_width() / 3)
+        self.base_box_width = int(display_surface.get_width() / 2)
         self.base_box_height = int(display_surface.get_height() * 2/3 + display_surface.get_height() // 6)
-        self.base_box_x = 50
+        self.base_box_x = int(display_surface.get_width() / 4)
         self.angle = 0
         self.rotation_speed = 1
         self.color = (182, 143, 64)
@@ -505,9 +505,11 @@ class BallSimulation:
             self.circles.append({'radius': new_radius, 'active': True})
 
     def update(self, dt, sX, sY):
+        padding = int(50 * min(sX, sY))  # Add padding proportional to circle size
         pygame.draw.rect(self.display_surface, '#cccccc', 
-                        (self.box_x, self.box_y, self.box_width, self.box_height), 
-                        max(1, int(1 * min(sX, sY))))
+                        (self.box_x - padding, self.box_y - padding, 
+                         self.box_width + 2*padding, self.box_height + 2*padding), 
+                        max(1, int(2 * min(sX, sY))))
 
         self.angle = (self.angle + self.rotation_speed) % 360
         cos_val, sin_val = self.angle_cache[self.angle]
