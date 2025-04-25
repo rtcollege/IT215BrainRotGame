@@ -390,6 +390,18 @@ class UI:
         self.volume = max(0, min(100, self.volume))
         # Update slider position
         self.volume_slider.x = left_edge + (self.volume * self.slider_width / 100)
+
+    def handle_settings_click(self, mouse_pos):
+        if self.back_button.check_input(mouse_pos):
+            self.switch_scene(self.previous_scene)
+        elif self.easy_button.check_input(mouse_pos):
+            self.difficulty = 'easy'
+        elif self.medium_button.check_input(mouse_pos):
+            self.difficulty = 'medium'
+        elif self.hard_button.check_input(mouse_pos):
+            self.difficulty = 'hard'
+        elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+            self.update_volume_from_mouse(mouse_pos[0])
         elif self.apply_button.check_input(mouse_pos):
             selected_res = self.resolution_dropdown.selected_option
             width, height = map(int, selected_res.split('x'))
