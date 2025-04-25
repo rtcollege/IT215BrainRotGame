@@ -75,6 +75,16 @@ class UI:
                                    int(self.base_font_size * min(self.sX, self.sY)))
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                          int(self.base_font_size * 1.5 * min(self.sX, self.sY)))
+                                         
+        # Update back button position with safe padding
+        padding = int(60 * min(self.sX, self.sY))  # Scale padding with window size
+        button_text = self.font.render("Back", True, "white")
+        button_height = button_text.get_height()
+        x_pos = max(padding, button_text.get_width() + padding)
+        y_pos = min(self.W_HEIGHT - padding - button_height/2, 
+                   self.W_HEIGHT - button_height - padding)
+        self.back_button = Button(None, (x_pos, y_pos), "Back", 
+                                self.font, "white", "#b68f40")
 
         # Layout constants
         button_x = int(50 * self.sX)
