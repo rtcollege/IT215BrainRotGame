@@ -508,7 +508,7 @@ class BallSimulation:
         return nearby
 
     def recalculate_layout(self, sX, sY):
-        # Update base measurements
+        # Update base measurements with proper scaling
         scale_factor = min(sX, sY)
         self.radius = int(self.base_radius * scale_factor)
         self.box_width = int(self.base_box_width * scale_factor)
@@ -519,7 +519,7 @@ class BallSimulation:
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * scale_factor))
         
-        # Update all circles' radii
+        # Update all circles' radii with proper scaling
         for circle in self.circles:
             circle.radius = int(circle.radius * scale_factor)
         
