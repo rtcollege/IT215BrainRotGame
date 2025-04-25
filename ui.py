@@ -536,12 +536,13 @@ class BallSimulation:
                 in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
                         (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
 
-                # If ball passes through gap, mark circle as passed
+                # If ball passes through gap, mark circle as inactive
                 if in_gap and distance > radius_diff:
+                    circle_data['active'] = False
                     ball.passed_circles.add(id(circle_data))
                 
-                # Only check collision if ball hasn't passed this circle
-                if distance > radius_diff and not in_gap and id(circle_data) not in ball.passed_circles:
+                # Only check collision if ball hasn't passed this circle and circle is active
+                if distance > radius_diff and not in_gap and id(circle_data) not in ball.passed_circles and circle_data['active']:
                     normal_x = -dx / distance  # Invert normal for correct bounce direction
                     normal_y = -dy / distance
 
