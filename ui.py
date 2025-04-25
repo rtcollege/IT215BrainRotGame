@@ -277,6 +277,7 @@ class UI:
     def update_settings(self, mouse_pos, dt):
         self.display_surface.blit(self.settings_title, self.settings_title_rect)
         self.display_surface.blit(self.volume_text, self.volume_text_rect)
+        self.display_surface.blit(self.difficulty_text, self.difficulty_text_rect)
         pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
         pygame.draw.rect(self.display_surface, "white", self.volume_slider)
 
