@@ -637,11 +637,14 @@ class BallSimulation:
 
                 # If ball is near the circle's radius
                 if abs(distance - circle.radius) < ball.radius:
+                    # Check if ball is in the gap region
                     if circle.is_in_gap(angle):
-                        # Ball passed through gap, destroy circle
-                        circle.active = False
+                        # Only destroy circle if ball is moving outward
+                        ball_velocity = (dx * ball.vel_x + dy * ball.vel_y) / distance
+                        if ball_velocity > 0:  # Ball is moving outward
+                            circle.active = False
                     else:
-                        # Ball hit circle, bounce it
+                        # Ball hit solid part of circle, bounce it
                         normal_angle = atan2(dy, dx)
                         normal_x = cos(normal_angle)
                         normal_y = sin(normal_angle)
