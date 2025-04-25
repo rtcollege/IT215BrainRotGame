@@ -489,7 +489,7 @@ class BallSimulation:
         self.line_thickness = max(1, int(3 * min(sX, sY)))
         
         button_spacing = int(30 * min(sX, sY))  # Reduced spacing between buttons
-        button_y = self.box_y + self.box_height + button_spacing + self.spawn_button.rect.height//2  # Position below box with proper height offset
+        button_y = self.box_y + self.box_height + (button_spacing * 1.5) + self.spawn_button.rect.height  # Position below box with proper height offset
         
         # Update existing buttons with new positions
         self.spawn_button.set_position((self.box_x + button_spacing, button_y))
