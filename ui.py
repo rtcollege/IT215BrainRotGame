@@ -499,7 +499,12 @@ class BallSimulation:
         active_circles = sum(1 for c in self.circles if c.active)
         if active_circles >= 7:
             return
-        self.circles.append(Circle(self.base_radius))
+            
+        new_circle = Circle(self.base_radius)
+        if not new_circle.check_collision(self.circles):
+            self.circles.append(new_circle)
+            return True
+        return False
 
     def handle_collisions(self):
         for ball in self.balls[:]:
@@ -599,7 +604,8 @@ class BallSimulation:
                 self.spawn_ball(sX, sY)
                 self.spawn_pressed = True
             if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
-                self.add_circle(sX, sY)
+                while self.add_circle(sX, sY):  # Keep adding circles while possible
+                    pass
                 self.circle_pressed = True
         else:
             self.spawn_pressed = False
