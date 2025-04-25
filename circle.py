@@ -22,7 +22,7 @@ class Circle:
             self.gap_size = min(90, 30 + (self.radius / 2))
             
             # Signal to add new circle when significant shrinking occurs
-            if old_radius > (self.radius + 20):  # 20 is the padding threshold
+            if old_radius > (self.radius + 50):  # 20 is the padding threshold
                 return True
         return False
 
