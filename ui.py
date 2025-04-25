@@ -4,7 +4,7 @@ from debug import debug
 from dropdown import Dropdown
 from timer import Timer
 from button import Button
-from math import sin, cos, radians, degrees, atan2
+from math import sin, cos, radians, hypot, atan2, degrees
 import random
 import pygame.gfxdraw
 
@@ -449,34 +449,29 @@ class Ball:
         self.y = y
         self.radius = radius
         angle = random.uniform(0, 2 * 3.14159)
-        speed = random.uniform(1, 3)
-        self.vel_x = cos(angle) * speed
-        self.vel_y = sin(angle) * speed
-        self.gravity = 3
+        speed = random.uniform(1, 100)
+        self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
+        self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
+        self.gravity = 540
         self.cell_x = 0
         self.cell_y = 0
-        self.passed_circles = set(
-        )  # Track which circles the ball has passed through
-
+        
     def update(self, dt):
         self.vel_y += self.gravity * dt
-        self.x += self.vel_x * dt * 60
-        self.y += self.vel_y * dt * 60
+        self.x += self.vel_x * dt
+        self.y += self.vel_y * dt
 
     def draw(self, surface):
-        pygame.draw.circle(surface, (255, 255, 255),
-                           (int(self.x), int(self.y)), self.radius)
+        pygame.draw.circle(surface, (255, 255, 255), (int(self.x), int(self.y)), self.radius)
 
 
 class Circle:
-
     def __init__(self, radius, active=True):
         self.radius = radius
         self.active = active
-        self.angle = random.randint(0, 360)  # Random starting angle
-        self.rotation_speed = random.uniform(0.5, 2.0)  # Random rotation speed
-        self.gap_size = min(120, 30 +
-                            (radius / 2))  # Gap size proportional to radius
+        self.angle = random.randint(0, 360)
+        self.rotation_speed = random.uniform(0.5, 2.0)
+        self.gap_size = min(120, 30 + (radius / 2))
 
     def update(self, dt):
         self.angle = (self.angle + self.rotation_speed) % 360
@@ -484,77 +479,42 @@ class Circle:
     def is_in_gap(self, ball_angle):
         gap_start = self.angle
         gap_end = (self.angle + self.gap_size) % 360
-        return (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
-               (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
+        if gap_start < gap_end:
+            return gap_start <= ball_angle <= gap_end
+        else:
+            return ball_angle >= gap_start or ball_angle <= gap_end
 
-    def draw(self, surface, center_x, center_y, line_thickness, color,
-             gfxdraw):
+    def draw(self, surface, center_x, center_y, line_thickness, color, gfxdraw):
         if self.active:
             for i in range(line_thickness):
                 gfxdraw.arc(surface, int(center_x), int(center_y),
-                            int(self.radius - i), int(self.angle),
-                            int((self.angle + (360 - self.gap_size)) % 360),
+                            int(self.radius - i),
+                            int((self.angle + self.gap_size) % 360),
+                            int((self.angle + 360) % 360),
                             color)
 
-
 class BallSimulation:
-
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
+        self.balls = []
+        self.circles = []
         self.base_radius = 150
-        self.base_padding = 100  # Padding around the circle
+        self.base_padding = 100
         self.base_box_width = self.base_radius * 2 + self.base_padding
         self.base_box_height = self.base_radius * 2 + self.base_padding
         self.base_box_x = 100
-        self.angle = 0
-        self.rotation_speed = 1
-        self.color = (182, 143, 64)
-        self.balls = []
-        self.circles = []  # Initialize empty
-        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf",
-                                     int(20 * min(sX, sY)))
-
-        self.spawn_button = Button(None, (0, 0), "Spawn Ball", self.font,
-                                   "white", "#b68f40")
-        self.add_circle_button = Button(None, (0, 0), "Add Circle", self.font,
-                                        "white", "#b68f40")
-
-        # Add base circle
-        self.add_circle(
-            1, 1)  # Initial scaling factors don't matter for first circle
-        self.spawn_pressed = False
-        self.circle_pressed = False
         self.cell_size = 50
         self.grid = {}
-        self.recalculate_layout(sX, sY)
-        self.angle_cache = {}
-        for angle in range(360):
-            rad = radians(angle)
-            self.angle_cache[angle] = (cos(rad), sin(rad))
+
+        self.spawn_button = Button(None, (0, 0), "Spawn Ball", pygame.font.Font(None, 24), "white", "#b68f40")
+        self.add_circle_button = Button(None, (0, 0), "Add Circle", pygame.font.Font(None, 24), "white", "#b68f40")
 
         self.recalculate_layout(sX, sY)
+        self.add_circle(sX, sY)
 
-    def get_grid_pos(self, x, y):
-        return (int(x // self.cell_size), int(y // self.cell_size))
-
-    def update_grid(self):
-        self.grid.clear()
-        for ball in self.balls:
-            cell_x, cell_y = self.get_grid_pos(ball.x, ball.y)
-            ball.cell_x, ball.cell_y = cell_x, cell_y
-            cell_key = (cell_x, cell_y)
-            if cell_key not in self.grid:
-                self.grid[cell_key] = []
-            self.grid[cell_key].append(ball)
-
-    def get_nearby_balls(self, ball):
-        nearby = []
-        for dx in (-1, 0, 1):
-            for dy in (-1, 0, 1):
-                cell_key = (ball.cell_x + dx, ball.cell_y + dy)
-                if cell_key in self.grid:
-                    nearby.extend(self.grid[cell_key])
-        return nearby
+        self.angle_cache = {angle: (cos(radians(angle)), sin(radians(angle))) for angle in range(360)}
+        self.spawn_pressed = False
+        self.circle_pressed = False
 
     def recalculate_layout(self, sX, sY):
         # Update base measurements
@@ -585,98 +545,77 @@ class BallSimulation:
              button_spacing, button_y))
 
     def spawn_ball(self, sX, sY):
-        ball_radius = int(6 * min(sX, sY))  # Scale ball size with screen size
-        new_ball = Ball(self.center_x, self.center_y, ball_radius)
-        self.balls.append(new_ball)
+        ball_radius = int(6 * min(sX, sY))
+        self.balls.append(Ball(self.center_x, self.center_y, ball_radius))
 
     def add_circle(self, sX, sY):
-        active_circles = sum(1 for circle in self.circles if circle.active)
+        active_circles = sum(1 for c in self.circles if c.active)
         if active_circles >= 10:
             return
-        if len(self.circles) == 0 or active_circles == 0:
-            # Base case - first circle or all circles broken
+        if not self.circles or active_circles == 0:
             self.circles.append(Circle(self.base_radius))
         else:
-            # Get the last active circle's radius
-            last_active_radius = next(
-                (circle.radius
-                 for circle in reversed(self.circles) if circle.active),
-                self.base_radius)
-            new_radius = max(10, last_active_radius - 20)
+            largest_remaining_radius = max((c.radius for c in self.circles if c.active), default=self.base_radius)
+            new_radius = max(10, largest_remaining_radius - 20)
             self.circles.append(Circle(new_radius))
 
-    def update(self, dt, sX, sY):
-        padding = int(50 *
-                      min(sX, sY))  # Add padding proportional to circle size
-        pygame.draw.rect(
-            self.display_surface, '#cccccc',
-            (self.box_x - padding, self.box_y - padding,
-             self.box_width + 2 * padding, self.box_height + 2 * padding),
-            max(1, int(2 * min(sX, sY))))
-
-        for circle in self.circles:
-            circle.update(dt)
-            circle.draw(self.display_surface, self.center_x, self.center_y,
-                        self.line_thickness, self.color, pygame.gfxdraw)
-
+    def handle_collisions(self):
         for ball in self.balls[:]:
-            ball.update(dt)
+            dx = ball.x - self.center_x
+            dy = ball.y - self.center_y
+            dist = hypot(dx, dy)
 
-            # Check collision with each circle
-            for i, circle in enumerate(self.circles):
+            for circle in self.circles:
                 if not circle.active:
                     continue
 
-                # Calculate ball's position relative to circle center
-                dx = ball.x - self.center_x
-                dy = ball.y - self.center_y
-                distance = (dx * dx + dy * dy) ** 0.5
+                distance_to_ring = abs(dist - circle.radius)
+                collision_margin = self.line_thickness + ball.radius
 
-                # If ball is near the circle's radius
-                if abs(distance - circle.radius) < ball.radius:
-                    # Calculate ball's angle relative to circle center
+                if distance_to_ring <= collision_margin:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
-
-                    # If ball is in gap, remove it and mark circle as inactive
                     if circle.is_in_gap(angle):
                         self.balls.remove(ball)
                         circle.active = False
                         break
                     else:
-                        # Basic bounce behavior - reverse radial velocity component
-                        radial_angle = atan2(dy, dx)
-                        normal_x = cos(radial_angle)
-                        normal_y = sin(radial_angle)
+                        norm_dx = dx / dist
+                        norm_dy = dy / dist
+                        dot = ball.vel_x * norm_dx + ball.vel_y * norm_dy
+                        ball.vel_x -= 2 * dot * norm_dx
+                        ball.vel_y -= 2 * dot * norm_dy
+                        ball.x += norm_dx * (collision_margin - distance_to_ring + 1)
+                        ball.y += norm_dy * (collision_margin - distance_to_ring + 1)
+                        break
 
-                        # Calculate dot product of velocity and normal
-                        dot_product = ball.vel_x * normal_x + ball.vel_y * normal_y
+    def update(self, dt, sX, sY):
+        for circle in self.circles:
+            circle.update(dt)
+            circle.draw(self.display_surface, self.center_x, self.center_y,
+                        self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
-                        # Reflect velocity
-                        ball.vel_x = ball.vel_x - 2 * dot_product * normal_x
-                        ball.vel_y = ball.vel_y - 2 * dot_product * normal_y
+        for ball in self.balls:
+            ball.update(dt)
 
-        self.update_grid()
+        self.handle_collisions()
 
         for ball in self.balls[:]:
             if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
-                continue
+            else:
+                ball.draw(self.display_surface)
 
-            ball.draw(self.display_surface)
+        # Button UI
         self.spawn_button.update(self.display_surface)
         self.add_circle_button.update(self.display_surface)
         mouse_pos = pygame.mouse.get_pos()
         self.spawn_button.change_color(mouse_pos)
         self.add_circle_button.change_color(mouse_pos)
-
-        mouse_pressed = pygame.mouse.get_pressed()[0]
-        if mouse_pressed:
-            if self.spawn_button.check_input(
-                    mouse_pos) and not self.spawn_pressed:
+        if pygame.mouse.get_pressed()[0]:
+            if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
                 self.spawn_ball(sX, sY)
                 self.spawn_pressed = True
-            if self.add_circle_button.check_input(
-                    mouse_pos) and not self.circle_pressed:
+            if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
                 self.add_circle(sX, sY)
                 self.circle_pressed = True
         else:
