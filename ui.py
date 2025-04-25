@@ -419,10 +419,16 @@ class Circle:
         self.active = active
         self.angle = random.randint(0, 360)  # Random starting angle
         self.rotation_speed = random.uniform(0.5, 2.0)  # Random rotation speed
-        self.gap_offset = random.randint(-30, 30)  # Random gap position offset
+        self.gap_size = min(120, 30 + (radius / 2))  # Gap size proportional to radius
 
     def update(self, dt):
         self.angle = (self.angle + self.rotation_speed) % 360
+
+    def is_in_gap(self, ball_angle):
+        gap_start = self.angle
+        gap_end = (self.angle + self.gap_size) % 360
+        return (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
+               (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
 
     def draw(self, surface, center_x, center_y, line_thickness, color, gfxdraw):
         if self.active:
@@ -432,7 +438,7 @@ class Circle:
                            int(center_y), 
                            int(self.radius - i), 
                            int(self.angle), 
-                           int((self.angle + 330 + self.gap_offset) % 360), 
+                           int((self.angle + (360 - self.gap_size)) % 360), 
                            color)
 
 
@@ -574,13 +580,16 @@ class BallSimulation:
                 in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
                         (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
 
+                ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
+                in_gap = circle_data.is_in_gap(ball_angle)
+
                 # If ball passes through gap, mark circle as inactive
-                if in_gap and distance > radius_diff:
+                if in_gap and abs(distance - radius_diff) < ball.radius:
                     circle_data.active = False
                     ball.passed_circles.add(id(circle_data))
                 
                 # Only check collision if ball hasn't passed this circle and circle is active
-                if distance > radius_diff and not in_gap and id(circle_data) not in ball.passed_circles and circle_data.active:
+                if abs(distance - radius_diff) < ball.radius and not in_gap and id(circle_data) not in ball.passed_circles and circle_data.active:
                     normal_x = -dx / distance  # Invert normal for correct bounce direction
                     normal_y = -dy / distance
 
