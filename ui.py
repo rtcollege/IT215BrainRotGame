@@ -473,19 +473,18 @@ class BallSimulation:
         self.line_thickness = max(1, int(3 * min(sX, sY)))
 
         font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
-        button_spacing = int(50 * min(sX, sY))  # Space between buttons
+        button_spacing = int(30 * min(sX, sY))  # Reduced spacing between buttons
         button_y = self.box_y + self.box_height + button_spacing  # Position below box
         
-        # Calculate positions to center buttons horizontally
-        total_width = self.box_width + (2 * button_spacing)  # Total available width including padding
+        # Position buttons to the left with smaller spacing
         self.spawn_button = Button(None, 
-                                 (self.box_x - button_spacing + (total_width // 3), button_y), 
+                                 (self.box_x + button_spacing, button_y), 
                                  "Spawn Ball", 
                                  font, 
                                  "white", 
                                  "#b68f40")
         self.add_circle_button = Button(None, 
-                                      (self.box_x - button_spacing + (2 * total_width // 3), button_y), 
+                                      (self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y), 
                                       "Add Circle", 
                                       font, 
                                       "white", 
