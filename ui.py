@@ -403,6 +403,7 @@ class Ball:
         self.gravity = 3
         self.cell_x = 0
         self.cell_y = 0
+        self.passed_circles = set()  # Track which circles the ball has passed through
 
     def update(self, dt):
         self.vel_y += self.gravity * dt
@@ -535,7 +536,12 @@ class BallSimulation:
                 in_gap = (gap_start < gap_end and gap_start <= ball_angle <= gap_end) or \
                         (gap_start > gap_end and (ball_angle >= gap_start or ball_angle <= gap_end))
 
-                if distance > radius_diff and not in_gap:
+                # If ball passes through gap, mark circle as passed
+                if in_gap and distance > radius_diff:
+                    ball.passed_circles.add(id(circle_data))
+                
+                # Only check collision if ball hasn't passed this circle
+                if distance > radius_diff and not in_gap and id(circle_data) not in ball.passed_circles:
                     normal_x = -dx / distance  # Invert normal for correct bounce direction
                     normal_y = -dy / distance
 
