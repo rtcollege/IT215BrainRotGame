@@ -502,7 +502,6 @@ class BallSimulation:
         # Update button fonts in case of resolution change
         self.spawn_button.update_font(self.font)
         self.add_circle_button.update_font(self.font) 
-                                      "#b68f40")
 
     def spawn_ball(self, sX, sY):
         ball_radius = int(10 * min(self.display_surface.get_width()/1920, self.display_surface.get_height()/1080))
