@@ -531,4 +531,33 @@ class BallSimulation:
 
         for ball in self.balls[:]:
             ball.update(dt)
+            
+            # Calculate distance and angle from center for each ball
+            dx = ball.x - self.center_x
+            dy = ball.y - self.center_y
+            distance = ((dx ** 2) + (dy ** 2)) ** 0.5
+            angle = (degrees(atan2(dy, dx)) + 360) % 360
+            
+            # Check collision with each circle
+            for i, circle in enumerate(self.circles):
+                if circle.active:
+                    # Only check collision if we haven't passed this circle yet
+                    if i not in ball.passed_circles:
+                        if abs(distance - circle.radius) < ball.radius:
+                            if not circle.is_in_gap(angle):
+                                # Ball hit the circle - remove it
+                                if ball in self.balls:
+                                    self.balls.remove(ball)
+                                break
+                            else:
+                                # Ball passed through gap
+                                ball.passed_circles.add(i)
+                                
+            # Remove balls that go too far from the center
+            max_distance = self.radius * 2
+            if distance > max_distance:
+                if ball in self.balls:
+                    self.balls.remove(ball)
+
+            ball.draw(self.display_surface)
 
