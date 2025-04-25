@@ -16,9 +16,16 @@ class Circle:
     def update(self, dt):
         self.angle = (self.angle + self.rotation_speed) % 360
         if self.active and self.radius > self.min_radius:
+            old_radius = self.radius
             self.radius = max(self.min_radius, self.radius - self.shrink_rate * dt)
             # Update gap size as circle shrinks
             self.gap_size = min(90, 30 + (self.radius / 2))
+            
+            # Check if circle has shrunk past padding threshold
+            padding_threshold = self.line_thickness + 20  # Line thickness plus some padding
+            if old_radius > (self.radius + padding_threshold):
+                return True  # Signal to add new circle
+        return False
 
     def is_in_gap(self, ball_angle):
         gap_start = self.angle

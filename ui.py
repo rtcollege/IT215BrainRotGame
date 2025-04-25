@@ -84,7 +84,7 @@ class UI:
         # Initialize title texts
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
         self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
-        
+
         # Update back button position to match main menu buttons
         back_button_x = int(50 * self.sX)  # Same as button_x
         back_button_y = button_y_start + 3 * button_y_spacing
@@ -592,9 +592,10 @@ class BallSimulation:
             ball.vel_x *= drag
             ball.vel_y *= drag
 
-    def update(self, dt, sX, sY):
+    def update(self, dt):
         for circle in self.circles:
-            circle.update(dt)
+            if circle.update(dt):  # If circle has shrunk past threshold
+                self.add_circle(self.sX, self.sY)  # Add a new circle
             circle.draw(self.display_surface, self.center_x, self.center_y,
                         self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
@@ -617,10 +618,10 @@ class BallSimulation:
         self.add_circle_button.change_color(mouse_pos)
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
-                self.spawn_ball(sX, sY)
+                self.spawn_ball(self.sX, self.sY)
                 self.spawn_pressed = True
             if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
-                self.add_circle(sX, sY)
+                self.add_circle(self.sX, self.sY)
                 self.circle_pressed = True
         else:
             self.spawn_pressed = False
