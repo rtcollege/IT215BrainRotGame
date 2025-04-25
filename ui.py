@@ -508,6 +508,7 @@ class BallSimulation:
         return nearby
 
     def recalculate_layout(self, sX, sY):
+        # Update base measurements
         self.radius = int(self.base_radius * min(sX, sY))
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
@@ -517,19 +518,22 @@ class BallSimulation:
         self.center_y = self.box_y + self.box_height // 2
         self.line_thickness = max(1, int(3 * min(sX, sY)))
         
-        button_spacing = int(30 * min(sX, sY))  # Reduced spacing between buttons
-        button_y = self.box_y + self.box_height + (button_spacing * 1.5) + self.spawn_button.rect.height  # Position below box with proper height offset
+        # Update font size for buttons
+        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", int(20 * min(sX, sY)))
         
-        # Update existing buttons with new positions
-        self.spawn_button.set_position((self.box_x + button_spacing, button_y))
-        self.add_circle_button.set_position((self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y))
+        # Update buttons with new font and calculate positions
+        button_spacing = int(30 * min(sX, sY))
+        button_y = self.box_y + self.box_height + (button_spacing * 1.5)
         
-        # Update button fonts in case of resolution change
+        # Update button fonts and positions
         self.spawn_button.update_font(self.font)
-        self.add_circle_button.update_font(self.font) 
+        self.add_circle_button.update_font(self.font)
+        
+        self.spawn_button.set_position((self.box_x + button_spacing, button_y))
+        self.add_circle_button.set_position((self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y)) 
 
     def spawn_ball(self, sX, sY):
-        ball_radius = int(10 * min(self.display_surface.get_width()/1920, self.display_surface.get_height()/1080))
+        ball_radius = int(10 * min(sX, sY))  # Scale ball size with screen size
         new_ball = Ball(self.center_x, self.center_y, ball_radius)
         self.balls.append(new_ball)
 
