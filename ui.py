@@ -533,7 +533,7 @@ class BallSimulation:
         self.add_circle_button.set_position((self.box_x + button_spacing + self.spawn_button.rect.width + button_spacing, button_y)) 
 
     def spawn_ball(self, sX, sY):
-        ball_radius = int(10 * min(sX, sY))  # Scale ball size with screen size
+        ball_radius = int(5 * min(sX, sY))  # Scale ball size with screen size
         new_ball = Ball(self.center_x, self.center_y, ball_radius)
         self.balls.append(new_ball)
 
