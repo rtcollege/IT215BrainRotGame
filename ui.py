@@ -474,9 +474,38 @@ class BallSimulation:
         self.add_circle(1, 1)  # Initial scaling factors don't matter for first circle
         self.spawn_pressed = False
         self.circle_pressed = False
+        self.cell_size = 50
+        self.grid = {}
+        self.recalculate_layout(sX, sY)
+        self.angle_cache = {}
+        for angle in range(360):
+            rad = radians(angle)
+            self.angle_cache[angle] = (cos(rad), sin(rad))
+
+        
         self.recalculate_layout(sX, sY)
 
+    def get_grid_pos(self, x, y):
+        return (int(x // self.cell_size), int(y // self.cell_size))
 
+    def update_grid(self):
+        self.grid.clear()
+        for ball in self.balls:
+            cell_x, cell_y = self.get_grid_pos(ball.x, ball.y)
+            ball.cell_x, ball.cell_y = cell_x, cell_y
+            cell_key = (cell_x, cell_y)
+            if cell_key not in self.grid:
+                self.grid[cell_key] = []
+            self.grid[cell_key].append(ball)
+
+    def get_nearby_balls(self, ball):
+        nearby = []
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                cell_key = (ball.cell_x + dx, ball.cell_y + dy)
+                if cell_key in self.grid:
+                    nearby.extend(self.grid[cell_key])
+        return nearby
 
     def recalculate_layout(self, sX, sY):
         self.radius = int(self.base_radius * min(sX, sY))
@@ -531,33 +560,62 @@ class BallSimulation:
 
         for ball in self.balls[:]:
             ball.update(dt)
-            
-            # Calculate distance and angle from center for each ball
-            dx = ball.x - self.center_x
-            dy = ball.y - self.center_y
-            distance = ((dx ** 2) + (dy ** 2)) ** 0.5
-            angle = (degrees(atan2(dy, dx)) + 360) % 360
-            
-            # Check collision with each circle
-            for i, circle in enumerate(self.circles):
-                if circle.active:
-                    # Only check collision if we haven't passed this circle yet
-                    if i not in ball.passed_circles:
-                        if abs(distance - circle.radius) < ball.radius:
-                            if not circle.is_in_gap(angle):
-                                # Ball hit the circle - remove it
-                                if ball in self.balls:
-                                    self.balls.remove(ball)
-                                break
-                            else:
-                                # Ball passed through gap
-                                ball.passed_circles.add(i)
-                                
-            # Remove balls that go too far from the center
-            max_distance = self.radius * 2
-            if distance > max_distance:
-                if ball in self.balls:
-                    self.balls.remove(ball)
+
+        self.update_grid()
+
+        for ball in self.balls[:]:
+            for circle_data in self.circles:
+                if not circle_data.active:
+                    continue
+
+                dx = ball.x - self.center_x
+                dy = ball.y - self.center_y
+                distance = (dx * dx + dy * dy) ** 0.5
+                radius_diff = circle_data.radius - ball.radius
+
+                ball_angle = (degrees(atan2(dy, dx)) + 360) % 360
+                in_gap = circle_data.is_in_gap(ball_angle)
+                collision_threshold = 5  # Small threshold for better collision detection
+
+                # If ball passes through gap, mark circle as inactive
+                if in_gap and abs(distance - radius_diff) < collision_threshold:
+                    circle_data.active = False
+                    ball.passed_circles.add(id(circle_data))
+                
+                # Only check collision if ball hasn't passed this circle and circle is active
+                if abs(distance - radius_diff) < collision_threshold and not in_gap and id(circle_data) not in ball.passed_circles and circle_data.active:
+                    normal_x = -dx / distance  # Invert normal for correct bounce direction
+                    normal_y = -dy / distance
+
+                    dot_product = (ball.vel_x * normal_x + ball.vel_y * normal_y)
+                    ball.vel_x = (ball.vel_x - 2 * dot_product * normal_x) * 0.8
+                    ball.vel_y = (ball.vel_y - 2 * dot_product * normal_y) * 0.8
+
+                    # Move ball to circle boundary
+                    ball.x = self.center_x + (-normal_x * radius_diff)
+                    ball.y = self.center_y + (-normal_y * radius_diff)
+
+            if ball.y > self.display_surface.get_height():
+                self.balls.remove(ball)
+                continue
 
             ball.draw(self.display_surface)
+
+        self.spawn_button.update(self.display_surface)
+        self.add_circle_button.update(self.display_surface)
+        mouse_pos = pygame.mouse.get_pos()
+        self.spawn_button.change_color(mouse_pos)
+        self.add_circle_button.change_color(mouse_pos)
+
+        mouse_pressed = pygame.mouse.get_pressed()[0]
+        if mouse_pressed:
+            if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
+                self.spawn_ball(sX, sY)
+                self.spawn_pressed = True
+            if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
+                self.add_circle(sX, sY)
+                self.circle_pressed = True
+        else:
+            self.spawn_pressed = False
+            self.circle_pressed = False
 
