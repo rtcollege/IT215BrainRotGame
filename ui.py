@@ -84,7 +84,7 @@ class UI:
         # Initialize title texts
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
         self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
-
+        
         # Update back button position to match main menu buttons
         back_button_x = int(50 * self.sX)  # Same as button_x
         back_button_y = button_y_start + 3 * button_y_spacing
@@ -317,7 +317,7 @@ class UI:
 
     def update_gameplay(self, mouse_pos, dt):
         if not self.is_paused:
-            self.ball_sim.update(dt)
+            self.ball_sim.update(dt, self.sX, self.sY)
         else:
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
@@ -468,8 +468,6 @@ class BallSimulation:
 
     def recalculate_layout(self, sX, sY):
         """Recalculate simulation layout"""
-        self.sX = sX
-        self.sY = sY
         self.radius = int(self.base_radius * min(sX, sY))
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
@@ -594,10 +592,9 @@ class BallSimulation:
             ball.vel_x *= drag
             ball.vel_y *= drag
 
-    def update(self, dt):
+    def update(self, dt, sX, sY):
         for circle in self.circles:
-            if circle.update(dt):  # If circle has shrunk past threshold
-                self.add_circle(self.sX, self.sY)  # Add a new circle
+            circle.update(dt)
             circle.draw(self.display_surface, self.center_x, self.center_y,
                         self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
@@ -620,10 +617,10 @@ class BallSimulation:
         self.add_circle_button.change_color(mouse_pos)
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
-                self.spawn_ball(self.sX, self.sY)
+                self.spawn_ball(sX, sY)
                 self.spawn_pressed = True
             if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
-                self.add_circle(self.sX, self.sY)
+                self.add_circle(sX, sY)
                 self.circle_pressed = True
         else:
             self.spawn_pressed = False

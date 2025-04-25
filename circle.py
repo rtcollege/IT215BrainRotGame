@@ -10,21 +10,15 @@ class Circle:
         self.angle = random.randint(0, 360)
         self.rotation_speed = random.uniform(0.5, 2.0)
         self.gap_size = min(90, 30 + (radius / 2))
-        self.shrink_rate = 30  # Units per second
+        self.shrink_rate = 5  # Units per second
         self.min_radius = 20  # Minimum radius allowed
 
     def update(self, dt):
         self.angle = (self.angle + self.rotation_speed) % 360
         if self.active and self.radius > self.min_radius:
-            old_radius = self.radius
             self.radius = max(self.min_radius, self.radius - self.shrink_rate * dt)
             # Update gap size as circle shrinks
             self.gap_size = min(90, 30 + (self.radius / 2))
-            
-            # Signal to add new circle when radius shrinks past threshold
-            if old_radius > self.radius + 20:  # Smaller threshold for more frequent circles
-                return True
-        return False
 
     def is_in_gap(self, ball_angle):
         gap_start = self.angle
