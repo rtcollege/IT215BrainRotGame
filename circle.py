@@ -21,8 +21,8 @@ class Circle:
             # Update gap size as circle shrinks
             self.gap_size = min(90, 30 + (self.radius / 2))
             
-            # Signal to add new circle when significant shrinking occurs
-            if old_radius > (self.radius + 50):  # 20 is the padding threshold
+            # Signal to add new circle when radius shrinks past threshold
+            if old_radius > self.radius + 20:  # Smaller threshold for more frequent circles
                 return True
         return False
 
