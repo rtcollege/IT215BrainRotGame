@@ -317,7 +317,7 @@ class UI:
 
     def update_gameplay(self, mouse_pos, dt):
         if not self.is_paused:
-            self.ball_sim.update(dt, self.sX, self.sY)
+            self.ball_sim.update(dt)
         else:
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
