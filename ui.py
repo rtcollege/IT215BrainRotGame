@@ -70,12 +70,21 @@ class UI:
 
     def recalculate_layout(self):
         """Recalculate all UI element positions and sizes"""
+        # Layout constants
+        button_x = int(50 * self.sX)
+        button_y_start = int(300 * self.sY)
+        button_y_spacing = int(100 * self.sY)
+
         # Update fonts
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(self.base_font_size * min(self.sX, self.sY)))
         self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                          int(self.base_font_size * 1.5 * min(self.sX, self.sY)))
-                                         
+
+        # Initialize title texts
+        self.title_text = self.title_font.render("Brain Rot Game", True, "white")
+        self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
+        
         # Update back button position to match main menu buttons
         back_button_x = int(50 * self.sX)  # Same as button_x
         back_button_y = button_y_start + 3 * button_y_spacing
