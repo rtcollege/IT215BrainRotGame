@@ -494,7 +494,7 @@ class BallSimulation:
         self.display_surface = display_surface
         self.balls = []
         self.circles = []
-        self.circle_base_radius = 150
+        self.circle_base_radius = 200
         self.ball_base_radius = 6
         self.base_padding = 100
         self.base_box_width = self.circle_base_radius * 2 + self.base_padding
