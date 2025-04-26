@@ -630,20 +630,10 @@ class BallSimulation:
             norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
             tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
 
-            # Calculate current velocity magnitude
-            current_speed = (ball.vel_x ** 2 + ball.vel_y ** 2) ** 0.5
-            max_speed = ball.max_speed * 0.8  # 80% of max speed as threshold
-            
-            # Dynamic bounce boost based on current speed
-            bounce_boost = 1.1
-            if current_speed > max_speed:
-                # Reduce boost for high speeds
-                speed_factor = max_speed / current_speed
-                bounce_boost = 1.0 + (0.1 * speed_factor)
-            
             # Reflect normal component with bounce boost and minimal energy loss
             energy_loss = 0.995 - (0.02 * (len(colliding_circles) - 1))  # Less energy loss
             energy_loss = max(0.85, energy_loss)  # Higher minimum energy retention
+            bounce_boost = 1.1  # Add extra energy on bounce
             norm_vel = -norm_vel * energy_loss * bounce_boost
 
             # Reconstruct velocity vector
