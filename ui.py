@@ -577,12 +577,6 @@ class BallSimulation:
         self.spawn_pressed = False
         self.circle_pressed = False
 
-        # Initialize upgrade button press states
-        self._multi_ball_level_pressed = False
-        self._shrink_reduction_level_pressed = False
-        self._rotation_reduction_level_pressed = False
-        self._health_regen_level_pressed = False
-
     def recalculate_layout(self, sX, sY):
         """Recalculate simulation layout"""
         scale_factor = min(sX, sY)
@@ -823,12 +817,6 @@ class BallSimulation:
         else:
             self.spawn_pressed = False
             self.circle_pressed = False
-
-        # Initialize upgrade button press states
-        self._multi_ball_level_pressed = False
-        self._shrink_reduction_level_pressed = False
-        self._rotation_reduction_level_pressed = False
-        self._health_regen_level_pressed = False
 
         # Handle upgrade buttons
         upgrade_buttons = [
