@@ -557,14 +557,14 @@ class BallSimulation:
         for ball in self.balls:
             # Scale ball radius
             ball.radius = int(6 * scale_factor)
-            # Recalculate ball position relative to new center
-            rel_x = ball.x - self.center_x
-            rel_y = ball.y - self.center_y
-            ball.x = self.center_x + (rel_x * sX)
-            ball.y = self.center_y + (rel_y * sY)
-            # Scale velocities
-            ball.vel_x *= sX
-            ball.vel_y *= sY
+            # Recalculate ball position relative to new center and display bounds
+            rel_x = (ball.x - self.center_x) / self.display_surface.get_width()
+            rel_y = (ball.y - self.center_y) / self.display_surface.get_height()
+            ball.x = self.center_x + (rel_x * self.display_surface.get_width())
+            ball.y = self.center_y + (rel_y * self.display_surface.get_height())
+            # Scale velocities relative to display size
+            ball.vel_x = (ball.vel_x / self.display_surface.get_width()) * self.display_surface.get_width()
+            ball.vel_y = (ball.vel_y / self.display_surface.get_height()) * self.display_surface.get_height()
 
     def get_current_ball_cost(self):
         return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
