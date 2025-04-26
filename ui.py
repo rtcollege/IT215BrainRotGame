@@ -55,7 +55,8 @@ class UI:
             ('resume_button', "Resume"),
             ('pause_settings_button', "Settings"),
             ('pause_credits_button', "Credits"),
-            ('pause_main_menu_button', "Main Menu")
+            ('pause_main_menu_button', "Main Menu"),
+            ('restart_button', "Restart")
         ]
 
         for attr_name, text in button_configs:
@@ -318,6 +319,23 @@ class UI:
     def update_gameplay(self, mouse_pos, dt):
         if not self.is_paused:
             self.ball_sim.update(dt, self.sX, self.sY)
+            
+            if self.ball_sim.health <= 0:
+                overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
+                overlay.fill((0, 0, 0))
+                overlay.set_alpha(128)
+                self.display_surface.blit(overlay, (0, 0))
+                
+                game_over_text = self.title_font.render("Game Over", True, "white")
+                game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
+                self.display_surface.blit(game_over_text, game_over_rect)
+                
+                # Position restart button below text
+                self.restart_button.update_font(self.font)
+                self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
+                                                self.W_HEIGHT // 2 + 50))
+                self.restart_button.update(self.display_surface)
+                self.restart_button.change_color(mouse_pos)
         else:
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
@@ -423,7 +441,12 @@ class UI:
             self.switch_scene(self.previous_scene)
 
     def handle_gameplay_click(self, mouse_pos):
-        if self.is_paused:
+        if self.ball_sim.health <= 0:
+            if self.restart_button.check_input(mouse_pos):
+                # Reset game state
+                self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY)
+                self.is_paused = False
+        elif self.is_paused:
             if self.resume_button.check_input(mouse_pos):
                 self.is_paused = False
             elif self.pause_settings_button.check_input(mouse_pos):
