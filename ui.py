@@ -452,6 +452,9 @@ class BallSimulation:
         self.base_box_x = 100
         self.cell_size = 50
         self.grid = {}
+        self.level = 1
+        self.can_spawn_circles = True
+        self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
 
         self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
                                  pygame.font.Font(None, 24), "white", "#b68f40")
@@ -489,7 +492,12 @@ class BallSimulation:
         ball_radius = int(6 * min(sX, sY))
         self.balls.append(Ball(self.center_x, self.center_y, ball_radius))
 
+    def enable_circle_spawn(self):
+        self.can_spawn_circles = True
+
     def add_circle(self, sX, sY):
+        if not self.can_spawn_circles:
+            return
         active_circles = sum(1 for c in self.circles if c.active)
         if active_circles >= 7:
             return
@@ -571,8 +579,27 @@ class BallSimulation:
             ball.vel_y *= drag
 
     def update(self, dt, sX, sY):
+        # Update level timer
+        self.level_timer.update()
+        
+        # Draw level text
+        level_text = self.font.render(f"Level: {self.level}", True, "white")
+        level_rect = level_text.get_rect(midtop=(self.center_x, self.box_y - 50))
+        self.display_surface.blit(level_text, level_rect)
+
+        # Update and draw circles
+        active_circles = [c for c in self.circles if c.active]
+        if not active_circles and not self.circles:
+            if self.can_spawn_circles:
+                self.level += 1
+                self.add_circle(sX, sY)
+        elif len(active_circles) == 0:
+            self.can_spawn_circles = False
+            self.level_timer.activate()
+            self.circles.clear()
+
         for circle in self.circles:
-            circle.update(dt, self.circles)
+            circle.update(dt, self.circles, self.level)  # Pass level to circle update
             circle.draw(self.display_surface, self.center_x, self.center_y,
                         self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
