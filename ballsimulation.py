@@ -1,4 +1,3 @@
-
 from settings import *
 from data import Data
 from timer import Timer
