@@ -21,7 +21,7 @@ class Ball:
         self.cell_x = 0
         self.cell_y = 0
         
-    def rescale(self, new_center_x, new_center_y, scale_factor):
+    def rescale(self, new_center_x, new_center_y, scale_factor, ball_radius):
         """Rescale ball position and properties based on new center and scale"""
         self.center_x = new_center_x
         self.center_y = new_center_y
@@ -32,7 +32,7 @@ class Ball:
         self.rel_x = self.x - new_center_x
         self.rel_y = self.y - new_center_y
         # Scale radius and velocities
-        self.radius = int(self.radius * scale_factor)
+        self.radius = ball_radius * scale_factor
         self.vel_x *= scale_factor
         self.vel_y *= scale_factor
         self.max_speed *= scale_factor

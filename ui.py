@@ -494,10 +494,11 @@ class BallSimulation:
         self.display_surface = display_surface
         self.balls = []
         self.circles = []
-        self.base_radius = 150
+        self.circle_base_radius = 150
+        self.ball_base_radius = 6
         self.base_padding = 100
-        self.base_box_width = self.base_radius * 2 + self.base_padding
-        self.base_box_height = self.base_radius * 2 + self.base_padding
+        self.base_box_width = self.circle_base_radius * 2 + self.base_padding
+        self.base_box_height = self.circle_base_radius * 2 + self.base_padding
         self.base_box_x = 100
         self.cell_size = 50
         self.grid = {}
@@ -526,7 +527,7 @@ class BallSimulation:
     def recalculate_layout(self, sX, sY):
         """Recalculate simulation layout"""
         scale_factor = min(sX, sY)
-        self.radius = int(self.base_radius * scale_factor)
+        self.radius = int(self.circle_base_radius * scale_factor)
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
         self.box_x = int(self.base_box_x * sX)
@@ -538,16 +539,17 @@ class BallSimulation:
         # Rescale all circles
         for circle in self.circles:
             # Scale radius directly from base radius
-            new_initial = int(self.base_radius * scale_factor)
+            new_initial = int(self.circle_base_radius * scale_factor)
             ratio = circle.radius / circle.initial_radius
             circle.radius = int(new_initial * ratio)
             circle.initial_radius = new_initial
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
+            circle.gap_size = (min(90, 30 + (circle.radius / 2)) * scale_factor)
             
         # Rescale all balls
         for ball in self.balls:
-            ball.rescale(self.center_x, self.center_y, scale_factor)
-
+            ball.rescale(self.center_x, self.center_y, scale_factor, self.ball_base_radius)
+            
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * scale_factor))
 
@@ -562,7 +564,7 @@ class BallSimulation:
         
     def spawn_ball(self, sX, sY):
         scale_factor = min(sX, sY)
-        ball_radius = int(6 * scale_factor)  # Base ball radius
+        ball_radius = self.ball_base_radius * scale_factor  # Base ball radius
         self.balls.append(Ball(self.center_x, self.center_y, ball_radius, self.center_x, self.center_y))
 
     def enable_circle_spawn(self):
@@ -575,7 +577,7 @@ class BallSimulation:
         if active_circles >= 7:
             return
             
-        scaled_radius = int(self.base_radius * min(sX, sY))
+        scaled_radius = int(self.circle_base_radius * min(sX, sY))
         new_circle = Circle(scaled_radius)
         if not new_circle.check_collision(self.circles):
             self.circles.append(new_circle)
