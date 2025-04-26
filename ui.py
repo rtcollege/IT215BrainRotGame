@@ -674,8 +674,11 @@ class BallSimulation:
                         self.spawn_timer.activate()
                         circle.active = False
                         # Award experience based on circle size
+                        # Award experience and currency based on circle size
                         exp_gain = int((circle.initial_radius - circle.radius) / 2)
+                        currency_gain = int((circle.initial_radius - circle.radius) / 4)  # Half of exp gain
                         self.data.experience += max(10, exp_gain)
+                        self.currency += max(5, currency_gain)  # Minimum 5 currency
                         break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
 
