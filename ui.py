@@ -12,11 +12,12 @@ import pygame.gfxdraw
 import sys
 
 class UI:
-    def __init__(self, font, frames):
+    def __init__(self, font, frames, data):
         self.display_surface = pygame.display.get_surface()
         self.base_font_size = 40
         self.frames = frames
         self.font = font
+        self.data = data
 
         # Core state
         self.current_scene = 'main_menu'
