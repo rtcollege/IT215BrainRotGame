@@ -566,8 +566,10 @@ class BallSimulation:
         
     def spawn_ball(self, sX, sY):
         scale_factor = min(sX, sY)
-        ball_radius = self.ball_base_radius * scale_factor  # Base ball radius
-        self.balls.append(Ball(self.center_x, self.center_y, ball_radius, self.center_x, self.center_y))
+        ball_radius = self.ball_base_radius * scale_factor
+        # Spawn multiple balls based on upgrade level
+        for _ in range(1 + self.data.multi_ball_level):
+            self.balls.append(Ball(self.center_x, self.center_y, ball_radius, self.center_x, self.center_y))
 
     def enable_circle_spawn(self):
         self.can_spawn_circles = True
@@ -664,6 +666,11 @@ class BallSimulation:
     def update(self, dt, sX, sY):
         # Update level timer
         self.spawn_timer.update()
+        
+        # Apply health regeneration
+        if self.health < 100:
+            regen_amount = self.data.health_regen_level * 2 * dt  # 2 health per second per level
+            self.health = min(100, self.health + regen_amount)
         
         # Update health and currency every second
         current_time = pygame.time.get_ticks()
