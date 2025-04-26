@@ -526,6 +526,11 @@ class BallSimulation:
                 if distance_to_ring <= collision_margin:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
                     if circle.is_in_gap(angle):
+                        # Check if this is the only active circle
+                        active_circles = sum(1 for c in self.circles if c.active)
+                        if active_circles == 1:
+                            self.can_spawn_circles = False
+                            self.level_timer.activate()
                         circle.active = False
                         break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
