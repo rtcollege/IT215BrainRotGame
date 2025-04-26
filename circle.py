@@ -1,4 +1,3 @@
-
 import random
 import pygame
 
@@ -16,16 +15,16 @@ class Circle:
     def check_collision(self, other_circles):
         if not other_circles:
             return False
-            
+
         for circle in other_circles:
             if not circle.active or circle == self:
                 continue
-                
+
             radii_diff = abs(self.radius - circle.radius)
             if radii_diff < 15:
                 if self.radius >= circle.radius:
                     return True
-                    
+
                 # Quick check for space below
                 target_radius = self.radius - 5
                 return any(
@@ -61,7 +60,7 @@ class Circle:
         else:
             return ball_angle >= gap_start or ball_angle <= gap_end
 
-    
+
 
     def draw(self, surface, center_x, center_y, line_thickness, color, gfxdraw):
         if self.active:
@@ -71,3 +70,14 @@ class Circle:
                            int((self.angle + self.gap_size) % 360),
                            int((self.angle + 360) % 360),
                            color)
+
+    def recalculate_layout(self, sX, sY):
+        """Recalculate circle dimensions based on screen size"""
+        scale_factor = min(sX, sY)
+        # Scale the current radius relative to initial radius
+        if self.radius == self.initial_radius:
+            self.radius = int(self.initial_radius * scale_factor)
+        else:
+            ratio = self.radius / self.initial_radius
+            self.radius = int(self.initial_radius * scale_factor * ratio)
+        self.min_radius = int(20 * scale_factor)  # Scale minimum radius

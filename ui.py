@@ -516,7 +516,8 @@ class BallSimulation:
                                  pygame.font.Font(None, 24), "white", "#b68f40")
 
         self.recalculate_layout(sX, sY)
-        self.add_circle(sX, sY)
+        if not self.circles:  # Only add circle if none exist
+            self.add_circle(sX, sY)
 
         self.angle_cache = {angle: (cos(radians(angle)), sin(radians(angle))) 
                            for angle in range(360)}
