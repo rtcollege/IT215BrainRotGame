@@ -538,12 +538,18 @@ class BallSimulation:
 
         # Rescale all circles
         for circle in self.circles:
-            # Scale radius directly from base radius
+            # Scale all radius values proportionally
             new_initial = int(self.circle_base_radius * scale_factor)
-            ratio = circle.radius / circle.initial_radius
-            circle.radius = int(new_initial * ratio)
+            circle.min_radius = int(20 * scale_factor)
+            
+            # Calculate how close the circle is to its minimum radius (as a percentage)
+            current_range = circle.initial_radius - circle.min_radius
+            current_progress = (circle.radius - circle.min_radius) / current_range if current_range > 0 else 0
+            
+            # Apply the same percentage to the new scale
+            new_range = new_initial - circle.min_radius
+            circle.radius = int(circle.min_radius + (new_range * current_progress))
             circle.initial_radius = new_initial
-            circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
             circle.line_thickness = self.line_thickness
             circle.scale_factor = scale_factor
             
