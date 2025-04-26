@@ -86,7 +86,7 @@ class UI:
         # Initialize title texts
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
         self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
-        
+
         # Update back button position to match main menu buttons
         back_button_x = int(50 * self.sX)  # Same as button_x
         back_button_y = button_y_start + 3 * button_y_spacing
@@ -324,29 +324,25 @@ class UI:
             status_x = int(20 * self.sX)
             status_y = int(20 * self.sY)
             spacing = int(40 * self.sY)
-            
+
             health_text = self.ball_sim.font.render(f"Health: {self.ball_sim.health}", True, "white")
             currency_text = self.ball_sim.font.render(f"Currency: {self.ball_sim.currency}", True, "white")
-            
+
             self.display_surface.blit(health_text, (status_x, status_y))
             self.display_surface.blit(currency_text, (status_x, status_y + spacing))
-            
+
             # Draw level and experience bar
-            level_text = self.ball_sim.font.render(f"Level: {self.data.level}", True, "white")
-            level_rect = level_text.get_rect(topleft=(self.ball_sim.box_x, self.ball_sim.box_y - 50))
-            self.display_surface.blit(level_text, level_rect)
-            
             # Experience bar
             exp_bar_width = int(300 * self.sX)
             exp_bar_height = int(20 * self.sY)
-            exp_bar_x = level_rect.right + int(20 * self.sX)
-            exp_bar_y = level_rect.centery - exp_bar_height // 2
-            
+            exp_bar_x = self.ball_sim.box_x
+            exp_bar_y = self.ball_sim.box_y - 50
+
             # Draw background
             exp_bar_bg = pygame.Rect(exp_bar_x, exp_bar_y, exp_bar_width, exp_bar_height)
             pygame.draw.rect(self.display_surface, "black", exp_bar_bg)
             pygame.draw.rect(self.display_surface, "white", exp_bar_bg, 2)
-            
+
             # Draw progress
             exp_needed = self.data.get_exp_for_level(self.data.level)
             progress = self.data.experience / exp_needed
@@ -363,17 +359,17 @@ class UI:
             # Draw all balls in their current state
             for ball in self.ball_sim.balls:
                 ball.draw(self.display_surface)
-            
+
             # Show game over overlay
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
             overlay.set_alpha(128)
             self.display_surface.blit(overlay, (0, 0))
-            
+
             game_over_text = self.title_font.render("Game Over", True, "white")
             game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
             self.display_surface.blit(game_over_text, game_over_rect)
-            
+
             # Position restart button below text
             self.restart_button.update_font(self.font)
             self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
@@ -382,21 +378,17 @@ class UI:
             self.restart_button.change_color(mouse_pos)
         elif not self.is_paused:
             # Draw level and experience bar
-            level_text = self.ball_sim.font.render(f"Level: {self.ball_sim.data.level}", True, "white")
-            level_rect = level_text.get_rect(topleft=(self.ball_sim.box_x, self.ball_sim.box_y - 50))
-            self.display_surface.blit(level_text, level_rect)
-            
             # Experience bar
             exp_bar_width = int(300 * self.sX)
             exp_bar_height = int(20 * self.sY)
-            exp_bar_x = level_rect.right + int(20 * self.sX)
-            exp_bar_y = level_rect.centery - exp_bar_height // 2
-            
+            exp_bar_x = self.ball_sim.box_x
+            exp_bar_y = self.ball_sim.box_y - 50
+
             # Draw background
             exp_bar_bg = pygame.Rect(exp_bar_x, exp_bar_y, exp_bar_width, exp_bar_height)
             pygame.draw.rect(self.display_surface, "black", exp_bar_bg)
             pygame.draw.rect(self.display_surface, "white", exp_bar_bg, 2)
-            
+
             # Draw progress
             exp_needed = self.ball_sim.data.get_exp_for_level(self.ball_sim.data.level)
             progress = self.ball_sim.data.experience / exp_needed
@@ -561,7 +553,7 @@ class BallSimulation:
 
         self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
                                  pygame.font.Font(None, 24), "white", "#b68f40")
-                                 
+
         # Initialize upgrade buttons
         self.multi_ball_button = Button(None, (0, 0), "Multi-Ball", 
                                       pygame.font.Font(None, 24), "white", "#b68f40")
@@ -602,11 +594,11 @@ class BallSimulation:
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
             circle.line_thickness = self.line_thickness
             circle.scale_factor = scale_factor
-            
+
         # Rescale all balls
         for ball in self.balls:
             ball.rescale(self.center_x, self.center_y, scale_factor, self.ball_base_radius)
-            
+
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * scale_factor))
 
@@ -628,7 +620,7 @@ class BallSimulation:
 
     def get_current_ball_cost(self):
         return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
-        
+
     def spawn_ball(self, sX, sY):
         scale_factor = min(sX, sY)
         ball_radius = self.ball_base_radius * scale_factor
@@ -646,7 +638,7 @@ class BallSimulation:
         max_circles = self.base_max_circles + (self.level - 1)
         if active_circles >= max_circles:
             return
-            
+
         scaled_radius = int(self.circle_base_radius * min(sX, sY))
         new_circle = Circle(scaled_radius, self.line_thickness)
         if not new_circle.check_collision(self.circles):
@@ -734,18 +726,18 @@ class BallSimulation:
     def update(self, dt, sX, sY):
         # Update level timer
         self.spawn_timer.update()
-        
+
         # Apply health regeneration
         if self.health < 100:
             regen_amount = self.data.health_regen_level * 2 * dt  # 2 health per second per level
             self.health = min(100, self.health + regen_amount)
-        
+
         # Update health and currency every second
         current_time = pygame.time.get_ticks()
         if current_time - self.last_stat_update >= self.stat_update_delay:
             # Update currency
             self.currency += 1
-            
+
             # Check for minimum radius circles and update health with scaling damage
             has_min_radius = any(circle.active and circle.radius <= circle.min_radius for circle in self.circles)
             if has_min_radius:
@@ -754,25 +746,21 @@ class BallSimulation:
                 self.health = max(0, self.health - damage)
             else:
                 self.min_radius_time = 0  # Reset timer when no circles are at minimum radius
-                    
+
             self.last_stat_update = current_time
-        
+
         # Draw status text
         status_x = int(20 * sX)
         status_y = int(20 * sY)
         spacing = int(40 * sY)
-        
+
         health_text = self.font.render(f"Health: {self.health}", True, "white")
         currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
-        
+
         self.display_surface.blit(health_text, (status_x, status_y))
         self.display_surface.blit(currency_text, (status_x, status_y + spacing))
-        
-        # Draw level text
-        level_text = self.font.render(f"Level: {self.level}", True, "white")
-        level_rect = level_text.get_rect(midtop=(self.center_x, self.box_y - 50))
-        self.display_surface.blit(level_text, level_rect)
 
+        # Draw level text within exp bar
         # Update and draw circles
         active_circles = [c for c in self.circles if c.active]
         if len(active_circles) == 0:
@@ -836,7 +824,7 @@ class BallSimulation:
             # Get current level and cost
             current_level = getattr(self.data, attr)
             cost = self.data.get_upgrade_cost(current_level)
-            
+
             # Update button text with cost
             button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
             button.text = button.font.render(button.text_input, True, button.base_color)
