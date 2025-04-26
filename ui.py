@@ -576,7 +576,8 @@ class BallSimulation:
         if not self.can_spawn_circles:
             return
         active_circles = sum(1 for c in self.circles if c.active)
-        if active_circles >= 7:
+        max_circles = self.base_max_circles + (self.level - 1)
+        if active_circles >= max_circles:
             return
             
         scaled_radius = int(self.circle_base_radius * min(sX, sY))
