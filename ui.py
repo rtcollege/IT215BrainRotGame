@@ -543,6 +543,10 @@ class BallSimulation:
             circle.radius = int(new_initial * ratio)
             circle.initial_radius = new_initial
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
+            
+        # Rescale all balls
+        for ball in self.balls:
+            ball.rescale(self.center_x, self.center_y, scale_factor)
 
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * scale_factor))
@@ -558,7 +562,7 @@ class BallSimulation:
         
     def spawn_ball(self, sX, sY):
         ball_radius = int(6 * min(sX, sY))
-        self.balls.append(Ball(self.center_x, self.center_y, ball_radius))
+        self.balls.append(Ball(self.center_x, self.center_y, ball_radius, self.center_x, self.center_y))
 
     def enable_circle_spawn(self):
         self.can_spawn_circles = True

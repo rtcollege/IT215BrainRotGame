@@ -4,9 +4,13 @@ import random
 from math import cos, sin
 
 class Ball:
-    def __init__(self, x, y, radius):
+    def __init__(self, x, y, radius, center_x=0, center_y=0):
         self.x = x
         self.y = y
+        self.center_x = center_x
+        self.center_y = center_y
+        self.rel_x = x - center_x  # Store relative position
+        self.rel_y = y - center_y
         self.radius = radius
         angle = random.uniform(0, 2 * 3.14159)
         speed = random.uniform(1, 50)  # Reduced max initial speed
@@ -16,6 +20,23 @@ class Ball:
         self.max_speed = 500  # Maximum allowed speed
         self.cell_x = 0
         self.cell_y = 0
+        
+    def rescale(self, new_center_x, new_center_y, scale_factor):
+        """Rescale ball position and properties based on new center and scale"""
+        self.center_x = new_center_x
+        self.center_y = new_center_y
+        # Update position based on relative coordinates
+        self.x = new_center_x + (self.rel_x * scale_factor)
+        self.y = new_center_y + (self.rel_y * scale_factor)
+        # Update relative position with new scale
+        self.rel_x = self.x - new_center_x
+        self.rel_y = self.y - new_center_y
+        # Scale radius and velocities
+        self.radius = int(self.radius * scale_factor)
+        self.vel_x *= scale_factor
+        self.vel_y *= scale_factor
+        self.max_speed *= scale_factor
+        self.gravity *= scale_factor
         
     def update(self, dt):
         self.vel_y += self.gravity * dt
