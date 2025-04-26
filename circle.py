@@ -12,7 +12,7 @@ class Circle:
         self.gap_size = min(90, 30 + (radius / 2))
         self.shrink_rate = 15  # Units per second
         self.min_radius = 20  # Minimum radius allowed
-        self.scale_factor = self.radius / self.initial_radius
+        self.scale_factor = 1.0
 
     def check_collision(self, other_circles):
         if not other_circles:
@@ -23,7 +23,7 @@ class Circle:
                 continue
             
             base_collision_threshold = 12  # 3 * 4 (line_thickness * 4)
-            collision_threshold = base_collision_threshold * self.scale_factor
+            collision_threshold = base_collision_threshold
             
             radii_diff = abs(self.radius - circle.radius)
             if radii_diff < collision_threshold:
