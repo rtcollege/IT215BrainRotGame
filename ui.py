@@ -317,25 +317,28 @@ class UI:
         self.back_button.change_color(mouse_pos)
 
     def update_gameplay(self, mouse_pos, dt):
-        if not self.is_paused:
-            self.ball_sim.update(dt, self.sX, self.sY)
+        if self.ball_sim.health <= 0:
+            # Draw the last frame of gameplay
+            self.ball_sim.draw_state()
             
-            if self.ball_sim.health <= 0:
-                overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
-                overlay.fill((0, 0, 0))
-                overlay.set_alpha(128)
-                self.display_surface.blit(overlay, (0, 0))
-                
-                game_over_text = self.title_font.render("Game Over", True, "white")
-                game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
-                self.display_surface.blit(game_over_text, game_over_rect)
-                
-                # Position restart button below text
-                self.restart_button.update_font(self.font)
-                self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
-                                                self.W_HEIGHT // 2 + 50))
-                self.restart_button.update(self.display_surface)
-                self.restart_button.change_color(mouse_pos)
+            # Show game over overlay
+            overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
+            overlay.fill((0, 0, 0))
+            overlay.set_alpha(128)
+            self.display_surface.blit(overlay, (0, 0))
+            
+            game_over_text = self.title_font.render("Game Over", True, "white")
+            game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
+            self.display_surface.blit(game_over_text, game_over_rect)
+            
+            # Position restart button below text
+            self.restart_button.update_font(self.font)
+            self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
+                                            self.W_HEIGHT // 2 + 50))
+            self.restart_button.update(self.display_surface)
+            self.restart_button.change_color(mouse_pos)
+        elif not self.is_paused:
+            self.ball_sim.update(dt, self.sX, self.sY)
         else:
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
