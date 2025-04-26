@@ -10,6 +10,11 @@ class Button:
         self.base_color = "#ffffff"  # White text
         self.hovering_color = "#b68f40"  # Warm gold hover color
         self.button_color = "#4a4a4a"  # Button background color
+        # Initialize padding
+        from settings import SCALE_X, SCALE_Y
+        self.padding_x = int(40 * SCALE_X)
+        self.padding_y = int(20 * SCALE_Y)
+        
         self._text_input = text_input  # Store original text input
         self.text = self.font.render(self._text_input, True, self.base_color)
 
@@ -22,10 +27,7 @@ class Button:
         self._text_input = value
         self.text = self.font.render(self._text_input, True, self.base_color)
         
-        # Add padding to text area
-        from settings import SCALE_X, SCALE_Y
-        self.padding_x = int(40 * SCALE_X)
-        self.padding_y = int(20 * SCALE_Y)
+        # Update rect and text position
         
         if self.image is not None:
             self.image = pygame.transform.scale(self.image, 
