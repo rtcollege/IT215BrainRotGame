@@ -10,8 +10,17 @@ class Button:
         self.base_color = "#ffffff"  # White text
         self.hovering_color = "#b68f40"  # Warm gold hover color
         self.button_color = "#4a4a4a"  # Button background color
-        self.text_input = text_input
-        self.text = self.font.render(self.text_input, True, self.base_color)
+        self._text_input = text_input  # Store original text input
+        self.text = self.font.render(self._text_input, True, self.base_color)
+
+    @property
+    def text_input(self):
+        return self._text_input
+
+    @text_input.setter 
+    def text_input(self, value):
+        self._text_input = value
+        self.text = self.font.render(self._text_input, True, self.base_color)
         
         # Add padding to text area
         from settings import SCALE_X, SCALE_Y
