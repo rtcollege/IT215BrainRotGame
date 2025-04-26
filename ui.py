@@ -503,6 +503,7 @@ class BallSimulation:
         self.cell_size = 50
         self.grid = {}
         self.level = 1
+        self.base_max_circles = 3  # Starting maximum number of circles
         self.base_ball_cost = 2
         self.can_spawn_circles = True
         self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
@@ -704,7 +705,9 @@ class BallSimulation:
             if not self.circles:  # No circles at all
                 if self.can_spawn_circles:
                     self.level += 1
-                    self.add_circle(sX, sY)
+                    max_circles = self.base_max_circles + (self.level - 1)
+                    for _ in range(max_circles):
+                        self.add_circle(sX, sY)
             else:  # Had circles but all were destroyed
                 self.can_spawn_circles = False
                 self.level_timer.activate()
