@@ -12,6 +12,7 @@ class Circle:
         self.gap_size = min(90, 30 + (radius / 2))
         self.shrink_rate = 15  # Units per second
         self.min_radius = 20  # Minimum radius allowed
+        self.scale_factor = self.radius / self.initial_radius
 
     def check_collision(self, other_circles):
         if not other_circles:
@@ -20,10 +21,10 @@ class Circle:
         for circle in other_circles:
             if not circle.active or circle == self:
                 continue
-                
-            # Scale threshold based on current radius relative to initial radius
-            scale_factor = self.radius / self.initial_radius
-            collision_threshold = 15 * scale_factor
+            
+            line_thickness = other_circles[0].line_thickness if hasattr(other_circles[0], 'line_thickness') else 3
+            
+            collision_threshold = ((line_thickness * 4) * self.scale_factor)
             
             radii_diff = abs(self.radius - circle.radius)
             if radii_diff < collision_threshold:
@@ -31,7 +32,7 @@ class Circle:
                     return True
                     
                 # Quick check for space below
-                target_radius = self.radius - (5 * scale_factor)
+                target_radius = self.radius - collision_threshold
                 return any(
                     other != self and other != circle and 
                     other.active and 
