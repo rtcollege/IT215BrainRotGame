@@ -799,7 +799,7 @@ class BallSimulation:
 
         for ball in self.balls[:]:
             # Remove balls that hit the ground or outer ring
-            if ball.y > self.display_surface.get_height() or ball.destroy_on_outer:
+            if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
                 # Refund half of the current ball cost
                 refund = self.get_current_ball_cost() // 2
