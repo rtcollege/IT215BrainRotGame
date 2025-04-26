@@ -544,7 +544,6 @@ class BallSimulation:
             circle.radius = int(new_initial * ratio)
             circle.initial_radius = new_initial
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
-            circle.gap_size = (min(90, 30 + (circle.radius / 2)) * scale_factor)
             
         # Rescale all balls
         for ball in self.balls:

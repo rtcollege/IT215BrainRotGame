@@ -9,8 +9,7 @@ class Circle:
         self.active = active
         self.angle = random.randint(0, 360)
         self.rotation_speed = random.uniform(0.5, 2.0)
-        self.base_gap_size = min(90, 30 + (radius / 2))  # Store base gap size
-        self.gap_size = self.base_gap_size
+        self.gap_size = min(90, 30 + (radius / 2))
         self.shrink_rate = 15  # Units per second
         self.min_radius = 20  # Minimum radius allowed
 
@@ -46,8 +45,6 @@ class Circle:
             # Calculate potential new radius with level scaling
             shrink_rate = self.shrink_rate * (1 + (level - 1) * 0.2)  # Only shrink rate scales with level
             new_radius = max(self.min_radius, self.radius - shrink_rate * dt)
-            # Scale gap size proportionally with radius
-            self.gap_size = self.base_gap_size * (new_radius / self.initial_radius)
 
             # Temporarily set the radius to test for collisions
             self.radius = new_radius
