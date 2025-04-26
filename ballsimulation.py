@@ -377,7 +377,7 @@ class BallSimulation:
             # Handle upgrade button text and cost updates
             if button != self.spawn_button:
                 # Extract button type from text
-                button_type = button.text_input.split(':')[0].strip().lower().replace(' ', '_')
+                button_type = button.text_input.split(':')[0].strip().lower().replace(' ', '').replace('-', '_')
                 button_type = f"_{button_type}_level"
                 current_level = getattr(self.data, button_type)
                 cost = self.data.get_upgrade_cost(current_level)
