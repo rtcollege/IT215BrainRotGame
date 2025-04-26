@@ -455,8 +455,6 @@ class BallSimulation:
 
         self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
                                  pygame.font.Font(None, 24), "white", "#b68f40")
-        self.add_circle_button = Button(None, (0, 0), "Add Circle", 
-                                      pygame.font.Font(None, 24), "white", "#b68f40")
 
         self.recalculate_layout(sX, sY)
         self.add_circle(sX, sY)
@@ -484,12 +482,8 @@ class BallSimulation:
         button_y = self.box_y + self.box_height + (button_spacing * 1.5)
 
         self.spawn_button.update_font(self.font)
-        self.add_circle_button.update_font(self.font)
 
         self.spawn_button.set_position((self.box_x + button_spacing, button_y))
-        self.add_circle_button.set_position(
-            (self.box_x + button_spacing + self.spawn_button.rect.width + 
-             button_spacing, button_y))
 
     def spawn_ball(self, sX, sY):
         ball_radius = int(6 * min(sX, sY))
@@ -593,20 +587,16 @@ class BallSimulation:
             else:
                 ball.draw(self.display_surface)
 
+        self.add_circle(sX, sY)
+
         # Button UI
         self.spawn_button.update(self.display_surface)
-        self.add_circle_button.update(self.display_surface)
         mouse_pos = pygame.mouse.get_pos()
         self.spawn_button.change_color(mouse_pos)
-        self.add_circle_button.change_color(mouse_pos)
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
                 self.spawn_ball(sX, sY)
                 self.spawn_pressed = True
-            if self.add_circle_button.check_input(mouse_pos) and not self.circle_pressed:
-                while self.add_circle(sX, sY):  # Keep adding circles while possible
-                    pass
-                self.circle_pressed = True
         else:
             self.spawn_pressed = False
             self.circle_pressed = False
