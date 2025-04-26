@@ -453,7 +453,7 @@ class BallSimulation:
         self.cell_size = 50
         self.grid = {}
         self.level = 1
-        self.base_ball_cost = 5
+        self.base_ball_cost = 2
         self.can_spawn_circles = True
         self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
         self.health = 100
