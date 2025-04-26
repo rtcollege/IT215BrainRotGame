@@ -455,6 +455,10 @@ class BallSimulation:
         self.level = 1
         self.can_spawn_circles = True
         self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
+        self.health = 100
+        self.currency = 0
+        self.last_stat_update = pygame.time.get_ticks()
+        self.stat_update_delay = 1000  # 1 second in milliseconds
 
         self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
                                  pygame.font.Font(None, 24), "white", "#b68f40")
@@ -586,6 +590,31 @@ class BallSimulation:
     def update(self, dt, sX, sY):
         # Update level timer
         self.level_timer.update()
+        
+        # Update health and currency every second
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_stat_update >= self.stat_update_delay:
+            # Update currency
+            self.currency += 1
+            
+            # Check for minimum radius circles and update health
+            for circle in self.circles:
+                if circle.active and circle.radius <= circle.min_radius:
+                    self.health = max(0, self.health - 1)
+                    break
+                    
+            self.last_stat_update = current_time
+        
+        # Draw status text
+        status_x = int(20 * sX)
+        status_y = int(20 * sY)
+        spacing = int(40 * sY)
+        
+        health_text = self.font.render(f"Health: {self.health}", True, "white")
+        currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
+        
+        self.display_surface.blit(health_text, (status_x, status_y))
+        self.display_surface.blit(currency_text, (status_x, status_y + spacing))
         
         # Draw level text
         level_text = self.font.render(f"Level: {self.level}", True, "white")
