@@ -589,14 +589,15 @@ class BallSimulation:
 
         # Update and draw circles
         active_circles = [c for c in self.circles if c.active]
-        if not active_circles and not self.circles:
-            if self.can_spawn_circles:
-                self.level += 1
-                self.add_circle(sX, sY)
-        elif len(active_circles) == 0:
-            self.can_spawn_circles = False
-            self.level_timer.activate()
-            self.circles.clear()
+        if len(active_circles) == 0:
+            if not self.circles:  # No circles at all
+                if self.can_spawn_circles:
+                    self.level += 1
+                    self.add_circle(sX, sY)
+            else:  # Had circles but all were destroyed
+                self.can_spawn_circles = False
+                self.level_timer.activate()
+                self.circles.clear()
 
         for circle in self.circles:
             circle.update(dt, self.circles, self.level)  # Pass level to circle update
