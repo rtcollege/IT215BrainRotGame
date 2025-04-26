@@ -506,7 +506,7 @@ class BallSimulation:
         self.base_max_circles = 3  # Starting maximum number of circles
         self.base_ball_cost = 2
         self.can_spawn_circles = True
-        self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
+        self.spawn_timer = Timer(100, self.enable_circle_spawn)  # 1 second pause between levels
         self.health = 100
         self.min_radius_time = 0  # Track time at minimum radius
         self.base_damage = 1  # Base damage per second
@@ -606,10 +606,8 @@ class BallSimulation:
                     angle = (degrees(atan2(dy, dx)) + 360) % 360
                     if circle.is_in_gap(angle):
                         # Check if this is the only active circle
-                        active_circles = sum(1 for c in self.circles if c.active)
-                        if active_circles == 1:
-                            self.can_spawn_circles = False
-                            self.level_timer.activate()
+                        self.can_spawn_circles = False
+                        self.spawn_timer.activate()
                         circle.active = False
                         break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
@@ -665,7 +663,7 @@ class BallSimulation:
 
     def update(self, dt, sX, sY):
         # Update level timer
-        self.level_timer.update()
+        self.spawn_timer.update()
         
         # Update health and currency every second
         current_time = pygame.time.get_ticks()
@@ -711,7 +709,7 @@ class BallSimulation:
                         self.add_circle(sX, sY)
             else:  # Had circles but all were destroyed
                 self.can_spawn_circles = False
-                self.level_timer.activate()
+                self.spawn_timer.activate()
                 self.circles.clear()
 
         for circle in self.circles:
