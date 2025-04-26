@@ -381,7 +381,7 @@ class UI:
             # Experience bar
             exp_bar_width = int(300 * self.sX)
             exp_bar_height = int(20 * self.sY)
-            exp_bar_x = self.ball_sim.box_x
+            exp_bar_x = self.ball_sim.center_x - exp_bar_width // 2
             exp_bar_y = self.ball_sim.box_y - 50
 
             # Draw background
@@ -396,6 +396,11 @@ class UI:
                 fill_width = int(exp_bar_width * progress)
                 fill_rect = pygame.Rect(exp_bar_x, exp_bar_y, fill_width, exp_bar_height)
                 pygame.draw.rect(self.display_surface, (255, 215, 0), fill_rect)  # Gold color
+
+            # Draw level text centered in exp bar
+            level_text = self.ball_sim.font.render(f"Level: {self.ball_sim.data.level}", True, "white")
+            level_rect = level_text.get_rect(center=(exp_bar_x + exp_bar_width // 2, exp_bar_y + exp_bar_height // 2))
+            self.display_surface.blit(level_text, level_rect)
 
             self.ball_sim.update(dt, self.sX, self.sY)
         else:
