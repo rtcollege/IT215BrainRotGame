@@ -543,6 +543,9 @@ class BallSimulation:
         button_x = self.center_x - (self.spawn_button.rect.width // 2)
         self.spawn_button.set_position((button_x, button_y))
 
+        for circle in self.circles:
+            circle.recalculate_layout(sX, sY)
+
     def get_current_ball_cost(self):
         return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
         
