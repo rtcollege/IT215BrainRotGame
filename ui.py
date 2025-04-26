@@ -630,10 +630,11 @@ class BallSimulation:
             norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
             tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
 
-            # Reflect normal component with increased energy loss for multiple collisions
-            energy_loss = 0.99 - (0.05 * (len(colliding_circles) - 1))  # More energy loss with more collisions
-            energy_loss = max(0.5, energy_loss)  # Don't let it go below 0.5
-            norm_vel = -norm_vel * energy_loss
+            # Reflect normal component with bounce boost and minimal energy loss
+            energy_loss = 0.995 - (0.02 * (len(colliding_circles) - 1))  # Less energy loss
+            energy_loss = max(0.85, energy_loss)  # Higher minimum energy retention
+            bounce_boost = 1.1  # Add extra energy on bounce
+            norm_vel = -norm_vel * energy_loss * bounce_boost
 
             # Reconstruct velocity vector
             ball.vel_x = norm_vel * norm_dx + tang_vel * tang_dx
@@ -654,8 +655,8 @@ class BallSimulation:
             ball.x = self.center_x + norm_dx * target_dist
             ball.y = self.center_y + norm_dy * target_dist
 
-            # Add drag/friction over time to slow balls
-            drag = 0.98
+            # Add minimal drag/friction
+            drag = 0.995
             ball.vel_x *= drag
             ball.vel_y *= drag
 
