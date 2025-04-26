@@ -18,7 +18,6 @@ class Ball:
         self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
         self.gravity = 540
         self.max_speed = 350  # Maximum allowed speed
-        self.destroy_on_outer = True  # Flag to destroy ball when hitting outer ring
         self.cell_x = 0
         self.cell_y = 0
         
