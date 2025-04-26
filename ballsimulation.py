@@ -39,8 +39,8 @@ class BallSimulation:
                           for angle in range(360)}
 
         # Initialize components
-        self.init_buttons()  # Initialize buttons first
         self.init_dimensions(sX, sY)
+        self.init_buttons()
         self.add_circle(sX, sY)
 
     def init_dimensions(self, sX, sY):
@@ -58,12 +58,16 @@ class BallSimulation:
         """Initialize button objects"""
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 24)
 
-        # Create button instances
-        self.spawn_button = Button(None, (0, 0), "Spawn Ball", self.font, "white", "#b68f40")
-        self.multi_ball_button = Button(None, (0, 0), "Multi-Ball: 0", self.font, "white", "#b68f40")
-        self.shrink_reduction_button = Button(None, (0, 0), "Shrink Reduction: 0", self.font, "white", "#b68f40")
-        self.rotation_reduction_button = Button(None, (0, 0), "Rotation Reduction: 0", self.font, "white", "#b68f40")
-        self.health_regen_button = Button(None, (0, 0), "Health Regen: 0", self.font, "white", "#b68f40")
+        buttons = [
+            ('spawn_button', "Spawn Ball"),
+            ('multi_ball_button', "Multi-Ball"),
+            ('shrink_reduction_button', "Shrink Reduction"),
+            ('rotation_reduction_button', "Rotation Reduction"),
+            ('health_regen_button', "Health Regen")
+        ]
+
+        for attr_name, text in buttons:
+            setattr(self, attr_name, Button(None, (0, 0), text, self.font, "white", "#b68f40"))
 
     def handle_events(self, event, mouse_pos):
         """Main event handler"""
@@ -376,10 +380,7 @@ class BallSimulation:
             button.change_color(mouse_pos)
             # Handle upgrade button text and cost updates
             if button != self.spawn_button:
-                # Extract button type from text
-                button_type = button.text_input.split(':')[0].strip().lower().replace(' ', '').replace('-', '_')
-                button_type = f"_{button_type}_level"
-                current_level = getattr(self.data, button_type)
+                current_level = getattr(self.data, button.text_input.split(':')[1].strip())
                 cost = self.data.get_upgrade_cost(current_level)
-                button.text_input = f"{button.text_input.split(':')[0]}: {current_level}"
+                button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
                 button.text = button.font.render(button.text_input, True, button.base_color)
