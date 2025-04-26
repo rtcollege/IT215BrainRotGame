@@ -457,6 +457,8 @@ class BallSimulation:
         self.can_spawn_circles = True
         self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
         self.health = 100
+        self.min_radius_time = 0  # Track time at minimum radius
+        self.base_damage = 1  # Base damage per second
         self.currency = 0
         self.last_stat_update = pygame.time.get_ticks()
         self.stat_update_delay = 1000  # 1 second in milliseconds
@@ -600,11 +602,14 @@ class BallSimulation:
             # Update currency
             self.currency += 1
             
-            # Check for minimum radius circles and update health
-            for circle in self.circles:
-                if circle.active and circle.radius <= circle.min_radius:
-                    self.health = max(0, self.health - 1)
-                    break
+            # Check for minimum radius circles and update health with scaling damage
+            has_min_radius = any(circle.active and circle.radius <= circle.min_radius for circle in self.circles)
+            if has_min_radius:
+                self.min_radius_time += self.stat_update_delay / 1000  # Convert to seconds
+                damage = int(self.base_damage * (1 + self.min_radius_time / 5))  # Increase damage every 5 seconds
+                self.health = max(0, self.health - damage)
+            else:
+                self.min_radius_time = 0  # Reset timer when no circles are at minimum radius
                     
             self.last_stat_update = current_time
         
