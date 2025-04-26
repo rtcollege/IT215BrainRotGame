@@ -54,6 +54,10 @@ class Circle:
 
 
     def recalculate_layout(self, sX, sY):
+        """Recalculate circle dimensions based on screen size"""
+        scale_factor = min(sX, sY)
+        self.radius = int(self.initial_radius * scale_factor)
+        self.min_radius = int(20 * scale_factor)  # Scale minimum radius
         
 
     
