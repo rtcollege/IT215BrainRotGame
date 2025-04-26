@@ -506,7 +506,9 @@ class BallSimulation:
         self.base_max_circles = 3  # Starting maximum number of circles
         self.base_ball_cost = 2
         self.can_spawn_circles = True
-        self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
+        self.frame_count = 0
+        self.frames_before_spawn = 3
+        self.level_timer = Timer(50, self.count_frames)  # Short timer for frame counting
         self.health = 100
         self.min_radius_time = 0  # Track time at minimum radius
         self.base_damage = 1  # Base damage per second
@@ -569,8 +571,12 @@ class BallSimulation:
         ball_radius = self.ball_base_radius * scale_factor  # Base ball radius
         self.balls.append(Ball(self.center_x, self.center_y, ball_radius, self.center_x, self.center_y))
 
-    def enable_circle_spawn(self):
-        self.can_spawn_circles = True
+    def count_frames(self):
+        self.frame_count += 1
+        if self.frame_count >= self.frames_before_spawn:
+            self.frame_count = 0
+            self.can_spawn_circles = True
+            self.level_timer.deactivate()
 
     def add_circle(self, sX, sY):
         if not self.can_spawn_circles:
