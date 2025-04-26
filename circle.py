@@ -37,14 +37,13 @@ class Circle:
         return False
 
     def update(self, dt, other_circles=None, level=1):
-        # Increase speed based on level
-        level_speed_multiplier = 1 + (level - 1) * 0.2  # 20% faster per level
-        self.angle = (self.angle + self.rotation_speed * level_speed_multiplier) % 360
+        # Rotation speed remains constant regardless of level
+        self.angle = (self.angle + self.rotation_speed) % 360
         if self.active and self.radius > self.min_radius:
             # Store current radius
             current_radius = self.radius
             # Calculate potential new radius with level scaling
-            shrink_rate = self.shrink_rate * level_speed_multiplier
+            shrink_rate = self.shrink_rate * (1 + (level - 1) * 0.2)  # Only shrink rate scales with level
             new_radius = max(self.min_radius, self.radius - shrink_rate * dt)
 
             # Temporarily set the radius to test for collisions
