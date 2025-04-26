@@ -453,6 +453,7 @@ class BallSimulation:
         self.cell_size = 50
         self.grid = {}
         self.level = 1
+        self.base_ball_cost = 5
         self.can_spawn_circles = True
         self.level_timer = Timer(1000, self.enable_circle_spawn)  # 1 second pause between levels
         self.health = 100
@@ -491,6 +492,9 @@ class BallSimulation:
         button_x = self.center_x - (self.spawn_button.rect.width // 2)
         self.spawn_button.set_position((button_x, button_y))
 
+    def get_current_ball_cost(self):
+        return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
+        
     def spawn_ball(self, sX, sY):
         ball_radius = int(6 * min(sX, sY))
         self.balls.append(Ball(self.center_x, self.center_y, ball_radius))
@@ -645,6 +649,9 @@ class BallSimulation:
         for ball in self.balls[:]:
             if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
+                # Refund half of the current ball cost
+                refund = self.get_current_ball_cost() // 2
+                self.currency += refund
             else:
                 ball.draw(self.display_surface)
 
@@ -656,9 +663,10 @@ class BallSimulation:
         self.spawn_button.change_color(mouse_pos)
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
-                if self.currency >= 5:
+                ball_cost = self.get_current_ball_cost()
+                if self.currency >= ball_cost:
                     self.spawn_ball(sX, sY)
-                    self.currency -= 5
+                    self.currency -= ball_cost
                     self.spawn_pressed = True
         else:
             self.spawn_pressed = False
