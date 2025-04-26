@@ -606,7 +606,6 @@ class BallSimulation:
 
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * scale_factor))
-
         # Position spawn button below circles
         button_y = self.box_y + self.box_height + int(30 * scale_factor)
         self.spawn_button.update_font(self.font)
@@ -774,14 +773,13 @@ class BallSimulation:
         if len(active_circles) == 0:
             if not self.circles:  # No circles at all
                 if self.can_spawn_circles:
-                    self.level += 1
                     max_circles = self.base_max_circles + (self.level - 1)
                     for _ in range(max_circles):
                         self.add_circle(sX, sY)
-            else:  # Had circles but all were destroyed
-                self.can_spawn_circles = False
-                self.spawn_timer.activate()
-                self.circles.clear()
+                else:  # Had circles but all were destroyed
+                    self.can_spawn_circles = False
+                    self.spawn_timer.activate()
+                    self.circles.clear()
 
         for circle in self.circles:
             circle.update(dt, self.circles, self.level)  # Pass level to circle update
