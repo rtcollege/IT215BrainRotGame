@@ -492,6 +492,7 @@ class BallSimulation:
     """Handles ball physics simulation"""
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
+        self.data = Data(None)  # Initialize with None since we don't need UI reference
         self.balls = []
         self.circles = []
         self.circle_base_radius = 200
@@ -516,6 +517,16 @@ class BallSimulation:
 
         self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
                                  pygame.font.Font(None, 24), "white", "#b68f40")
+                                 
+        # Initialize upgrade buttons
+        self.multi_ball_button = Button(None, (0, 0), "Multi-Ball", 
+                                      pygame.font.Font(None, 24), "white", "#b68f40")
+        self.shrink_reduction_button = Button(None, (0, 0), "Shrink Reduction", 
+                                            pygame.font.Font(None, 24), "white", "#b68f40")
+        self.rotation_reduction_button = Button(None, (0, 0), "Rotation Reduction", 
+                                              pygame.font.Font(None, 24), "white", "#b68f40")
+        self.health_regen_button = Button(None, (0, 0), "Health Regen", 
+                                        pygame.font.Font(None, 24), "white", "#b68f40")
 
         self.recalculate_layout(sX, sY)
         self.add_circle(sX, sY)
@@ -555,11 +566,21 @@ class BallSimulation:
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * scale_factor))
 
+        # Position spawn button below circles
         button_y = self.box_y + self.box_height + int(30 * scale_factor)
         self.spawn_button.update_font(self.font)
-        # Center the button horizontally below the circles
         button_x = self.center_x - (self.spawn_button.rect.width // 2)
         self.spawn_button.set_position((button_x, button_y))
+
+        # Position upgrade buttons on the right side
+        upgrade_x = self.box_x + self.box_width + int(50 * scale_factor)
+        upgrade_y = self.box_y
+        upgrade_spacing = int(60 * scale_factor)
+
+        for i, button in enumerate([self.multi_ball_button, self.shrink_reduction_button, 
+                                  self.rotation_reduction_button, self.health_regen_button]):
+            button.update_font(self.font)
+            button.set_position((upgrade_x, upgrade_y + i * upgrade_spacing))
 
     def get_current_ball_cost(self):
         return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
@@ -754,3 +775,27 @@ class BallSimulation:
         else:
             self.spawn_pressed = False
             self.circle_pressed = False
+
+        # Handle upgrade buttons
+        upgrade_buttons = [
+            (self.multi_ball_button, '_multi_ball_level'),
+            (self.shrink_reduction_button, '_shrink_reduction_level'),
+            (self.rotation_reduction_button, '_rotation_reduction_level'),
+            (self.health_regen_button, '_health_regen_level')
+        ]
+
+        for button, attr in upgrade_buttons:
+            # Get current level and cost
+            current_level = getattr(self.data, attr)
+            cost = self.data.get_upgrade_cost(current_level)
+            
+            # Update button text with cost
+            button.text = f"{button.text.split(':')[0]}: {cost}"
+            button.update(self.display_surface)
+            button.change_color(mouse_pos)
+
+            # Handle click
+            if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos):
+                if self.currency >= cost:
+                    setattr(self.data, attr, current_level + 1)
+                    self.currency -= cost
