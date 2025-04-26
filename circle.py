@@ -9,7 +9,7 @@ class Circle:
         self.active = active
         self.angle = random.randint(0, 360)
         self.rotation_speed = random.uniform(0.5, 2.0)
-        self.gap_size = min(90, 30 + (radius / 2))
+        self.gap_size = min(90, 30 + (radius / 3))
         self.shrink_rate = 15  # Units per second
         self.min_radius = 20  # Minimum radius allowed
 
