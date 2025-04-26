@@ -380,6 +380,30 @@ class UI:
             self.restart_button.update(self.display_surface)
             self.restart_button.change_color(mouse_pos)
         elif not self.is_paused:
+            # Draw level and experience bar
+            level_text = self.ball_sim.font.render(f"Level: {self.ball_sim.data.level}", True, "white")
+            level_rect = level_text.get_rect(topleft=(self.ball_sim.box_x, self.ball_sim.box_y - 50))
+            self.display_surface.blit(level_text, level_rect)
+            
+            # Experience bar
+            exp_bar_width = int(300 * self.sX)
+            exp_bar_height = int(20 * self.sY)
+            exp_bar_x = level_rect.right + int(20 * self.sX)
+            exp_bar_y = level_rect.centery - exp_bar_height // 2
+            
+            # Draw background
+            exp_bar_bg = pygame.Rect(exp_bar_x, exp_bar_y, exp_bar_width, exp_bar_height)
+            pygame.draw.rect(self.display_surface, "black", exp_bar_bg)
+            pygame.draw.rect(self.display_surface, "white", exp_bar_bg, 2)
+            
+            # Draw progress
+            exp_needed = self.ball_sim.data.get_exp_for_level(self.ball_sim.data.level)
+            progress = self.ball_sim.data.experience / exp_needed
+            if progress > 0:
+                fill_width = int(exp_bar_width * progress)
+                fill_rect = pygame.Rect(exp_bar_x, exp_bar_y, fill_width, exp_bar_height)
+                pygame.draw.rect(self.display_surface, (255, 215, 0), fill_rect)  # Gold color
+
             self.ball_sim.update(dt, self.sX, self.sY)
         else:
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
@@ -773,7 +797,8 @@ class BallSimulation:
         self.handle_collisions()
 
         for ball in self.balls[:]:
-            if ball.y > self.display_surface.get_height():
+            # Remove balls that hit the ground or outer ring
+            if ball.y > self.display_surface.get_height() or ball.destroy_on_outer:
                 self.balls.remove(ball)
                 # Refund half of the current ball cost
                 refund = self.get_current_ball_cost() // 2
