@@ -485,12 +485,11 @@ class BallSimulation:
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * min(sX, sY)))
 
-        button_spacing = int(30 * min(sX, sY))
-        button_y = self.box_y + self.box_height + (button_spacing * 1.5)
-
+        button_y = self.box_y + self.box_height + int(30 * min(sX, sY))
         self.spawn_button.update_font(self.font)
-
-        self.spawn_button.set_position((self.box_x + button_spacing, button_y))
+        # Center the button horizontally below the circles
+        button_x = self.center_x - (self.spawn_button.rect.width // 2)
+        self.spawn_button.set_position((button_x, button_y))
 
     def spawn_ball(self, sX, sY):
         ball_radius = int(6 * min(sX, sY))
@@ -657,8 +656,10 @@ class BallSimulation:
         self.spawn_button.change_color(mouse_pos)
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
-                self.spawn_ball(sX, sY)
-                self.spawn_pressed = True
+                if self.currency >= 5:
+                    self.spawn_ball(sX, sY)
+                    self.currency -= 5
+                    self.spawn_pressed = True
         else:
             self.spawn_pressed = False
             self.circle_pressed = False
