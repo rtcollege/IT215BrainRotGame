@@ -561,7 +561,8 @@ class BallSimulation:
         return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
         
     def spawn_ball(self, sX, sY):
-        ball_radius = int(6 * min(sX, sY))
+        scale_factor = min(sX, sY)
+        ball_radius = int(6 * scale_factor)  # Base ball radius
         self.balls.append(Ball(self.center_x, self.center_y, ball_radius, self.center_x, self.center_y))
 
     def enable_circle_spawn(self):
