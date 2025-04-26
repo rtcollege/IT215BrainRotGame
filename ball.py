@@ -9,37 +9,31 @@ class Ball:
         self.y = y
         self.radius = radius
         angle = random.uniform(0, 2 * 3.14159)
-        speed = random.uniform(100, 200)  # Increased initial speed range
-        self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
-        self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
-        self.gravity = 400  # Reduced gravity
-        self.max_speed = 600  # Increased max speed
-        self.bounce_factor = random.uniform(0.92, 0.98)  # Random bounce energy retention
-        self.drift_force = random.uniform(-50, 50)  # Random horizontal drift
+        speed = random.uniform(1, 50)  # Reduced max initial speed
+        self.vel_x = cos(angle) * speed + random.uniform(-50, 50)
+        self.vel_y = sin(angle) * speed + random.uniform(-50, 50)
+        self.gravity = 540
+        self.max_speed = 300  # Maximum allowed speed
+        self.cell_x = 0
+        self.cell_y = 0
         
     def update(self, dt):
         self.vel_y += self.gravity * dt
-        self.vel_x += self.drift_force * dt  # Add horizontal drift
         
-        # Add slight random motion
-        self.vel_x += random.uniform(-20, 20) * dt
-        self.vel_y += random.uniform(-20, 20) * dt
-        
-        # Limit velocity
+        # Limit velocity to max_speed using squared comparison (avoid sqrt)
         speed_squared = self.vel_x ** 2 + self.vel_y ** 2
         max_speed_squared = self.max_speed ** 2
         if speed_squared > max_speed_squared:
             scale = (self.max_speed / (speed_squared ** 0.5))
             self.vel_x *= scale
             self.vel_y *= scale
-        
-        # Update position
-        self.x += self.vel_x * dt
-        self.y += self.vel_y * dt
-        
-        # Apply air resistance
-        self.vel_x *= 0.99
-        self.vel_y *= 0.99
+            
+        # Use fewer substeps for better performance
+        substeps = 2
+        dt_sub = dt / substeps
+        for _ in range(substeps):
+            self.x += self.vel_x * dt_sub
+            self.y += self.vel_y * dt_sub
 
     def draw(self, surface):
         pygame.draw.circle(surface, (255, 255, 255), (int(self.x), int(self.y)), self.radius)
