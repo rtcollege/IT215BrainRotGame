@@ -373,7 +373,17 @@ class BallSimulation:
             button.change_color(mouse_pos)
             # Handle upgrade button text and cost updates
             if button != self.spawn_button:
-                current_level = getattr(self.data, button.text_input.split(':')[1].strip())
-                cost = self.data.get_upgrade_cost(current_level)
-                button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
-                button.text = button.font.render(button.text_input, True, button.base_color)
+                # Get the base name without cost
+                base_name = button.text_input.split(':')[0] if ':' in button.text_input else button.text_input
+                # Map button text to attribute names
+                attr_map = {
+                    'Multi-Ball': '_multi_ball_level',
+                    'Shrink Reduction': '_shrink_reduction_level',
+                    'Rotation Reduction': '_rotation_reduction_level',
+                    'Health Regen': '_health_regen_level'
+                }
+                if base_name in attr_map:
+                    current_level = getattr(self.data, attr_map[base_name])
+                    cost = self.data.get_upgrade_cost(current_level)
+                    button.text_input = f"{base_name}: {cost}"
+                    button.text = button.font.render(button.text_input, True, button.base_color)
