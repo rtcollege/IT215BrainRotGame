@@ -3,7 +3,7 @@ import random
 import pygame
 
 class Circle:
-    def __init__(self, radius, active=True):
+    def __init__(self, radius, line_thickness, active=True):
         self.initial_radius = radius
         self.radius = radius
         self.active = active
@@ -12,6 +12,7 @@ class Circle:
         self.gap_size = min(90, 30 + (radius / 2))
         self.shrink_rate = 15  # Units per second
         self.min_radius = 20  # Minimum radius allowed
+        self.line_thickness = line_thickness
         self.scale_factor = 1.0
 
     def check_collision(self, other_circles):
@@ -21,8 +22,8 @@ class Circle:
         for circle in other_circles:
             if not circle.active or circle == self:
                 continue
-            
-            base_collision_threshold = 12  # 3 * 4 (line_thickness * 4)
+
+            base_collision_threshold = self.line_thickness * 4
             collision_threshold = base_collision_threshold * self.scale_factor
             
             radii_diff = abs(self.radius - circle.radius)

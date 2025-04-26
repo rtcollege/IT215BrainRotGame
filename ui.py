@@ -544,6 +544,7 @@ class BallSimulation:
             circle.radius = int(new_initial * ratio)
             circle.initial_radius = new_initial
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
+            circle.line_thickness = self.line_thickness
             circle.scale_factor = scale_factor
             
         # Rescale all balls
@@ -578,7 +579,7 @@ class BallSimulation:
             return
             
         scaled_radius = int(self.circle_base_radius * min(sX, sY))
-        new_circle = Circle(scaled_radius)
+        new_circle = Circle(scaled_radius, self.line_thickness)
         if not new_circle.check_collision(self.circles):
             self.circles.append(new_circle)
             return True
