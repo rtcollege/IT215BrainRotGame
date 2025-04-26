@@ -317,29 +317,25 @@ class UI:
         self.back_button.change_color(mouse_pos)
 
     def update_gameplay(self, mouse_pos, dt):
-        if not self.is_paused and self.ball_sim.health > 0:
+        if not self.is_paused:
             self.ball_sim.update(dt, self.sX, self.sY)
             
-        if self.ball_sim.health <= 0:
-            # Draw the last frame of the game state without updating
-            self.ball_sim.draw_state()
-            
-            # Draw game over overlay
-            overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
-            overlay.fill((0, 0, 0))
-            overlay.set_alpha(128)
-            self.display_surface.blit(overlay, (0, 0))
-            
-            game_over_text = self.title_font.render("Game Over", True, "white")
-            game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
-            self.display_surface.blit(game_over_text, game_over_rect)
-            
-            # Position restart button below text
-            self.restart_button.update_font(self.font)
-            self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
-                                            self.W_HEIGHT // 2 + 50))
-            self.restart_button.update(self.display_surface)
-            self.restart_button.change_color(mouse_pos)
+            if self.ball_sim.health <= 0:
+                overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
+                overlay.fill((0, 0, 0))
+                overlay.set_alpha(128)
+                self.display_surface.blit(overlay, (0, 0))
+                
+                game_over_text = self.title_font.render("Game Over", True, "white")
+                game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
+                self.display_surface.blit(game_over_text, game_over_rect)
+                
+                # Position restart button below text
+                self.restart_button.update_font(self.font)
+                self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
+                                                self.W_HEIGHT // 2 + 50))
+                self.restart_button.update(self.display_surface)
+                self.restart_button.change_color(mouse_pos)
         else:
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
@@ -618,35 +614,6 @@ class BallSimulation:
             drag = 0.98
             ball.vel_x *= drag
             ball.vel_y *= drag
-
-    def draw_state(self):
-        """Draw the current state without updating"""
-        # Draw status text
-        status_x = int(20 * self.sX)
-        status_y = int(20 * self.sY)
-        spacing = int(40 * self.sY)
-        
-        health_text = self.font.render(f"Health: {self.health}", True, "white")
-        currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
-        
-        self.display_surface.blit(health_text, (status_x, status_y))
-        self.display_surface.blit(currency_text, (status_x, status_y + spacing))
-        
-        # Draw level text
-        level_text = self.font.render(f"Level: {self.level}", True, "white")
-        level_rect = level_text.get_rect(midtop=(self.center_x, self.box_y - 50))
-        self.display_surface.blit(level_text, level_rect)
-
-        # Draw circles and balls in their current state
-        for circle in self.circles:
-            circle.draw(self.display_surface, self.center_x, self.center_y,
-                      self.line_thickness, (182, 143, 64), pygame.gfxdraw)
-
-        for ball in self.balls:
-            ball.draw(self.display_surface)
-
-        # Draw spawn button
-        self.spawn_button.update(self.display_surface)
 
     def update(self, dt, sX, sY):
         # Update level timer
