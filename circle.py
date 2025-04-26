@@ -53,16 +53,6 @@ class Circle:
                 self.radius = current_radius
 
 
-    def recalculate_layout(self, sX, sY):
-        """Recalculate circle dimensions based on screen size"""
-        scale_factor = min(sX, sY)
-        self.radius = int(self.initial_radius * scale_factor)
-        self.min_radius = int(20 * scale_factor)  # Scale minimum radius
-        
-
-    
-
-        
     def is_in_gap(self, ball_angle):
         gap_start = self.angle
         gap_end = (self.angle + self.gap_size) % 360
