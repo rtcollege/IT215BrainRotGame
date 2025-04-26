@@ -537,7 +537,9 @@ class BallSimulation:
 
         # Rescale all circles
         for circle in self.circles:
-            circle.radius = int(circle.initial_radius * scale_factor)
+            original_ratio = circle.radius / circle.initial_radius
+            circle.initial_radius = int(self.base_radius * scale_factor)
+            circle.radius = int(circle.initial_radius * original_ratio)
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
 
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
@@ -566,7 +568,8 @@ class BallSimulation:
         if active_circles >= 7:
             return
             
-        new_circle = Circle(self.base_radius)
+        scaled_radius = int(self.base_radius * min(sX, sY))
+        new_circle = Circle(scaled_radius)
         if not new_circle.check_collision(self.circles):
             self.circles.append(new_circle)
             return True
