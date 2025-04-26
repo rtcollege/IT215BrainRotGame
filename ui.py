@@ -318,8 +318,31 @@ class UI:
 
     def update_gameplay(self, mouse_pos, dt):
         if self.ball_sim.health <= 0:
-            # Draw the last frame of gameplay
-            self.ball_sim.update(0, self.sX, self.sY)  # Pass dt=0 to prevent movement
+            # Draw the current state without updating
+            # Draw status text
+            status_x = int(20 * self.sX)
+            status_y = int(20 * self.sY)
+            spacing = int(40 * self.sY)
+            
+            health_text = self.ball_sim.font.render(f"Health: {self.ball_sim.health}", True, "white")
+            currency_text = self.ball_sim.font.render(f"Currency: {self.ball_sim.currency}", True, "white")
+            
+            self.display_surface.blit(health_text, (status_x, status_y))
+            self.display_surface.blit(currency_text, (status_x, status_y + spacing))
+            
+            # Draw level text
+            level_text = self.ball_sim.font.render(f"Level: {self.ball_sim.level}", True, "white")
+            level_rect = level_text.get_rect(midtop=(self.ball_sim.center_x, self.ball_sim.box_y - 50))
+            self.display_surface.blit(level_text, level_rect)
+
+            # Draw all circles in their current state
+            for circle in self.ball_sim.circles:
+                circle.draw(self.display_surface, self.ball_sim.center_x, self.ball_sim.center_y,
+                            self.ball_sim.line_thickness, (182, 143, 64), pygame.gfxdraw)
+
+            # Draw all balls in their current state
+            for ball in self.ball_sim.balls:
+                ball.draw(self.display_surface)
             
             # Show game over overlay
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
