@@ -21,17 +21,21 @@ class Circle:
             if not circle.active or circle == self:
                 continue
                 
+            # Scale threshold based on current radius relative to initial radius
+            scale_factor = self.radius / self.initial_radius
+            collision_threshold = 15 * scale_factor
+            
             radii_diff = abs(self.radius - circle.radius)
-            if radii_diff < 15:
+            if radii_diff < collision_threshold:
                 if self.radius >= circle.radius:
                     return True
                     
                 # Quick check for space below
-                target_radius = self.radius - 5
+                target_radius = self.radius - (5 * scale_factor)
                 return any(
                     other != self and other != circle and 
                     other.active and 
-                    abs(other.radius - target_radius) < 15
+                    abs(other.radius - target_radius) < collision_threshold
                     for other in other_circles
                 )
         return False
