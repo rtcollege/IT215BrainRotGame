@@ -85,7 +85,7 @@ class UI:
         # Initialize title texts
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
         self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
-
+        
         # Update back button position to match main menu buttons
         back_button_x = int(50 * self.sX)  # Same as button_x
         back_button_y = button_y_start + 3 * button_y_spacing
@@ -323,13 +323,13 @@ class UI:
             status_x = int(20 * self.sX)
             status_y = int(20 * self.sY)
             spacing = int(40 * self.sY)
-
+            
             health_text = self.ball_sim.font.render(f"Health: {self.ball_sim.health}", True, "white")
             currency_text = self.ball_sim.font.render(f"Currency: {self.ball_sim.currency}", True, "white")
-
+            
             self.display_surface.blit(health_text, (status_x, status_y))
             self.display_surface.blit(currency_text, (status_x, status_y + spacing))
-
+            
             # Draw level text
             level_text = self.ball_sim.font.render(f"Level: {self.ball_sim.level}", True, "white")
             level_rect = level_text.get_rect(midtop=(self.ball_sim.center_x, self.ball_sim.box_y - 50))
@@ -343,17 +343,17 @@ class UI:
             # Draw all balls in their current state
             for ball in self.ball_sim.balls:
                 ball.draw(self.display_surface)
-
+            
             # Show game over overlay
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
             overlay.fill((0, 0, 0))
             overlay.set_alpha(128)
             self.display_surface.blit(overlay, (0, 0))
-
+            
             game_over_text = self.title_font.render("Game Over", True, "white")
             game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
             self.display_surface.blit(game_over_text, game_over_rect)
-
+            
             # Position restart button below text
             self.restart_button.update_font(self.font)
             self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2, 
@@ -547,11 +547,11 @@ class BallSimulation:
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
             circle.line_thickness = self.line_thickness
             circle.scale_factor = scale_factor
-
+            
         # Rescale all balls
         for ball in self.balls:
             ball.rescale(self.center_x, self.center_y, scale_factor, self.ball_base_radius)
-
+            
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * scale_factor))
 
@@ -563,7 +563,7 @@ class BallSimulation:
 
     def get_current_ball_cost(self):
         return int(self.base_ball_cost * (1 + len(self.balls) * 0.2))  # 20% increase per ball
-
+        
     def spawn_ball(self, sX, sY):
         scale_factor = min(sX, sY)
         ball_radius = self.ball_base_radius * scale_factor  # Base ball radius
@@ -579,7 +579,7 @@ class BallSimulation:
         max_circles = self.base_max_circles + (self.level - 1)
         if active_circles >= max_circles:
             return
-
+            
         scaled_radius = int(self.circle_base_radius * min(sX, sY))
         new_circle = Circle(scaled_radius, self.line_thickness)
         if not new_circle.check_collision(self.circles):
@@ -611,7 +611,6 @@ class BallSimulation:
                             self.can_spawn_circles = False
                             self.level_timer.activate()
                         circle.active = False
-                        circle.respawn_timer = circle.respawn_delay
                         break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
 
@@ -634,7 +633,7 @@ class BallSimulation:
             norm_vel = ball.vel_x * norm_dx + ball.vel_y * norm_dy
             tang_vel = ball.vel_x * tang_dx + ball.vel_y * tang_dy
 
-            # Reflect normal component with bounce boost and minimalenergy loss
+            # Reflect normal component with bounce boost and minimal energy loss
             energy_loss = 0.995 - (0.02 * (len(colliding_circles) - 1))  # Less energy loss
             energy_loss = max(0.85, energy_loss)  # Higher minimum energy retention
             bounce_boost = 1.1  # Add extra energy on bounce
@@ -667,13 +666,13 @@ class BallSimulation:
     def update(self, dt, sX, sY):
         # Update level timer
         self.level_timer.update()
-
+        
         # Update health and currency every second
         current_time = pygame.time.get_ticks()
         if current_time - self.last_stat_update >= self.stat_update_delay:
             # Update currency
             self.currency += 1
-
+            
             # Check for minimum radius circles and update health with scaling damage
             has_min_radius = any(circle.active and circle.radius <= circle.min_radius for circle in self.circles)
             if has_min_radius:
@@ -682,20 +681,20 @@ class BallSimulation:
                 self.health = max(0, self.health - damage)
             else:
                 self.min_radius_time = 0  # Reset timer when no circles are at minimum radius
-
+                    
             self.last_stat_update = current_time
-
+        
         # Draw status text
         status_x = int(20 * sX)
         status_y = int(20 * sY)
         spacing = int(40 * sY)
-
+        
         health_text = self.font.render(f"Health: {self.health}", True, "white")
         currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
-
+        
         self.display_surface.blit(health_text, (status_x, status_y))
         self.display_surface.blit(currency_text, (status_x, status_y + spacing))
-
+        
         # Draw level text
         level_text = self.font.render(f"Level: {self.level}", True, "white")
         level_rect = level_text.get_rect(midtop=(self.center_x, self.box_y - 50))

@@ -14,8 +14,6 @@ class Circle:
         self.min_radius = 20  # Minimum radius allowed
         self.line_thickness = line_thickness
         self.scale_factor = 1.0
-        self.respawn_timer = 0
-        self.respawn_delay = 1.0  # 1 second delay before respawning
 
     def check_collision(self, other_circles):
         if not other_circles:
@@ -44,14 +42,6 @@ class Circle:
         return False
 
     def update(self, dt, other_circles=None, level=1):
-        # Update respawn timer if inactive
-        if not self.active:
-            if self.respawn_timer > 0:
-                self.respawn_timer = max(0, self.respawn_timer - dt)
-                if self.respawn_timer == 0:
-                    self.active = True
-            return
-
         # Rotation speed remains constant regardless of level
         self.angle = (self.angle + self.rotation_speed) % 360
         if self.active and self.radius > self.min_radius:
