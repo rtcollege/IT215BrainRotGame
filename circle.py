@@ -21,9 +21,11 @@ class Circle:
             if not circle.active or circle == self:
                 continue
                 
-            # Get line thickness from UI context (passed through other_circles)
+            # Calculate collision threshold based on current radius and line thickness
             line_thickness = other_circles[0].line_thickness if hasattr(other_circles[0], 'line_thickness') else 3
-            collision_threshold = line_thickness * 2
+            base_spacing = line_thickness * 4  # Base spacing between circles
+            radius_factor = self.radius / self.initial_radius  # Scale factor based on current vs initial radius
+            collision_threshold = base_spacing * radius_factor  # Scale spacing with radius
             
             radii_diff = abs(self.radius - circle.radius)
             if radii_diff < collision_threshold:
