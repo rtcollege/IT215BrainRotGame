@@ -832,13 +832,13 @@ class BallSimulation:
 
         # Handle upgrade buttons
         upgrade_buttons = [
-            (self.multi_ball_button, '_multi_ball_level', '_multi_ball_level_pressed'),
-            (self.shrink_reduction_button, '_shrink_reduction_level', '_shrink_reduction_level_pressed'),
-            (self.rotation_reduction_button, '_rotation_reduction_level', '_rotation_reduction_level_pressed'),
-            (self.health_regen_button, '_health_regen_level', '_health_regen_level_pressed')
+            (self.multi_ball_button, '_multi_ball_level'),
+            (self.shrink_reduction_button, '_shrink_reduction_level'),
+            (self.rotation_reduction_button, '_rotation_reduction_level'),
+            (self.health_regen_button, '_health_regen_level')
         ]
 
-        for button, attr, pressed_attr in upgrade_buttons:
+        for button, attr in upgrade_buttons:
             # Get current level and cost
             current_level = getattr(self.data, attr)
             cost = self.data.get_upgrade_cost(current_level)
@@ -849,12 +849,8 @@ class BallSimulation:
             button.update(self.display_surface)
             button.change_color(mouse_pos)
 
-            # Handle click with press check
-            if pygame.mouse.get_pressed()[0]:
-                if button.check_input(mouse_pos) and not getattr(self, pressed_attr):
-                    if self.currency >= cost:
-                        setattr(self.data, attr, current_level + 1)
-                        self.currency -= cost
-                    setattr(self, pressed_attr, True)
-            else:
-                setattr(self, pressed_attr, False)
+            # Handle click
+            if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos):
+                if self.currency >= cost:
+                    setattr(self.data, attr, current_level + 1)
+                    self.currency -= cost
