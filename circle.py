@@ -22,9 +22,8 @@ class Circle:
             if not circle.active or circle == self:
                 continue
             
-            line_thickness = other_circles[0].line_thickness if hasattr(other_circles[0], 'line_thickness') else 3
-            
-            collision_threshold = ((line_thickness * 4) * self.scale_factor)
+            base_collision_threshold = 12  # 3 * 4 (line_thickness * 4)
+            collision_threshold = base_collision_threshold * self.scale_factor
             
             radii_diff = abs(self.radius - circle.radius)
             if radii_diff < collision_threshold:
