@@ -330,10 +330,29 @@ class UI:
             self.display_surface.blit(health_text, (status_x, status_y))
             self.display_surface.blit(currency_text, (status_x, status_y + spacing))
             
-            # Draw level text
-            level_text = self.ball_sim.font.render(f"Level: {self.ball_sim.level}", True, "white")
-            level_rect = level_text.get_rect(midtop=(self.ball_sim.center_x, self.ball_sim.box_y - 50))
+            # Draw level and experience bar
+            level_text = self.ball_sim.font.render(f"Level: {self.data.level}", True, "white")
+            level_rect = level_text.get_rect(topleft=(self.ball_sim.box_x, self.ball_sim.box_y - 50))
             self.display_surface.blit(level_text, level_rect)
+            
+            # Experience bar
+            exp_bar_width = int(300 * self.sX)
+            exp_bar_height = int(20 * self.sY)
+            exp_bar_x = level_rect.right + int(20 * self.sX)
+            exp_bar_y = level_rect.centery - exp_bar_height // 2
+            
+            # Draw background
+            exp_bar_bg = pygame.Rect(exp_bar_x, exp_bar_y, exp_bar_width, exp_bar_height)
+            pygame.draw.rect(self.display_surface, "black", exp_bar_bg)
+            pygame.draw.rect(self.display_surface, "white", exp_bar_bg, 2)
+            
+            # Draw progress
+            exp_needed = self.data.get_exp_for_level(self.data.level)
+            progress = self.data.experience / exp_needed
+            if progress > 0:
+                fill_width = int(exp_bar_width * progress)
+                fill_rect = pygame.Rect(exp_bar_x, exp_bar_y, fill_width, exp_bar_height)
+                pygame.draw.rect(self.display_surface, (255, 215, 0), fill_rect)  # Gold color
 
             # Draw all circles in their current state
             for circle in self.ball_sim.circles:
@@ -632,6 +651,9 @@ class BallSimulation:
                         self.can_spawn_circles = False
                         self.spawn_timer.activate()
                         circle.active = False
+                        # Award experience based on circle size
+                        exp_gain = int((circle.initial_radius - circle.radius) / 2)
+                        self.data.experience += max(10, exp_gain)
                         break
                     colliding_circles.append((circle, distance_to_ring, collision_margin))
 

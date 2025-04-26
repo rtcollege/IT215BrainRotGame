@@ -6,9 +6,11 @@ class Data:
         self._health = 100
         self.difficulty = 'medium'
         self.volume = 100    
-
-        self.unlocked_level = 0
-        self.current_level = 0
+        
+        self._experience = 0
+        self._level = 1
+        self.base_exp_required = 100  # Base XP needed for first level
+        self.exp_scaling = 1.5  # Each level requires 50% more XP
         
         # Upgrade levels
         self._multi_ball_level = 0
@@ -57,3 +59,24 @@ class Data:
     @health.setter
     def health(self, health):
         self._health = health
+
+    @property
+    def experience(self):
+        return self._experience
+
+    @experience.setter
+    def experience(self, value):
+        self._experience = value
+        # Check for level up
+        exp_needed = self.get_exp_for_level(self._level)
+        while self._experience >= exp_needed:
+            self._experience -= exp_needed
+            self._level += 1
+            exp_needed = self.get_exp_for_level(self._level)
+
+    @property
+    def level(self):
+        return self._level
+
+    def get_exp_for_level(self, level):
+        return int(self.base_exp_required * (self.exp_scaling ** (level - 1)))
