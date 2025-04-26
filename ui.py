@@ -525,25 +525,19 @@ class BallSimulation:
 
     def recalculate_layout(self, sX, sY):
         """Recalculate simulation layout"""
-        scale_factor = min(sX, sY)
-        self.radius = int(self.base_radius * scale_factor)
+        self.radius = int(self.base_radius * min(sX, sY))
         self.box_width = int(self.base_box_width * sX)
         self.box_height = int(self.base_box_height * sY)
         self.box_x = int(self.base_box_x * sX)
         self.box_y = (self.display_surface.get_height() - self.box_height) // 2
         self.center_x = self.box_x + self.box_width // 2
         self.center_y = self.box_y + self.box_height // 2
-        self.line_thickness = max(1, int(6 * scale_factor))
-
-        # Rescale all circles
-        for circle in self.circles:
-            circle.radius = int(circle.initial_radius * scale_factor)
-            circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
+        self.line_thickness = max(1, int(6 * min(sX, sY)))
 
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
-                                   int(20 * scale_factor))
+                                   int(20 * min(sX, sY)))
 
-        button_y = self.box_y + self.box_height + int(30 * scale_factor)
+        button_y = self.box_y + self.box_height + int(30 * min(sX, sY))
         self.spawn_button.update_font(self.font)
         # Center the button horizontally below the circles
         button_x = self.center_x - (self.spawn_button.rect.width // 2)
