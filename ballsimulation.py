@@ -376,7 +376,10 @@ class BallSimulation:
             button.change_color(mouse_pos)
             # Handle upgrade button text and cost updates
             if button != self.spawn_button:
-                current_level = getattr(self.data, button.text_input.split(':')[1].strip())
+                # Extract button type from text
+                button_type = button.text_input.split(':')[0].strip().lower().replace(' ', '_')
+                button_type = f"_{button_type}_level"
+                current_level = getattr(self.data, button_type)
                 cost = self.data.get_upgrade_cost(current_level)
-                button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
+                button.text_input = f"{button.text_input.split(':')[0]}: {current_level}"
                 button.text = button.font.render(button.text_input, True, button.base_color)
