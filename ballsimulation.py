@@ -39,8 +39,8 @@ class BallSimulation:
                           for angle in range(360)}
 
         # Initialize components
-        self.init_dimensions(sX, sY)
         self.init_buttons()
+        self.init_dimensions(sX, sY)
         self.add_circle(sX, sY)
 
     def init_dimensions(self, sX, sY):
@@ -76,13 +76,6 @@ class BallSimulation:
         elif event.type == pygame.MOUSEBUTTONUP:
             self.is_pressed['spawn'] = False
             self.is_pressed['circle'] = False
-
-    def handle_mouse_click(self, mouse_pos):
-        """Handle mouse click events"""
-        if self.spawn_button.check_input(mouse_pos) and not self.is_pressed['spawn']:
-            self.handle_spawn_click()
-
-        self.handle_upgrade_clicks(mouse_pos)
 
     def handle_spawn_click(self):
         """Handle spawn button click"""
