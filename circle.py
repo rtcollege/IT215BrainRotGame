@@ -44,17 +44,13 @@ class Circle:
     def update(self, dt, other_circles=None, level=1):
         # Rotation speed remains constant regardless of level
         self.angle = (self.angle + self.rotation_speed) % 360
-        if self.active:
+        if self.active and self.radius > self.min_radius:
             # Store current radius
             current_radius = self.radius
             # Calculate potential new radius with level scaling
             shrink_rate = self.shrink_rate * (1 + (level - 1) * 0.2)  # Only shrink rate scales with level
-            new_radius = self.radius - shrink_rate * dt
-            
-            # Apply minimum radius constraint after shrinking
-            if new_radius < self.min_radius:
-                new_radius = self.min_radius
-            
+            new_radius = max(self.min_radius, self.radius - shrink_rate * dt)
+
             # Temporarily set the radius to test for collisions
             self.radius = new_radius
             if other_circles and self.check_collision(other_circles):
