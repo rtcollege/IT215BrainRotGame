@@ -537,9 +537,11 @@ class BallSimulation:
 
         # Rescale all circles
         for circle in self.circles:
-            original_ratio = circle.radius / circle.initial_radius
-            circle.initial_radius = int(self.base_radius * scale_factor)
-            circle.radius = int(circle.initial_radius * original_ratio)
+            # Scale radius directly from base radius
+            new_initial = int(self.base_radius * scale_factor)
+            ratio = circle.radius / circle.initial_radius
+            circle.radius = int(new_initial * ratio)
+            circle.initial_radius = new_initial
             circle.min_radius = int(20 * scale_factor)  # Scale minimum radius too
 
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
