@@ -319,7 +319,7 @@ class UI:
     def update_gameplay(self, mouse_pos, dt):
         if self.ball_sim.health <= 0:
             # Draw the last frame of gameplay
-            self.ball_sim.draw_state()
+            self.ball_sim.update(0, self.sX, self.sY)  # Pass dt=0 to prevent movement
             
             # Show game over overlay
             overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
