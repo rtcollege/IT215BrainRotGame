@@ -86,6 +86,12 @@ class UI:
         self.title_text = self.title_font.render("Brain Rot Game", True, "white")
         self.title_rect = self.title_text.get_rect(topleft=(button_x, int(100 * self.sY)))
         
+        # Update back button position to match main menu buttons
+        back_button_x = int(50 * self.sX)  # Same as button_x
+        back_button_y = button_y_start + 3 * button_y_spacing
+        self.back_button = Button(None, (back_button_x, back_button_y), "Back", 
+                                self.font, "white", "#b68f40")
+
         # Add difficulty text
         self.difficulty_text = self.font.render("Difficulty:", True, "white")
         text_height = self.difficulty_text.get_height()
@@ -225,11 +231,6 @@ class UI:
             self.credits_rects.append(rect)
 
     def setup_pause_menu(self, button_x, button_y_start, button_y_spacing):
-        # Set back button position first with proper padding from bottom
-        back_y = self.W_HEIGHT - int(100 * self.sY)
-        self.back_button.update_font(self.font)
-        self.back_button.set_position((button_x, back_y))
-
         self.resume_button.update_font(self.font)
         self.pause_settings_button.update_font(self.font)
         self.pause_credits_button.update_font(self.font)
@@ -411,6 +412,19 @@ class UI:
         elif self.quit_button.check_input(mouse_pos):
             pygame.quit()
             sys.exit()
+
+    def handle_settings_click(self, mouse_pos):
+        if self.back_button.check_input(mouse_pos):
+            self.switch_scene(self.previous_scene)
+        elif self.easy_button.check_input(mouse_pos):
+            self.difficulty = 'easy'
+        elif self.medium_button.check_input(mouse_pos):
+            self.difficulty = 'medium'
+        elif self.hard_button.check_input(mouse_pos):
+            self.difficulty = 'hard'
+        elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+            # Update volume based on mouse position
+            self.update_volume_from_mouse(mouse_pos[0])
 
     def update_volume_from_mouse(self, mouse_x):
         # Calculate volume based on mouse position relative to slider
