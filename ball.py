@@ -17,7 +17,7 @@ class Ball:
         self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
         self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
         self.gravity = 540
-        self.max_speed = 500  # Maximum allowed speed
+        self.max_speed = 900  # Maximum allowed speed
         self.cell_x = 0
         self.cell_y = 0
         
