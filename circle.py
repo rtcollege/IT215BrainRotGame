@@ -21,9 +21,9 @@ class Circle:
             if not circle.active or circle == self:
                 continue
                 
-            # Scale threshold based on current radius relative to initial radius
-            scale_factor = self.radius / self.initial_radius
-            collision_threshold = 15 * scale_factor
+            # Get line thickness from UI context (passed through other_circles)
+            line_thickness = other_circles[0].line_thickness if hasattr(other_circles[0], 'line_thickness') else 3
+            collision_threshold = line_thickness * 2
             
             radii_diff = abs(self.radius - circle.radius)
             if radii_diff < collision_threshold:
@@ -31,7 +31,7 @@ class Circle:
                     return True
                     
                 # Quick check for space below
-                target_radius = self.radius - (5 * scale_factor)
+                target_radius = self.radius - collision_threshold
                 return any(
                     other != self and other != circle and 
                     other.active and 
