@@ -511,22 +511,20 @@ class UI:
     def handle_gameplay_click(self, mouse_pos):
         if self.data.health <= 0:
             if self.restart_button.check_input(mouse_pos):
-                # Create fresh data instance
+                # Create completely new Data instance
                 self.data = Data(self)
-                self.data.health = 100  # Ensure health is reset
-                self.data.currency = 5  # Reset starting currency
-                self.data.experience = 0  # Reset experience
-                self.data._level = 1  # Reset level
-                self.data._multi_ball_level = 0  # Reset upgrades
-                self.data._shrink_reduction_level = 0
-                self.data._rotation_reduction_level = 0
-                self.data._health_regen_level = 0
-                # Create new ball simulation with fresh data
-                self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
-                self.ball_sim.balls.clear()  # Clear any existing balls
-                self.ball_sim.circles.clear()  # Clear any existing circles
-                self.ball_sim.can_spawn_circles = True  # Enable circle spawning
+                # Force reset all game state
                 self.is_paused = False
+                # Create fresh BallSimulation instance
+                self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
+                # Ensure ball simulation is in initial state
+                self.ball_sim.balls = []
+                self.ball_sim.circles = []
+                self.ball_sim.can_spawn_circles = True
+                self.ball_sim.level = 1
+                # Force immediate UI update
+                self.display_surface.fill("gray")
+                self.draw_background()
         elif self.is_paused:
             if self.resume_button.check_input(mouse_pos):
                 self.is_paused = False
