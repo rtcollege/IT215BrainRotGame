@@ -511,9 +511,11 @@ class UI:
     def handle_gameplay_click(self, mouse_pos):
         if self.data.health <= 0:
             if self.restart_button.check_input(mouse_pos):
-                # Create new data instance with clean state
+                # First create new data instance
                 self.data = Data(self)
-                # Reset ball simulation with new data
+                # Then update ball simulation reference in data
+                self.data.ui = self
+                # Finally create new ball simulation
                 self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
                 self.is_paused = False
         elif self.is_paused:
