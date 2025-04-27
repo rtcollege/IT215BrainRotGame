@@ -177,9 +177,9 @@ class BallSimulation:
         circle.active = False
         self.circles.remove(circle)  # Remove the inactive circle completely
         exp_gain = int((circle.initial_radius - circle.radius) / 2)
-        currency_gain = int((circle.initial_radius - circle.radius) / 4)
+        currency_gain = int((circle.initial_radius - circle.radius) / 8)
         self.data.experience += max(10, exp_gain)
-        self.data.currency += max(5, currency_gain)
+        self.data.currency += max(1, currency_gain)
         
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]
@@ -294,7 +294,7 @@ class BallSimulation:
             ball.update(dt)
             if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
-                refund = self.get_current_ball_cost() // 2
+                refund = self.get_current_ball_cost() // 8
                 self.data.currency += refund
             else:
                 ball.draw(self.display_surface)
