@@ -11,7 +11,7 @@ class Button:
         self.hovering_color = "#b68f40"  # Warm gold hover color
         self.button_color = "#4a4a4a"  # Button background color
         self.text_input = text_input
-        self.update_text()  # Initial text render
+        self.text = self.font.render(self.text_input, True, self.base_color)
         
         # Add padding to text area
         from settings import SCALE_X, SCALE_Y
@@ -86,10 +86,3 @@ class Button:
         # Recalculate the text_rect position after font change
         self.text_rect = self.text.get_rect(midleft=(self.x_pos + self.padding_x//2, self.y_pos))
 
-def update_text(self):
-        """Update button text and recalculate dimensions"""
-        if ':' in self.text_input:
-            # For buttons with cost, render full text
-            self.text = self.font.render(self.text_input, True, self.base_color)
-        else:
-            self.text = self.font.render(self.text_input, True, self.base_color)
