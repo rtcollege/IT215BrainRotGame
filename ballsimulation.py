@@ -104,10 +104,18 @@ class BallSimulation:
         button_x = self.center_x - (self.spawn_button.rect.width // 2)
         self.spawn_button.set_position((button_x, button_y))
 
-        # Position upgrade buttons on the right side
+        # Position headers and upgrade buttons on the right side
         upgrade_x = self.box_x + self.box_width + int(50 * self.scale_factor)
-        upgrade_y = self.box_y
+        upgrade_y = self.box_y + int(40 * self.scale_factor)  # Move buttons down to make room for headers
         upgrade_spacing = int(60 * self.scale_factor)
+
+        # Add headers
+        upgrade_text = self.font.render("Upgrade", True, "white")
+        cost_text = self.font.render("Cost", True, "white")
+        
+        header_y = self.box_y
+        self.display_surface.blit(upgrade_text, (upgrade_x, header_y))
+        self.display_surface.blit(cost_text, (upgrade_x + int(200 * self.scale_factor), header_y))
 
         for i, button in enumerate([self.multi_ball_button, self.shrink_reduction_button, 
                                   self.rotation_reduction_button, self.health_regen_button]):
