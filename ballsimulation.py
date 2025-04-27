@@ -88,6 +88,13 @@ class BallSimulation:
             self.currency -= ball_cost
             self.is_pressed['spawn'] = True
 
+    def handle_mouse_click(self, mouse_pos):
+        """Handle mouse click events"""
+        if self.spawn_button.check_input(mouse_pos):
+            self.handle_spawn_click()
+        else:
+            self.handle_upgrade_clicks(mouse_pos)
+
     def handle_upgrade_clicks(self, mouse_pos):
         """Handle upgrade button clicks"""
         upgrade_buttons = [
@@ -104,6 +111,7 @@ class BallSimulation:
                 if self.currency >= cost:
                     setattr(self.data, attr, current_level + 1)
                     self.currency -= cost
+                    break
 
     def update(self, dt, sX, sY):
         """Main update loop"""
@@ -288,7 +296,7 @@ class BallSimulation:
 
         dx = ball.x - self.center_x
         dy = ball.y - self.center_y
-        dist = hypot(dx, dy)
+        dist = max(0.0001, hypot(dx, dy))  # Prevent division by zero
 
         # Calculate collision response
         norm_dx = dx / dist
@@ -338,7 +346,9 @@ class BallSimulation:
             self.circles.clear()
 
         for circle in self.circles:
-            circle.update(dt, self.circles, self.level)
+            circle.update(dt, self.circles, self.level, 
+                         self.data._shrink_reduction_level,
+                         self.data._rotation_reduction_level)
             circle.draw(self.display_surface, self.center_x, self.center_y,
                       self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
