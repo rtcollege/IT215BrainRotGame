@@ -319,7 +319,7 @@ class UI:
         self.back_button.change_color(mouse_pos)
 
     def update_gameplay(self, mouse_pos, dt):
-        if self.data.health <= 0:
+        if self.ball_sim.data.health <= 0:
             # Draw the current state without updating
             # Draw status text
             status_x = int(20 * self.sX)
