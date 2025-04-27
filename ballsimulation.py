@@ -334,7 +334,7 @@ class BallSimulation:
             cost = self.data.get_upgrade_cost(current_level)
             
             button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
-            button.text = button.font.render(button.text_input, True, button.base_color)
+            button.update_text()
             button.update(self.display_surface)
             button.change_color(mouse_pos)
 
