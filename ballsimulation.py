@@ -274,14 +274,14 @@ class BallSimulation:
     def update_circles_and_balls(self, dt, sX, sY):
         """Update and draw circles and balls"""
         active_circles = [c for c in self.circles if c.active]
-        if not active_circles:
-            if self.can_spawn_circles:
-                max_circles = self.base_max_circles + (self.level - 1)
-                self.circles = []  # Clear inactive circles
-                for _ in range(max_circles):
-                    self.add_circle(sX, sY)
-            else:
-                self.spawn_timer.activate()
+        if not active_circles and self.can_spawn_circles:
+            max_circles = self.base_max_circles + (self.level - 1)
+            for _ in range(max_circles):
+                self.add_circle(sX, sY)
+        elif not active_circles:
+            self.can_spawn_circles = False
+            self.spawn_timer.activate()
+            self.circles.clear()
 
         for circle in self.circles:
             circle.update(dt, self.circles, self.level)
