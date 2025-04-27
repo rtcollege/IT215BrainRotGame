@@ -11,7 +11,7 @@ import pygame.gfxdraw
 
 class BallSimulation:
     """Handles ball physics simulation"""
-    def __init__(self, display_surface, sX, sY):
+    def __init__(self, display_surface, sX, sY, data):
         self.display_surface = display_surface
         self.data = data  # Use the passed data reference
         self.balls = []

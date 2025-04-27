@@ -85,10 +85,10 @@ class Main:
                 self.ui.switch_scene(self.ui.previous_scene)
                 
         elif current_scene == 'gameplay':
-            if self.check_game_over():
-                if self.ui.restart_button.check_input(mouse_pos):
-                    self.ui.ball_sim = BallSimulation(self.display_surface, self.ui.sX, self.ui.sY)
-                    self.ui.is_paused = False
+            if self.ui.restart_button.check_input(mouse_pos):
+                self.data = Data(self.ui)
+                self.ui.ball_sim = BallSimulation(self.display_surface, self.ui.sX, self.ui.sY, self.data)
+                self.ui.is_paused = False
             elif self.ui.is_paused:
                 if self.ui.resume_button.check_input(mouse_pos):
                     self.ui.is_paused = False
