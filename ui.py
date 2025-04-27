@@ -513,18 +513,9 @@ class UI:
             if self.restart_button.check_input(mouse_pos):
                 # Create completely new Data instance
                 self.data = Data(self)
-                # Force reset all game state
-                self.is_paused = False
-                # Create fresh BallSimulation instance
+                
                 self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
-                # Ensure ball simulation is in initial state
-                self.ball_sim.balls = []
-                self.ball_sim.circles = []
-                self.ball_sim.can_spawn_circles = True
-                self.ball_sim.level = 1
-                # Force immediate UI update
-                self.display_surface.fill("gray")
-                self.draw_background()
+                self.is_paused = False
         elif self.is_paused:
             if self.resume_button.check_input(mouse_pos):
                 self.is_paused = False
