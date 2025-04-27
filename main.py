@@ -2,6 +2,7 @@ from settings import *
 from data import Data
 from debug import debug
 from ui import UI
+from ballsimulation import BallSimulation
 
 
 class Main:
