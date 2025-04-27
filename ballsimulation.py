@@ -186,7 +186,8 @@ class BallSimulation:
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]
         if not active_circles:
-            self.can_spawn_circles = True
+            self.can_spawn_circles = False
+            self.spawn_timer.activate()
 
     def resolve_collision(self, ball, colliding_circles):
         """Resolve ball collision with circles"""
@@ -281,12 +282,11 @@ class BallSimulation:
         
         if not active_circles and self.can_spawn_circles:
             max_circles = self.base_max_circles + (self.level - 1)
-            self.circles = []  # Clear inactive circles
             for _ in range(max_circles):
                 self.add_circle(sX, sY)
         elif not active_circles:
-            self.spawn_timer.activate()
-
+            self.circles.clear()
+        
         for circle in self.circles:
             circle.update(dt, self.circles, self.level)
             circle.draw(self.display_surface, self.center_x, self.center_y,
