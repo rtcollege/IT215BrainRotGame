@@ -2,23 +2,25 @@ class Data:
 
     def __init__(self, ui):
         self.ui = ui
+        # Reset all stats to initial values
         self._currency = 5
         self._health = 100
         self.difficulty = 'medium'
         self.volume = 100    
         
+        # Reset experience and level
         self._experience = 0
         self._level = 1
         self.base_exp_required = 100  # Base XP needed for first level
         self.exp_scaling = 1.5  # Each level requires 50% more XP
         
-        # Upgrade levels
+        # Reset all upgrade levels
         self._multi_ball_level = 0
         self._shrink_reduction_level = 0
         self._rotation_reduction_level = 0
         self._health_regen_level = 0
         
-        # Upgrade costs (increase by 50% per level)
+        # Reset upgrade costs
         self.base_upgrade_cost = 10
         
     @property
