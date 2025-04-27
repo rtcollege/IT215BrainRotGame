@@ -326,8 +326,8 @@ class UI:
             status_y = int(20 * self.sY)
             spacing = int(40 * self.sY)
 
-            health_text = self.ball_sim.font.render(f"Health: {self.ball_sim.health}", True, "white")
-            currency_text = self.ball_sim.font.render(f"Currency: {self.ball_sim.currency}", True, "white")
+            health_text = self.ball_sim.font.render(f"Health: {self.data.health}", True, "white")
+            currency_text = self.ball_sim.font.render(f"Currency: {self.data.currency}", True, "white")
 
             self.display_surface.blit(health_text, (status_x, status_y))
             self.display_surface.blit(currency_text, (status_x, status_y + spacing))
@@ -509,7 +509,7 @@ class UI:
             self.switch_scene(self.previous_scene)
 
     def handle_gameplay_click(self, mouse_pos):
-        if self.ball_sim.health <= 0:
+        if self.data.health <= 0:
             if self.restart_button.check_input(mouse_pos):
                 # Reset game state
                 self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data) #Added self.data here
