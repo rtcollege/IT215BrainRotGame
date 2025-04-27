@@ -23,7 +23,7 @@ class BallSimulation:
 
         # Constants
         self.stat_update_delay = 1000
-        self.base_damage = 1
+        self.base_damage = 0.2  # Reduced damage rate
         self.base_max_circles = 3
         self.base_ball_cost = 2
 
@@ -41,7 +41,10 @@ class BallSimulation:
         # Initialize components
         self.init_buttons()
         self.init_dimensions(sX, sY)
-        self.add_circle(sX, sY)
+        
+        # Initial circle generation
+        for _ in range(self.base_max_circles):
+            self.add_circle(sX, sY)
 
     def init_dimensions(self, sX, sY):
         """Initialize all dimension-related attributes"""
@@ -104,10 +107,15 @@ class BallSimulation:
 
     def update(self, dt, sX, sY):
         """Main update loop"""
+        if dt > 0.1:  # Prevent large time steps
+            dt = 0.1
+            
         self.spawn_timer.update()
         self.update_stats(dt)
         self.update_game_objects(dt, sX, sY)
-        self.draw()
+        self.draw_game_objects()
+        self.draw_status_text()
+        self.draw_buttons()
 
     def update_stats(self, dt):
         """Update health and currency"""
