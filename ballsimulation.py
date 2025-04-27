@@ -41,9 +41,7 @@ class BallSimulation:
 
         self.angle_cache = {angle: (cos(radians(angle)), sin(radians(angle))) 
                           for angle in range(360)}
-        self.spawn_pressed = False
-        self.circle_pressed = False
-        self.upgrade_pressed = False # Added line
+        self.button_pressed = False
 
     def init_buttons(self):
         """Initialize all buttons"""
@@ -310,44 +308,43 @@ class BallSimulation:
         self.spawn_button.update(self.display_surface)
         self.spawn_button.change_color(mouse_pos)
 
-        if pygame.mouse.get_pressed()[0]:
-            if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
+        mouse_pressed = pygame.mouse.get_pressed()[0]
+
+        if not mouse_pressed:
+            self.button_pressed = False
+        elif not self.button_pressed:
+            # Spawn ball button
+            if self.spawn_button.check_input(mouse_pos):
                 ball_cost = self.get_current_ball_cost()
                 if self.data.currency >= ball_cost:
                     self.spawn_ball(self.scale_factor, self.scale_factor)
                     self.data.currency -= ball_cost
-                    self.spawn_pressed = True
-        else:
-            self.spawn_pressed = False
-            self.circle_pressed = False
+                    self.button_pressed = True
 
-        # Upgrade buttons
-        upgrade_buttons = [
-            (self.multi_ball_button, '_multi_ball_level'),
-            (self.shrink_reduction_button, '_shrink_reduction_level'),
-            (self.rotation_reduction_button, '_rotation_reduction_level'),
-            (self.health_regen_button, '_health_regen_level')
-        ]
+            # Upgrade buttons
+            upgrade_buttons = [
+                (self.multi_ball_button, '_multi_ball_level'),
+                (self.shrink_reduction_button, '_shrink_reduction_level'),
+                (self.rotation_reduction_button, '_rotation_reduction_level'),
+                (self.health_regen_button, '_health_regen_level')
+            ]
 
-        for button, attr in upgrade_buttons:
-            current_level = getattr(self.data, attr)
-            cost = self.data.get_upgrade_cost(current_level)
+            for button, attr in upgrade_buttons:
+                current_level = getattr(self.data, attr)
+                cost = self.data.get_upgrade_cost(current_level)
 
-            # Update button text to only show name
-            button.text_input = button.text_input.split(':')[0]
-            button.update(self.display_surface)
-            button.change_color(mouse_pos)
+                button.text_input = button.text_input.split(':')[0]
+                button.update(self.display_surface)
+                button.change_color(mouse_pos)
 
-            # Draw cost text to the right of the button
-            cost_text = self.font.render(str(cost), True, "white")
-            cost_x = button.rect.right + 20
-            cost_y = button.rect.centery - cost_text.get_height() // 2
-            self.display_surface.blit(cost_text, (cost_x, cost_y))
+                # Draw cost text
+                cost_text = self.font.render(str(cost), True, "white")
+                cost_x = button.rect.right + 20
+                cost_y = button.rect.centery - cost_text.get_height() // 2
+                self.display_surface.blit(cost_text, (cost_x, cost_y))
 
-            if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos) and not self.upgrade_pressed: #modified
-                if self.data.currency >= cost:
-                    setattr(self.data, attr, current_level + 1)
-                    self.data.currency -= cost
-                    self.upgrade_pressed = True #added
-        else:
-            self.upgrade_pressed = False #added
+                if button.check_input(mouse_pos):
+                    if self.data.currency >= cost:
+                        setattr(self.data, attr, current_level + 1)
+                        self.data.currency -= cost
+                        self.button_pressed = True
