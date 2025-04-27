@@ -4,6 +4,7 @@ from debug import debug
 from dropdown import Dropdown
 from timer import Timer
 from button import Button
+from ballsimulation import BallSimulation
 from ball import Ball
 from circle import Circle
 from math import sin, cos, radians, hypot, atan2, degrees
