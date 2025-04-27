@@ -29,10 +29,8 @@ class BallSimulation:
         self.base_ball_cost = 2
         self.can_spawn_circles = True
         self.spawn_timer = Timer(100, self.enable_circle_spawn)  # 1 second pause between levels
-        self.health = 100
         self.min_radius_time = 0  # Track time at minimum radius
         self.base_damage = 1  # Base damage per second
-        self.currency = 0
         self.last_stat_update = pygame.time.get_ticks()
         self.stat_update_delay = 1000  # 1 second in milliseconds
 
@@ -243,13 +241,13 @@ class BallSimulation:
 
     def update_health_and_currency(self, dt):
         """Update health and currency values"""
-        if self.health < 100:
+        if self.data.health < 100:
             regen_amount = self.data.health_regen_level * 2 * dt
-            self.health = min(100, self.health + regen_amount)
+            self.data.health = min(100, self.data.health + regen_amount)
 
         current_time = pygame.time.get_ticks()
         if current_time - self.last_stat_update >= self.stat_update_delay:
-            self.currency += 1
+            self.data.currency += 1
             self.update_damage()
             self.last_stat_update = current_time
 
@@ -260,7 +258,7 @@ class BallSimulation:
         if has_min_radius:
             self.min_radius_time += self.stat_update_delay / 1000
             damage = int(self.base_damage * (1 + self.min_radius_time / 5))
-            self.health = max(0, self.health - damage)
+            self.data.health = max(0, self.data.health - damage)
         else:
             self.min_radius_time = 0
 
@@ -297,7 +295,7 @@ class BallSimulation:
             if ball.y > self.display_surface.get_height():
                 self.balls.remove(ball)
                 refund = self.get_current_ball_cost() // 2
-                self.currency += refund
+                self.data.currency += refund
             else:
                 ball.draw(self.display_surface)
 
@@ -315,9 +313,9 @@ class BallSimulation:
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
                 ball_cost = self.get_current_ball_cost()
-                if self.currency >= ball_cost:
+                if self.data.currency >= ball_cost:
                     self.spawn_ball(self.scale_factor, self.scale_factor)
-                    self.currency -= ball_cost
+                    self.data.currency -= ball_cost
                     self.spawn_pressed = True
         else:
             self.spawn_pressed = False
