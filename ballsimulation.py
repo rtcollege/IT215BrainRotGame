@@ -1,3 +1,4 @@
+
 from settings import *
 from data import Data
 from timer import Timer
@@ -9,45 +10,12 @@ import random
 import pygame.gfxdraw
 
 class BallSimulation:
+    """Handles ball physics simulation"""
     def __init__(self, display_surface, sX, sY):
-        # Core attributes
         self.display_surface = display_surface
-        self.data = Data(None)
-        self.health = 100
-        self.currency = 0
-        self.level = 1
-        self.is_pressed = {'spawn': False, 'circle': False}
-        self.can_spawn_circles = True
-        self.min_radius_time = 0
-        self.last_stat_update = pygame.time.get_ticks()
-
-        # Constants
-        self.stat_update_delay = 1000
-        self.base_damage = 0.2  # Reduced damage rate
-        self.base_max_circles = 3
-        self.base_ball_cost = 2
-
-        # Game objects
+        self.data = Data(None)  # Initialize with None since we don't need UI reference
         self.balls = []
         self.circles = []
-
-        # Timers
-        self.spawn_timer = Timer(100, self.enable_circle_spawn)
-
-        # Cache
-        self.angle_cache = {angle: (cos(radians(angle)), sin(radians(angle))) 
-                          for angle in range(360)}
-
-        # Initialize components
-        self.init_buttons()
-        self.init_dimensions(sX, sY)
-        
-        # Initial circle generation
-        for _ in range(self.base_max_circles):
-            self.add_circle(sX, sY)
-
-    def init_dimensions(self, sX, sY):
-        """Initialize all dimension-related attributes"""
         self.circle_base_radius = 200
         self.ball_base_radius = 6
         self.base_padding = 100
@@ -55,117 +23,44 @@ class BallSimulation:
         self.base_box_height = self.circle_base_radius * 2 + self.base_padding
         self.base_box_x = 100
         self.cell_size = 50
+        self.grid = {}
+        self.level = 1
+        self.base_max_circles = 3  # Starting maximum number of circles
+        self.base_ball_cost = 2
+        self.can_spawn_circles = True
+        self.spawn_timer = Timer(100, self.enable_circle_spawn)  # 1 second pause between levels
+        self.health = 100
+        self.min_radius_time = 0  # Track time at minimum radius
+        self.base_damage = 1  # Base damage per second
+        self.currency = 0
+        self.last_stat_update = pygame.time.get_ticks()
+        self.stat_update_delay = 1000  # 1 second in milliseconds
+
+        # Initialize buttons
+        self.init_buttons()
+
         self.recalculate_layout(sX, sY)
+        self.add_circle(sX, sY)
+
+        self.angle_cache = {angle: (cos(radians(angle)), sin(radians(angle))) 
+                          for angle in range(360)}
+        self.spawn_pressed = False
+        self.circle_pressed = False
 
     def init_buttons(self):
-        """Initialize button objects"""
-        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 24)
-
-        buttons = [
-            ('spawn_button', "Spawn Ball"),
-            ('multi_ball_button', "Multi-Ball"),
-            ('shrink_reduction_button', "Shrink Reduction"),
-            ('rotation_reduction_button', "Rotation Reduction"),
-            ('health_regen_button', "Health Regen")
-        ]
-
-        for attr_name, text in buttons:
-            setattr(self, attr_name, Button(None, (0, 0), text, self.font, "white", "#b68f40"))
-
-    def handle_events(self, event, mouse_pos):
-        """Main event handler"""
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            self.handle_mouse_click(mouse_pos)
-        elif event.type == pygame.MOUSEBUTTONUP:
-            self.is_pressed['spawn'] = False
-            self.is_pressed['circle'] = False
-
-    def handle_spawn_click(self):
-        """Handle spawn button click"""
-        ball_cost = self.get_current_ball_cost()
-        if self.currency >= ball_cost:
-            self.spawn_ball(self.scale_factor, self.scale_factor)
-            self.currency -= ball_cost
-            self.is_pressed['spawn'] = True
-
-    def handle_mouse_click(self, mouse_pos):
-        """Handle mouse click events"""
-        if self.spawn_button.check_input(mouse_pos):
-            self.handle_spawn_click()
-        else:
-            self.handle_upgrade_clicks(mouse_pos)
-
-    def handle_upgrade_clicks(self, mouse_pos):
-        """Handle upgrade button clicks"""
-        upgrade_buttons = [
-            (self.multi_ball_button, '_multi_ball_level'),
-            (self.shrink_reduction_button, '_shrink_reduction_level'),
-            (self.rotation_reduction_button, '_rotation_reduction_level'),
-            (self.health_regen_button, '_health_regen_level')
-        ]
-
-        for button, attr in upgrade_buttons:
-            if button.check_input(mouse_pos):
-                current_level = getattr(self.data, attr)
-                cost = self.data.get_upgrade_cost(current_level)
-                if self.currency >= cost:
-                    setattr(self.data, attr, current_level + 1)
-                    self.currency -= cost
-                    break
-
-    def update(self, dt, sX, sY):
-        """Main update loop"""
-        if dt > 0.1:  # Prevent large time steps
-            dt = 0.1
-            
-        self.spawn_timer.update()
-        self.update_stats(dt)
-        self.update_game_objects(dt, sX, sY)
-        self.draw_game_objects()
-        self.draw_status_text()
-        self.draw_buttons()
-
-    def update_stats(self, dt):
-        """Update health and currency"""
-        self.update_health_regen(dt)
-        self.update_currency()
-        self.update_damage()
-
-    def update_health_regen(self, dt):
-        """Update health regeneration"""
-        if self.health < 100:
-            regen_amount = self.data.health_regen_level * 2 * dt
-            self.health = min(100, self.health + regen_amount)
-
-    def update_currency(self):
-        """Update currency based on time"""
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_stat_update >= self.stat_update_delay:
-            self.currency += 1
-            self.last_stat_update = current_time
-
-    def update_damage(self):
-        """Update damage from minimum radius circles"""
-        has_min_radius = any(circle.active and circle.radius <= circle.min_radius 
-                           for circle in self.circles)
-        if has_min_radius:
-            self.min_radius_time += self.stat_update_delay / 1000
-            damage = int(self.base_damage * (1 + self.min_radius_time / 5))
-            self.health = max(0, self.health - damage)
-        else:
-            self.min_radius_time = 0
-
-    def update_game_objects(self, dt, sX, sY):
-        """Update circles and balls"""
-        self.update_circles(dt, sX, sY)
-        self.update_balls(dt)
-        self.handle_collisions()
-
-    def draw(self):
-        """Draw all game elements"""
-        self.draw_status_text()
-        self.draw_game_objects()
-        self.draw_buttons()
+        """Initialize all buttons"""
+        self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
+                                 pygame.font.Font(None, 24), "white", "#b68f40")
+        
+        # Initialize upgrade buttons
+        self.multi_ball_button = Button(None, (0, 0), "Multi-Ball", 
+                                      pygame.font.Font(None, 24), "white", "#b68f40")
+        self.shrink_reduction_button = Button(None, (0, 0), "Shrink Reduction", 
+                                            pygame.font.Font(None, 24), "white", "#b68f40")
+        self.rotation_reduction_button = Button(None, (0, 0), "Rotation Reduction", 
+                                              pygame.font.Font(None, 24), "white", "#b68f40")
+        self.health_regen_button = Button(None, (0, 0), "Health Regen", 
+                                        pygame.font.Font(None, 24), "white", "#b68f40")
 
     def recalculate_layout(self, sX, sY):
         """Recalculate simulation layout"""
@@ -296,7 +191,7 @@ class BallSimulation:
 
         dx = ball.x - self.center_x
         dy = ball.y - self.center_y
-        dist = max(0.0001, hypot(dx, dy))  # Prevent division by zero
+        dist = hypot(dx, dy)
 
         # Calculate collision response
         norm_dx = dx / dist
@@ -333,8 +228,51 @@ class BallSimulation:
         ball.vel_x *= 0.995
         ball.vel_y *= 0.995
 
-    def update_circles(self, dt, sX, sY):
-        """Update and draw circles"""
+    def update(self, dt, sX, sY):
+        """Update game state"""
+        self.spawn_timer.update()
+        self.update_health_and_currency(dt)
+        self.draw_status_text(sX, sY)
+        self.update_circles_and_balls(dt, sX, sY)
+        self.handle_buttons()
+
+    def update_health_and_currency(self, dt):
+        """Update health and currency values"""
+        if self.health < 100:
+            regen_amount = self.data.health_regen_level * 2 * dt
+            self.health = min(100, self.health + regen_amount)
+
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_stat_update >= self.stat_update_delay:
+            self.currency += 1
+            self.update_damage()
+            self.last_stat_update = current_time
+
+    def update_damage(self):
+        """Update damage from minimum radius circles"""
+        has_min_radius = any(circle.active and circle.radius <= circle.min_radius 
+                           for circle in self.circles)
+        if has_min_radius:
+            self.min_radius_time += self.stat_update_delay / 1000
+            damage = int(self.base_damage * (1 + self.min_radius_time / 5))
+            self.health = max(0, self.health - damage)
+        else:
+            self.min_radius_time = 0
+
+    def draw_status_text(self, sX, sY):
+        """Draw health and currency status"""
+        status_x = int(20 * sX)
+        status_y = int(20 * sY)
+        spacing = int(40 * sY)
+
+        health_text = self.font.render(f"Health: {int(self.health)}", True, "white")
+        currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
+
+        self.display_surface.blit(health_text, (status_x, status_y))
+        self.display_surface.blit(currency_text, (status_x, status_y + spacing))
+
+    def update_circles_and_balls(self, dt, sX, sY):
+        """Update and draw circles and balls"""
         active_circles = [c for c in self.circles if c.active]
         if not active_circles and self.can_spawn_circles:
             max_circles = self.base_max_circles + (self.level - 1)
@@ -346,14 +284,10 @@ class BallSimulation:
             self.circles.clear()
 
         for circle in self.circles:
-            circle.update(dt, self.circles, self.level, 
-                         self.data._shrink_reduction_level,
-                         self.data._rotation_reduction_level)
+            circle.update(dt, self.circles, self.level)
             circle.draw(self.display_surface, self.center_x, self.center_y,
                       self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
-    def update_balls(self, dt):
-        """Update and draw balls"""
         for ball in self.balls[:]:
             ball.update(dt)
             if ball.y > self.display_surface.get_height():
@@ -363,45 +297,46 @@ class BallSimulation:
             else:
                 ball.draw(self.display_surface)
 
-    def draw_status_text(self):
-        """Draw health and currency status"""
-        status_x = int(20 * self.scale_factor)
-        status_y = int(20 * self.scale_factor)
-        spacing = int(40 * self.scale_factor)
+        self.handle_collisions()
+        self.add_circle(sX, sY)
 
-        health_text = self.font.render(f"Health: {int(self.health)}", True, "white")
-        currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
-
-        self.display_surface.blit(health_text, (status_x, status_y))
-        self.display_surface.blit(currency_text, (status_x, status_y + spacing))
-
-    def draw_game_objects(self):
-        """Draw circles and balls"""
-        for circle in self.circles:
-            circle.draw(self.display_surface, self.center_x, self.center_y,
-                        self.line_thickness, (182, 143, 64), pygame.gfxdraw)
-        for ball in self.balls:
-            ball.draw(self.display_surface)
-
-    def draw_buttons(self):
-        """Draw all buttons"""
+    def handle_buttons(self):
+        """Handle button updates and interactions"""
         mouse_pos = pygame.mouse.get_pos()
-        for button in [self.spawn_button, self.multi_ball_button, self.shrink_reduction_button, self.rotation_reduction_button, self.health_regen_button]:
+        
+        # Spawn button
+        self.spawn_button.update(self.display_surface)
+        self.spawn_button.change_color(mouse_pos)
+        
+        if pygame.mouse.get_pressed()[0]:
+            if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
+                ball_cost = self.get_current_ball_cost()
+                if self.currency >= ball_cost:
+                    self.spawn_ball(self.scale_factor, self.scale_factor)
+                    self.currency -= ball_cost
+                    self.spawn_pressed = True
+        else:
+            self.spawn_pressed = False
+            self.circle_pressed = False
+
+        # Upgrade buttons
+        upgrade_buttons = [
+            (self.multi_ball_button, '_multi_ball_level'),
+            (self.shrink_reduction_button, '_shrink_reduction_level'),
+            (self.rotation_reduction_button, '_rotation_reduction_level'),
+            (self.health_regen_button, '_health_regen_level')
+        ]
+
+        for button, attr in upgrade_buttons:
+            current_level = getattr(self.data, attr)
+            cost = self.data.get_upgrade_cost(current_level)
+            
+            button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
+            button.text = button.font.render(button.text_input, True, button.base_color)
             button.update(self.display_surface)
             button.change_color(mouse_pos)
-            # Handle upgrade button text and cost updates
-            if button != self.spawn_button:
-                # Get the base name without cost
-                base_name = button.text_input.split(':')[0] if ':' in button.text_input else button.text_input
-                # Map button text to attribute names
-                attr_map = {
-                    'Multi-Ball': '_multi_ball_level',
-                    'Shrink Reduction': '_shrink_reduction_level',
-                    'Rotation Reduction': '_rotation_reduction_level',
-                    'Health Regen': '_health_regen_level'
-                }
-                if base_name in attr_map:
-                    current_level = getattr(self.data, attr_map[base_name])
-                    cost = self.data.get_upgrade_cost(current_level)
-                    button.text_input = f"{base_name}: {cost}"
-                    button.text = button.font.render(button.text_input, True, button.base_color)
+
+            if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos):
+                if self.currency >= cost:
+                    setattr(self.data, attr, current_level + 1)
+                    self.currency -= cost

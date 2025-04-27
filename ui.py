@@ -1,11 +1,15 @@
 from settings import *
 from data import Data
+from debug import debug
 from dropdown import Dropdown
 from timer import Timer
 from button import Button
 from ball import Ball
 from circle import Circle
-from ballsimulation import BallSimulation
+from math import sin, cos, radians, hypot, atan2, degrees
+import random
+import pygame.gfxdraw
+import sys
 
 class UI:
     def __init__(self, font, frames, data):
