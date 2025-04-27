@@ -176,13 +176,17 @@ class BallSimulation:
 
     def handle_circle_destruction(self, circle):
         """Handle destroying a circle"""
-        self.can_spawn_circles = False
-        self.spawn_timer.activate()
         circle.active = False
+        self.circles.remove(circle)  # Remove the inactive circle completely
         exp_gain = int((circle.initial_radius - circle.radius) / 2)
         currency_gain = int((circle.initial_radius - circle.radius) / 4)
         self.data.experience += max(10, exp_gain)
         self.currency += max(5, currency_gain)
+        
+        # Check if we need to spawn new circles
+        active_circles = [c for c in self.circles if c.active]
+        if not active_circles:
+            self.can_spawn_circles = True
 
     def resolve_collision(self, ball, colliding_circles):
         """Resolve ball collision with circles"""
