@@ -1,4 +1,3 @@
-
 from settings import *
 from data import Data
 from timer import Timer
@@ -44,12 +43,13 @@ class BallSimulation:
                           for angle in range(360)}
         self.spawn_pressed = False
         self.circle_pressed = False
+        self.upgrade_pressed = False # Added line
 
     def init_buttons(self):
         """Initialize all buttons"""
         self.spawn_button = Button(None, (0, 0), "Spawn Ball", 
                                  pygame.font.Font(None, 24), "white", "#b68f40")
-        
+
         # Initialize upgrade buttons
         self.multi_ball_button = Button(None, (0, 0), "Multi-Ball", 
                                       pygame.font.Font(None, 24), "white", "#b68f40")
@@ -97,7 +97,7 @@ class BallSimulation:
         """Update positions of all buttons"""
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
                                    int(20 * self.scale_factor))
-        
+
         # Position spawn button below circles
         button_y = self.box_y + self.box_height + int(30 * self.scale_factor)
         self.spawn_button.update_font(self.font)
@@ -134,7 +134,7 @@ class BallSimulation:
         """Add a new circle to the game"""
         if not self.can_spawn_circles:
             return False
-            
+
         active_circles = sum(1 for c in self.circles if c.active)
         max_circles = self.base_max_circles + (self.level - 1)
         if active_circles >= max_circles:
@@ -180,7 +180,7 @@ class BallSimulation:
         currency_gain = int((circle.initial_radius - circle.radius) / 8)
         self.data.experience += max(10, exp_gain)
         self.data.currency += max(1, currency_gain)
-        
+
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]
         if not active_circles:
@@ -215,7 +215,7 @@ class BallSimulation:
         # Handle ball position
         penetration = collision_margin - distance_to_ring
         push_multiplier = 1 + (0.2 * (len(colliding_circles) - 1))
-        
+
         if dist > circle.radius:
             ball.x -= norm_dx * (penetration + push_multiplier)
             ball.y -= norm_dy * (penetration + push_multiplier)
@@ -277,14 +277,14 @@ class BallSimulation:
     def update_circles_and_balls(self, dt, sX, sY):
         """Update and draw circles and balls"""
         active_circles = [c for c in self.circles if c.active]
-        
+
         if not active_circles and self.can_spawn_circles:
             max_circles = self.base_max_circles + (self.level - 1)
             for _ in range(max_circles):
                 self.add_circle(sX, sY)
         elif not active_circles:
             self.circles.clear()
-        
+
         for circle in self.circles:
             circle.update(dt, self.circles, self.level)
             circle.draw(self.display_surface, self.center_x, self.center_y,
@@ -305,11 +305,11 @@ class BallSimulation:
     def handle_buttons(self):
         """Handle button updates and interactions"""
         mouse_pos = pygame.mouse.get_pos()
-        
+
         # Spawn button
         self.spawn_button.update(self.display_surface)
         self.spawn_button.change_color(mouse_pos)
-        
+
         if pygame.mouse.get_pressed()[0]:
             if self.spawn_button.check_input(mouse_pos) and not self.spawn_pressed:
                 ball_cost = self.get_current_ball_cost()
@@ -332,7 +332,7 @@ class BallSimulation:
         for button, attr in upgrade_buttons:
             current_level = getattr(self.data, attr)
             cost = self.data.get_upgrade_cost(current_level)
-            
+
             # Update button text to only show name
             button.text_input = button.text_input.split(':')[0]
             button.update(self.display_surface)
@@ -344,7 +344,10 @@ class BallSimulation:
             cost_y = button.rect.centery - cost_text.get_height() // 2
             self.display_surface.blit(cost_text, (cost_x, cost_y))
 
-            if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos):
+            if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos) and not self.upgrade_pressed: #modified
                 if self.data.currency >= cost:
                     setattr(self.data, attr, current_level + 1)
                     self.data.currency -= cost
+                    self.upgrade_pressed = True #added
+        else:
+            self.upgrade_pressed = False #added
