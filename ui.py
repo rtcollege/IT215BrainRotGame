@@ -509,7 +509,7 @@ class UI:
             self.switch_scene(self.previous_scene)
 
     def handle_gameplay_click(self, mouse_pos):
-        if self.ball_sim.health <= 0:
+        if self.ball_sim.data.health <= 0:
             if self.restart_button.check_input(mouse_pos):
                 # Reset game state
                 self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY)
