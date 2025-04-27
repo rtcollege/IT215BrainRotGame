@@ -73,9 +73,9 @@ class Data:
         while self._experience >= exp_needed:
             self._experience -= exp_needed
             self._level += 1
-            # Award currency for leveling up (50 base + 25 per level)
+            # Award currency for leveling up (10 base + 5 per level)
             if hasattr(self, '_currency'):
-                self._currency += 50 + (self._level * 25)
+                self._currency += 10 + (self._level * 5)
             exp_needed = self.get_exp_for_level(self._level)
 
     @property
