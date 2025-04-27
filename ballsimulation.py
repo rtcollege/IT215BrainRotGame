@@ -13,7 +13,7 @@ class BallSimulation:
     """Handles ball physics simulation"""
     def __init__(self, display_surface, sX, sY):
         self.display_surface = display_surface
-        self.data = data  # Use the passed data reference
+        self.data = Data(None)  # Initialize with None since we don't need UI reference
         self.balls = []
         self.circles = []
         self.circle_base_radius = 200

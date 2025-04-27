@@ -34,7 +34,7 @@ class UI:
         self.sY = SCALE_Y
 
         # Initialize ball simulation
-        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
+        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY)
 
         # Initialize UI elements
         self.init_buttons()
@@ -512,7 +512,7 @@ class UI:
         if self.ball_sim.health <= 0:
             if self.restart_button.check_input(mouse_pos):
                 # Reset game state
-                self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data) #Added self.data here
+                self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY)
                 self.is_paused = False
         elif self.is_paused:
             if self.resume_button.check_input(mouse_pos):
