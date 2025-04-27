@@ -88,6 +88,8 @@ class Main:
         elif current_scene == 'gameplay':
             if self.ui.restart_button.check_input(mouse_pos):
                 self.data = Data(self.ui)
+                self.data.health = 100
+                self.data.currency = 0
                 self.ui.ball_sim = BallSimulation(self.display_surface, self.ui.sX, self.ui.sY, self.data)
                 self.ui.is_paused = False
             elif self.ui.is_paused:

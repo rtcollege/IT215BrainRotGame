@@ -513,6 +513,8 @@ class UI:
             if self.restart_button.check_input(mouse_pos):
                 # Reset both game state and data
                 self.data = Data(self)
+                self.data.health = 100
+                self.data.currency = 0
                 self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
                 self.is_paused = False
         elif self.is_paused:
