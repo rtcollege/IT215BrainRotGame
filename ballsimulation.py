@@ -333,9 +333,16 @@ class BallSimulation:
             current_level = getattr(self.data, attr)
             cost = self.data.get_upgrade_cost(current_level)
             
-            button.text_input = f"{button.text_input.split(':')[0]}: {cost}"
+            # Update button text to only show name
+            button.text_input = button.text_input.split(':')[0]
             button.update(self.display_surface)
             button.change_color(mouse_pos)
+
+            # Draw cost text to the right of the button
+            cost_text = self.font.render(str(cost), True, "white")
+            cost_x = button.rect.right + 20
+            cost_y = button.rect.centery - cost_text.get_height() // 2
+            self.display_surface.blit(cost_text, (cost_x, cost_y))
 
             if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos):
                 if self.data.currency >= cost:
