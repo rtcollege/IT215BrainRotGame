@@ -34,7 +34,7 @@ class Main:
 
     def check_game_over(self):
         """Check for game over conditions"""
-        return self.ui.ball_sim.health <= 0 if hasattr(self.ui, 'ball_sim') else False
+        return self.ui.data.health <= 0 if hasattr(self.ui, 'ball_sim') else False
 
     def handle_events(self):
         """Handle all pygame events"""

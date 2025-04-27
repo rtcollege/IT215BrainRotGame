@@ -179,7 +179,7 @@ class BallSimulation:
         exp_gain = int((circle.initial_radius - circle.radius) / 2)
         currency_gain = int((circle.initial_radius - circle.radius) / 4)
         self.data.experience += max(10, exp_gain)
-        self.currency += max(5, currency_gain)
+        self.data.currency += max(5, currency_gain)
         
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]
@@ -268,8 +268,8 @@ class BallSimulation:
         status_y = int(20 * sY)
         spacing = int(40 * sY)
 
-        health_text = self.font.render(f"Health: {int(self.health)}", True, "white")
-        currency_text = self.font.render(f"Currency: {self.currency}", True, "white")
+        health_text = self.font.render(f"Health: {int(self.data.health)}", True, "white")
+        currency_text = self.font.render(f"Currency: {self.data.currency}", True, "white")
 
         self.display_surface.blit(health_text, (status_x, status_y))
         self.display_surface.blit(currency_text, (status_x, status_y + spacing))
@@ -339,6 +339,6 @@ class BallSimulation:
             button.change_color(mouse_pos)
 
             if pygame.mouse.get_pressed()[0] and button.check_input(mouse_pos):
-                if self.currency >= cost:
+                if self.data.currency >= cost:
                     setattr(self.data, attr, current_level + 1)
-                    self.currency -= cost
+                    self.data.currency -= cost

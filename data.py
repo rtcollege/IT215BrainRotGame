@@ -50,8 +50,7 @@ class Data:
     @currency.setter
     def currency(self, currency):
         self._currency = currency
-        self.ui.show_currency(self.currency)
-
+        return self.currency
     @property
     def health(self):
         return self._health
