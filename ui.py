@@ -422,12 +422,11 @@ class UI:
             elif self.current_scene in ['settings', 'credits']:
                 self.switch_scene(self.previous_scene)
 
+        if self.current_scene == 'settings':
+            self.resolution_dropdown.handle_event(event)
+            
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.current_scene == 'settings':
-                if not self.resolution_dropdown.handle_event(event):
-                    self.handle_mouse_click(event)
-            else:
-                self.handle_mouse_click(event)
+            self.handle_mouse_click(event)
 
 
     def handle_mouse_click(self, event):
