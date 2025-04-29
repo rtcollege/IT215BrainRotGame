@@ -455,19 +455,6 @@ class UI:
             pygame.quit()
             sys.exit()
 
-    def handle_settings_click(self, mouse_pos):
-        if self.back_button.check_input(mouse_pos):
-            self.switch_scene(self.previous_scene)
-        elif self.easy_button.check_input(mouse_pos):
-            self.difficulty = 'easy'
-        elif self.medium_button.check_input(mouse_pos):
-            self.difficulty = 'medium'
-        elif self.hard_button.check_input(mouse_pos):
-            self.difficulty = 'hard'
-        elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
-            # Update volume based on mouse position
-            self.update_volume_from_mouse(mouse_pos[0])
-
     def update_volume_from_mouse(self, mouse_x):
         # Calculate volume based on mouse position relative to slider
         left_edge = self.W_WIDTH // 2 - self.slider_width // 2
@@ -491,6 +478,8 @@ class UI:
             self.difficulty = 'hard'
         elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
             self.update_volume_from_mouse(mouse_pos[0])
+        elif self.resolution_dropdown.handle_event(mouse_pos):
+            pass
         elif self.apply_button.check_input(mouse_pos):
             selected_res = self.resolution_dropdown.selected_option
             width, height = map(int, selected_res.split('x'))

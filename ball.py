@@ -50,7 +50,7 @@ class Ball:
             self.vel_y *= scale
             
         # Use fewer substeps for better performance
-        substeps = 2
+        substeps = 4
         dt_sub = dt / substeps
         for _ in range(substeps):
             self.x += self.vel_x * dt_sub
