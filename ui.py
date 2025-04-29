@@ -422,11 +422,22 @@ class UI:
             elif self.current_scene in ['settings', 'credits']:
                 self.switch_scene(self.previous_scene)
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            self.handle_mouse_click(event)
-
-        if event.type == pygame.MOUSEBUTTONDOWN and self.current_scene == 'settings':
-            self.resolution_dropdown.handle_event(event)
+        if self.current_scene == 'settings':
+            if self.resolution_dropdown.handle_event(event):
+                # Get the selected resolution
+                width, height = map(int, self.resolution_dropdown.selected_option.split('x'))
+                # Update the display and recalculate layout
+                pygame.display.set_mode((width, height))
+                self.W_WIDTH = width
+                self.W_HEIGHT = height
+                self.sX = width / BASE_WIDTH
+                self.sY = height / BASE_HEIGHT
+                self.recalculate_layout()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.handle_mouse_click(event)
+        else:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.handle_mouse_click(event)
 
 
     def handle_mouse_click(self, event):
