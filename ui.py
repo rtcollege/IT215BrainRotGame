@@ -41,6 +41,7 @@ class UI:
         self.frames = frames
         self.font = font
         self.data = data
+        self.volume = 75  # Default volume
 
         # Initialize music manager
         self.music_manager = MusicManager()
