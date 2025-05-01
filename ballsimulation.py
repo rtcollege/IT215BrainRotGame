@@ -178,18 +178,6 @@ class BallSimulation:
         currency_gain = int((circle.initial_radius - circle.radius) / 8)
         self.data.experience += max(10, exp_gain)
         self.data.currency += max(1, currency_gain)
-        
-        # Spawn particles
-        num_particles = random.randint(10, 20)
-        particle_radius = self.ball_base_radius * self.scale_factor * 0.5
-        angles = [random.uniform(0, 2 * 3.14159) for _ in range(num_particles)]
-        
-        for angle in angles:
-            x = self.center_x + cos(angle) * circle.radius
-            y = self.center_y + sin(angle) * circle.radius
-            particle = Ball(x, y, particle_radius, self.center_x, self.center_y, 
-                          is_particle=True, color=circle.color)
-            self.balls.append(particle)
 
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]

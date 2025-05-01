@@ -4,7 +4,7 @@ import random
 from math import cos, sin
 
 class Ball:
-    def __init__(self, x, y, radius, center_x=0, center_y=0, is_particle=False, color=(255,255,255)):
+    def __init__(self, x, y, radius, center_x=0, center_y=0):
         self.x = x
         self.y = y
         self.center_x = center_x
@@ -12,24 +12,12 @@ class Ball:
         self.rel_x = x - center_x  # Store relative position
         self.rel_y = y - center_y
         self.radius = radius
-        self.is_particle = is_particle
-        self.color = color
-        
-        if is_particle:
-            angle = random.uniform(0, 2 * 3.14159)
-            speed = random.uniform(50, 200)
-            self.vel_x = cos(angle) * speed
-            self.vel_y = sin(angle) * speed
-            self.gravity = 800
-            self.max_speed = 1000
-        else:
-            angle = random.uniform(0, 2 * 3.14159)
-            speed = random.uniform(1, 50)
-            self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
-            self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
-            self.gravity = 540
-            self.max_speed = 350
-            
+        angle = random.uniform(0, 2 * 3.14159)
+        speed = random.uniform(1, 50)  # Reduced max initial speed
+        self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
+        self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
+        self.gravity = 540
+        self.max_speed = 350  # Maximum allowed speed
         self.cell_x = 0
         self.cell_y = 0
         
@@ -69,4 +57,4 @@ class Ball:
             self.y += self.vel_y * dt_sub
 
     def draw(self, surface):
-        pygame.draw.circle(surface, self.color, (int(self.x), int(self.y)), self.radius)
+        pygame.draw.circle(surface, (255, 255, 255), (int(self.x), int(self.y)), self.radius)
