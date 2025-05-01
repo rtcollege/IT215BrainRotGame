@@ -187,7 +187,7 @@ class BallSimulation:
             radius = circle.radius + random.uniform(0, 20) # Radius slightly outside circle
             x = self.center_x + radius * cos(angle)
             y = self.center_y + radius * sin(angle)
-            self.particles.append(Particle(x, y, 5, circle.color)) # Assuming Particle class takes (x,y,radius,color)
+            self.particles.append(Particle(x, y, circle.color, self.scale_factor))
 
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]
