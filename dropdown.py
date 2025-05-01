@@ -2,11 +2,7 @@ import pygame
 
 class Dropdown:
     def __init__(self, x, y, width, height, options, font, selected_option):
-        from settings import SCALE_Y
-        text = font.render(selected_option, True, "white")
-        text_height = text.get_height()
-        padding_y = int(20 * SCALE_Y)
-        self.rect = pygame.Rect(x, y - (text_height + padding_y) // 2, width, text_height + padding_y)
+        self.rect = pygame.Rect(x, y, width, height)
         self.options = options
         self.font = font
         self.selected_option = selected_option
@@ -20,7 +16,7 @@ class Dropdown:
         """Set up the positions and dimensions of the option buttons in the dropdown."""
         self.option_rects = []
         for i, option in enumerate(self.options):
-            option_rect = pygame.Rect(self.rect.x, self.rect.bottom + self.rect.height * i, self.rect.width, self.rect.height)
+            option_rect = pygame.Rect(self.rect.x, self.rect.y + self.rect.height * (i + 1), self.rect.width, self.rect.height)
             self.option_rects.append(option_rect)
 
     def handle_event(self, event):
