@@ -496,10 +496,12 @@ class UI:
             res_str = self.resolution_dropdown.selected_option
             if res_str:
                 width, height = map(int, res_str.split('x'))
+                pygame.display.set_mode((width, height))
                 self.W_WIDTH = width
                 self.W_HEIGHT = height
                 self.sX = width / BASE_WIDTH
                 self.sY = height / BASE_HEIGHT
+                self.display_surface = pygame.display.get_surface()
                 self.recalculate_layout()
             self.switch_scene(self.previous_scene)
         elif self.easy_button.check_input(mouse_pos):
