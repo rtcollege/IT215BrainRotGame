@@ -5,6 +5,7 @@ from button import Button
 from ball import Ball
 from circle import Circle
 from particle import Particle
+import math
 from math import sin, cos, radians, hypot, atan2, degrees
 import random
 import pygame.gfxdraw
