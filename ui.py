@@ -172,10 +172,15 @@ class UI:
         self.resolution_text_rect = self.resolution_text.get_rect(
             topleft=(button_x, res_y - text_height // 2))
 
+        # Initialize dropdown with the current resolution
         self.resolution_dropdown = Dropdown(
             button_x + self.resolution_text.get_width() + int(40 * self.sX),
-            res_y, dropdown_width, dropdown_height, resolution_options,
-            self.font, current_res)
+            res_y - dropdown_height // 2,  # Center vertically
+            dropdown_width,
+            dropdown_height,
+            resolution_options,
+            self.font,
+            current_res)
 
         self.apply_button = Button(
             None,
@@ -260,6 +265,9 @@ class UI:
         # Draw volume controls
         pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
         pygame.draw.rect(self.display_surface, "white", self.volume_slider)
+
+        # Update dropdown hover states
+        self.resolution_dropdown.update(mouse_pos)
 
         # Handle volume slider
         if pygame.mouse.get_pressed()[0]:
@@ -506,14 +514,20 @@ class UI:
 
     def apply_resolution_change(self):
         """Apply selected resolution change"""
+        if not self.resolution_dropdown.selected_option:
+            return
+            
         selected_res = self.resolution_dropdown.selected_option
         width, height = map(int, selected_res.split('x'))
-        pygame.display.set_mode((width, height))
-        self.W_WIDTH = width
-        self.W_HEIGHT = height
-        self.sX = width / BASE_WIDTH
-        self.sY = height / BASE_HEIGHT
-        self.recalculate_layout()
+        
+        # Only update if resolution actually changed
+        if width != self.W_WIDTH or height != self.W_HEIGHT:
+            pygame.display.set_mode((width, height))
+            self.W_WIDTH = width
+            self.W_HEIGHT = height
+            self.sX = width / BASE_WIDTH
+            self.sY = height / BASE_HEIGHT
+            self.recalculate_layout()
 
     def switch_scene(self, new_scene):
         """Switch to a new scene"""
