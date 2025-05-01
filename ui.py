@@ -493,7 +493,18 @@ class UI:
     def handle_settings_click(self, event, mouse_pos):
         """Handle settings click events"""
         if self.back_button.check_input(mouse_pos):
-            self.switch_scene('main_menu')
+            res_str = self.resolution_dropdown.selected_option
+            if res_str:
+                width, height = map(int, res_str.split('x'))
+                if width != self.W_WIDTH or height != self.W_HEIGHT:
+                    pygame.display.set_mode((width, height))
+                    self.W_WIDTH = width
+                    self.W_HEIGHT = height
+                    self.sX = width / BASE_WIDTH
+                    self.sY = height / BASE_HEIGHT
+                    self.display_surface = pygame.display.get_surface()
+                    self.recalculate_layout()
+            self.switch_scene(self.previous_scene)
         elif self.easy_button.check_input(mouse_pos):
             self.difficulty = 'easy'
         elif self.medium_button.check_input(mouse_pos):
@@ -509,7 +520,7 @@ class UI:
     def handle_credits_click(self, event, mouse_pos):
         """Handle credits click events"""
         if self.back_button.check_input(mouse_pos):
-            self.switch_scene('main_menu')
+            self.switch_scene(self.previous_scene)
 
     def handle_gameplay_click(self, event, mouse_pos):
         """Handle gameplay click events"""
@@ -525,13 +536,10 @@ class UI:
             self.is_paused = False
         elif self.pause_settings_button.check_input(mouse_pos):
             self.switch_scene('settings')
-            self.previous_scene = 'gameplay'
         elif self.pause_credits_button.check_input(mouse_pos):
             self.switch_scene('credits')
-            self.previous_scene = 'gameplay'
         elif self.pause_main_menu_button.check_input(mouse_pos):
             self.switch_scene('main_menu')
-            self.is_paused = False
 
     def restart_game(self):
         """Restart the game"""
