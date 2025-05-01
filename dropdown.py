@@ -1,7 +1,7 @@
 import pygame
 
 class Dropdown:
-    def __init__(self, x, y, width, height, options, font, selected_option):
+    def __init__(self, x, y, width, height, options, font, selected_option, sX, sY):
         self.rect = pygame.Rect(x, y, width, height)
         self.options = options
         self.font = font
@@ -9,7 +9,10 @@ class Dropdown:
         self.is_open = False
         self.option_rects = []
         self.hover_index = -1
-        self.padding_x = 10
+        self.padding_x = int(40 * sX)  # Match button padding
+        self.padding_y = int(20 * sY)  # Match button padding
+        self.sX = sX
+        self.sY = sY
         self.setup_option_rects()
 
     def setup_option_rects(self):

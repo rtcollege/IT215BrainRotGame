@@ -14,7 +14,6 @@ class UI:
         self.display_surface = pygame.display.get_surface()
         self.base_font_size = 40
         self.frames = frames
-        self.font = font
         self.data = data
 
         # State variables
@@ -159,10 +158,10 @@ class UI:
     def setup_resolution_dropdown(self, button_x):
         """Set up resolution selection dropdown"""
         res_y = int(500 * self.sY)
-        dropdown_width = int(220 * self.sX)
-        dropdown_height = int(60 * self.sY)
-        # Scale padding based on window size
-
+        # Match button dimensions
+        dropdown_width = int(300 * self.sX)  # Wider to accommodate resolution text
+        dropdown_height = int(80 * self.sY)  # Match button height
+        # Initialize dropdown with the current resolution
         resolution_options = [
             f"{width}x{height}" for width, height in RESOLUTIONS
         ]
@@ -176,12 +175,14 @@ class UI:
         # Initialize dropdown with the current resolution
         self.resolution_dropdown = Dropdown(
             button_x + self.resolution_text.get_width() + int(40 * self.sX),
-            res_y - dropdown_height // 2,  # Center vertically
+            res_y - dropdown_height // 2,  # Center vertically 
             dropdown_width,
             dropdown_height,
             resolution_options,
             self.font,
-            current_res)
+            current_res,
+            self.sX,
+            self.sY)
 
         # Setup apply button
         self.apply_button = Button(
@@ -308,7 +309,7 @@ class UI:
         self.display_surface.blit(self.resolution_text,
                                   self.resolution_text_rect)
         self.resolution_dropdown.draw(self.display_surface)
-        
+
         self.apply_button.update(self.display_surface)
         self.apply_button.change_color(mouse_pos)
 
