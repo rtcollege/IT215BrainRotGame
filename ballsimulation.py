@@ -146,29 +146,12 @@ class BallSimulation:
         return False
 
     def handle_collisions(self):
-        """Handle ball collisions with circles"""
+        """Remove balls that fall off screen"""
         for ball in self.balls[:]:
-            dx = ball.x - self.center_x
-            dy = ball.y - self.center_y
-            dist = hypot(dx, dy)
-
-            colliding_circles = []
-            for circle in self.circles:
-                if not circle.active:
-                    continue
-
-                distance_to_ring = abs(dist - circle.radius)
-                collision_margin = self.line_thickness + ball.radius
-
-                if distance_to_ring <= collision_margin:
-                    angle = (degrees(atan2(dy, dx)) + 360) % 360
-                    if circle.is_in_gap(angle):
-                        self.handle_circle_destruction(circle)
-                        break
-                    colliding_circles.append((circle, distance_to_ring, collision_margin))
-
-            if colliding_circles:
-                self.resolve_collision(ball, colliding_circles)
+            if ball.y > self.display_surface.get_height():
+                self.balls.remove(ball)
+                refund = self.get_current_ball_cost() // 8
+                self.data.currency += refund
 
     def handle_circle_destruction(self, circle):
         """Handle destroying a circle"""
