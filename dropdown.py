@@ -32,7 +32,6 @@ class Dropdown:
         # Draw main button
         pygame.draw.rect(surface, "#4a4a4a", self.rect, 0, border_radius=10)
         pygame.draw.rect(surface, "#b68f40", self.rect, 2, border_radius=10)
-        print("Drawing Dropdown...")
 
         # Draw selected option
         text = self.font.render(self.selected_option, True, "#ffffff")
@@ -47,7 +46,7 @@ class Dropdown:
         ]
         pygame.draw.polygon(surface, "#ffffff", arrow_points)
 
-        # Debugging if dropdown is open or closed
+        # Debugging: Print dropdown open state
         print(f"Dropdown is {'open' if self.is_open else 'closed'}")
 
         # Draw dropdown options if open
@@ -61,23 +60,41 @@ class Dropdown:
                 pygame.draw.rect(surface, "#b68f40", option_rect, 2, border_radius=10)
 
                 text = self.font.render(option, True, "#ffffff")
-                text_rect = text.get_rect(midleft=(option_rect.x + self.padding_x//2, option_rect.centery))
+                text_rect = text.get_rect(midleft=(option_rect.x + self.padding_x // 2, option_rect.centery))
                 surface.blit(text, text_rect)
                 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            print(f"Clicked at {mouse_pos}")  # Debug click position
 
+            # If the dropdown button is clicked, toggle the dropdown open/closed
             if self.rect.collidepoint(mouse_pos):
-                self.is_open = not self.is_open
-                print(f"Dropdown {'opened' if self.is_open else 'closed'}")
+                print("Opening dropdown...")  # Debugging print
+                if not self.is_open:
+                    self.is_open = True  # Open the dropdown
+                else:
+                    self.is_open = False  # Close the dropdown if it's already open
+                return True  # Indicate that the dropdown state was toggled
 
+            # If the dropdown is open, check for option clicks
             if self.is_open:
                 for i, rect in enumerate(self.option_rects):
                     if rect.collidepoint(mouse_pos):
+                        print(f"Option {self.options[i]} clicked!")  # Debugging print
                         self.selected_option = self.options[i]
-                        self.is_open = False
-                        print(f"Option {self.selected_option} selected.")  # Debug selected option
-                        return True
+                        self.is_open = False  # Close the dropdown after selecting an option
+                        return True  # Indicate an option was selected
+
+                # If no option was selected, close the dropdown
+                print("Closing dropdown (no option clicked).")  # Debugging print
+                self.is_open = False
+
+        # Handle hover logic (optional) - updates hover index for UI feedback
+        elif event.type == pygame.MOUSEMOTION and self.is_open:
+            mouse_pos = pygame.mouse.get_pos()
+            self.hover_index = -1
+            for i, rect in enumerate(self.option_rects):
+                if rect.collidepoint(mouse_pos):
+                    self.hover_index = i
+                    break
         return False
