@@ -1,3 +1,4 @@
+
 import pygame
 
 class Dropdown:
@@ -17,44 +18,44 @@ class Dropdown:
         self.selected_option = default_option if default_option else options[0]
         self.option_height = adjusted_height
 
-        # Create background rects for all options
+        # Create button rects for all options
         self.option_rects = []
+        self.option_buttons = []
         for i in range(len(options)):
             # Start options below the button
             y_pos = self.rect.bottom + (i * adjusted_height)
-            self.option_rects.append(
-                pygame.Rect(x, y_pos, width, adjusted_height)
-            )
+            option_rect = pygame.Rect(x, y_pos, width, adjusted_height)
+            self.option_rects.append(option_rect)
+            
+            # Create text surface for each option
+            text = font.render(options[i], True, "#ffffff")
+            text_rect = text.get_rect(midleft=(x + 10, y_pos + adjusted_height // 2))
+            self.option_buttons.append((text, text_rect, option_rect))
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            print(f"Dropdown clicked at {mouse_pos}")
 
             # Check if main button is clicked
             if self.rect.collidepoint(mouse_pos):
                 self.is_open = not self.is_open
-                print(f"Main dropdown button clicked. Is open: {self.is_open}")
                 return True
 
             # If dropdown is open, check for option clicks
             if self.is_open:
-                for i, rect in enumerate(self.option_rects):
-                    if rect.collidepoint(mouse_pos):
+                for i, (_, _, button_rect) in enumerate(self.option_buttons):
+                    if button_rect.collidepoint(mouse_pos):
                         self.selected_option = self.options[i]
                         self.is_open = False
-                        print(f"Selected option: {self.selected_option}")
                         return True
 
                 # Click outside both button and options - close dropdown
                 self.is_open = False
-                print("Clicked outside dropdown - closing")
                 return True
 
         return False
 
     def draw(self, surface):
-        print(f"Drawing dropdown - Is open: {self.is_open}, Selected: {self.selected_option}")
         # Draw main button
         pygame.draw.rect(surface, "#4a4a4a", self.rect, 0, border_radius=10)
         pygame.draw.rect(surface, "#b68f40", self.rect, 2, border_radius=10)
@@ -74,12 +75,10 @@ class Dropdown:
 
         # Draw options if dropdown is open
         if self.is_open:
-            for i, (option, rect) in enumerate(zip(self.options, self.option_rects)):
-                # Draw option background
-                pygame.draw.rect(surface, "#4a4a4a", rect, 0, border_radius=10)
-                pygame.draw.rect(surface, "#b68f40", rect, 2, border_radius=10)
-
+            for text_surf, text_rect, button_rect in self.option_buttons:
+                # Draw button background
+                pygame.draw.rect(surface, "#4a4a4a", button_rect, 0, border_radius=10)
+                pygame.draw.rect(surface, "#b68f40", button_rect, 2, border_radius=10)
+                
                 # Draw option text
-                text = self.font.render(option, True, "#ffffff")
-                text_rect = text.get_rect(midleft=(rect.x + 10, rect.centery))
-                surface.blit(text, text_rect)
+                surface.blit(text_surf, text_rect)
