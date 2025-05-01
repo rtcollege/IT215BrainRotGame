@@ -101,7 +101,7 @@ class BallSimulation:
         # Position spawn button below circles
         button_y = self.box_y + self.box_height + int(30 * self.scale_factor)
         self.spawn_button.update_font(self.font)
-        button_x = self.center_x - (self.spawn_button.rect.width // 2)
+        button_x = self.center_x - self.spawn_button.rect.width
         self.spawn_button.set_position((button_x, button_y))
 
         # Position upgrade buttons on the right side
@@ -347,9 +347,16 @@ class BallSimulation:
             cost_y = button.rect.centery - cost_text.get_height() // 2
             self.display_surface.blit(cost_text, (cost_x, cost_y))
 
-        # Update spawn button
+        # Update spawn button and show cost
         self.spawn_button.update(self.display_surface)
         self.spawn_button.change_color(mouse_pos)
+        
+        # Display ball cost
+        ball_cost = self.get_current_ball_cost()
+        cost_text = self.font.render(f"Cost: {ball_cost}", True, "white")
+        cost_x = self.spawn_button.rect.right + int(20 * self.scale_factor)
+        cost_y = self.spawn_button.rect.centery - cost_text.get_height() // 2
+        self.display_surface.blit(cost_text, (cost_x, cost_y))
 
         if not mouse_pressed:
             self.button_pressed = False
