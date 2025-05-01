@@ -450,10 +450,12 @@ class UI:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.handle_escape_key()
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            print(f"Mouse click at {event.pos}")
             if self.current_scene == 'settings':
-                # Always handle dropdown events in settings scene
+                print(f"In settings scene, dropdown rect: {self.resolution_dropdown.rect}")
+                if self.resolution_dropdown.rect.collidepoint(event.pos):
+                    print("Click collides with dropdown!")
                 self.resolution_dropdown.handle_event(event)
-                # Only proceed with other clicks if we didn't click the dropdown
                 if not (self.resolution_dropdown.rect.collidepoint(event.pos) or 
                         (self.resolution_dropdown.is_open and any(rect.collidepoint(event.pos) 
                                                                 for rect in self.resolution_dropdown.option_rects))):
