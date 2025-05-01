@@ -201,9 +201,6 @@ class UI:
         self.resolution_text_rect = self.resolution_text.get_rect(
             topleft=(button_x, res_y - text_height // 2))
 
-        #Improved height calculation for better adaptability.
-        adjusted_height = self.font.size(resolution_options[0])[1] + 10  # Add padding
-
         self.resolution_dropdown = Dropdown(
             button_x + self.resolution_text.get_width() + int(40 * self.sX),
             res_y,
@@ -211,8 +208,7 @@ class UI:
             dropdown_height,
             resolution_options,
             self.font,
-            current_res,
-            adjusted_height #Pass adjusted height to Dropdown
+            current_res
         )
 
         self.apply_button = Button(
@@ -428,7 +424,7 @@ class UI:
 
         if self.current_scene == 'settings':
             self.resolution_dropdown.handle_event(event)
-
+            
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_mouse_click(event)
 
