@@ -15,8 +15,9 @@ class Dropdown:
     def setup_option_rects(self):
         """Set up the positions and dimensions of the option buttons in the dropdown."""
         self.option_rects = []
+        option_height = int(self.rect.height * 2/3)  # Make option buttons 2/3 the height of main button
         for i, option in enumerate(self.options):
-            option_rect = pygame.Rect(self.rect.x, self.rect.y + self.rect.height * (i + 1), self.rect.width, self.rect.height)
+            option_rect = pygame.Rect(self.rect.x, self.rect.y + self.rect.height + option_height * i, self.rect.width, option_height)
             self.option_rects.append(option_rect)
 
     def handle_event(self, event):
