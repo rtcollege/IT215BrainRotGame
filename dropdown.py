@@ -9,7 +9,7 @@ class Dropdown:
         self.is_open = False
         self.option_rects = []
         self.hover_index = -1
-        self.padding_x = int(40 * sX)  # Match button padding
+        self.padding_x = int(20 * sX)  # Match button padding
         self.padding_y = int(20 * sY)  # Match button padding
         self.sX = sX
         self.sY = sY
