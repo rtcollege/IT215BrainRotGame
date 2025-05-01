@@ -199,6 +199,10 @@ class BallSimulation:
         """Resolve ball collision with circles"""
         nearest_circle = min(colliding_circles, key=lambda x: x[1])
         circle, distance_to_ring, collision_margin = nearest_circle
+        
+        # Play bounce sound
+        if 'bounce' in self.data.ui.music_manager.sounds:
+            self.data.ui.music_manager.sounds['bounce'].play()
 
         dx = ball.x - self.center_x
         dy = ball.y - self.center_y
