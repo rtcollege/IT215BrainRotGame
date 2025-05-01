@@ -449,13 +449,9 @@ class UI:
         """Handle UI events"""
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.handle_escape_key()
-        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print(f"Mouse click at {event.pos}")
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.current_scene == 'settings':
-                print(f"In settings scene, dropdown rect: {self.resolution_dropdown.rect}")
-                if self.resolution_dropdown.rect.collidepoint(event.pos):
-                    print("Click collides with dropdown!")
                 self.resolution_dropdown.handle_event(event)
                 if not (self.resolution_dropdown.rect.collidepoint(event.pos) or 
                         (self.resolution_dropdown.is_open and any(rect.collidepoint(event.pos) 
@@ -552,10 +548,10 @@ class UI:
         """Apply selected resolution change"""
         if not self.resolution_dropdown.selected_option:
             return
-            
+
         selected_res = self.resolution_dropdown.selected_option
         width, height = map(int, selected_res.split('x'))
-        
+
         # Only update if resolution actually changed
         if width != self.W_WIDTH or height != self.W_HEIGHT:
             pygame.display.set_mode((width, height))

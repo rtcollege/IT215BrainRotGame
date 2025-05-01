@@ -21,20 +21,12 @@ class Dropdown:
 
     def handle_event(self, event):
         """Handle user interaction with the dropdown."""
-        print("Dropdown handle_event called")
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(f"Click position: {event.pos}")
-            print(f"Dropdown rect: {self.rect}")
             if self.rect.collidepoint(event.pos):
-                print("Dropdown clicked!")
                 self.toggle_dropdown()
-                print(f"Dropdown is now {'open' if self.is_open else 'closed'}")
             if self.is_open:
-                print("Checking option rects...")
                 for i, option_rect in enumerate(self.option_rects):
-                    print(f"Option {i} rect: {option_rect}")
                     if option_rect.collidepoint(event.pos):
-                        print(f"Option {i} selected: {self.options[i]}")
                         self.select_option(i)
                         break
 
