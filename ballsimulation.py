@@ -182,7 +182,7 @@ class BallSimulation:
         self.data.currency += max(1, currency_gain)
 
         # Spawn particles
-        for _ in range(30): # Spawn 30 particles
+        for _ in range(25): # Spawn 30 particles
             angle = random.uniform(0, 2 * 3.14159)
             radius = circle.radius + random.uniform(0, 20) # Radius slightly outside circle
             x = self.center_x + radius * cos(angle)

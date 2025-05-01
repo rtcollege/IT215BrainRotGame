@@ -17,7 +17,7 @@ class Particle:
         self.vel_y = sin(radians(angle)) * speed + 50  # Reduced downward bias
         
         self.gravity = 540 * scale_factor
-        self.lifetime = random.uniform(0.2, 0.8)  # Reduced lifetime range
+        self.lifetime = random.uniform(0.2, 1)  # Reduced lifetime range
         
     def update(self, dt):
         self.lifetime -= dt
