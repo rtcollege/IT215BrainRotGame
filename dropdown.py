@@ -1,23 +1,40 @@
+
 import pygame
 
 class Dropdown:
     def __init__(self, x, y, width, height, options, font, selected_option):
-        self.rect = pygame.Rect(x, y, width, height)
+        from settings import SCALE_X, SCALE_Y
+        self.padding_x = int(40 * SCALE_X)  # Match Button class padding
+        self.padding_y = int(20 * SCALE_Y)  # Match Button class padding
+        
+        # Calculate scaled dimensions
+        option_text = font.render(selected_option, True, "#ffffff")
+        self.rect = pygame.Rect(
+            x,
+            y - (option_text.get_height() + self.padding_y) // 2,
+            width,
+            height
+        )
+        
         self.options = options
         self.font = font
         self.selected_option = selected_option
         self.is_open = False
         self.option_rects = []
         self.hover_index = -1
-        self.padding_x = 10
         self.setup_option_rects()
 
     def setup_option_rects(self):
         """Set up the positions and dimensions of the option buttons in the dropdown."""
         self.option_rects = []
-        option_height = int(self.rect.height * 2/3)  # Make option buttons 2/3 the height of main button
+        option_height = self.rect.height
         for i, option in enumerate(self.options):
-            option_rect = pygame.Rect(self.rect.x, self.rect.y + self.rect.height + option_height * i, self.rect.width, option_height)
+            option_rect = pygame.Rect(
+                self.rect.x,
+                self.rect.y + self.rect.height + option_height * i,
+                self.rect.width,
+                option_height
+            )
             self.option_rects.append(option_rect)
 
     def handle_event(self, event):
@@ -38,8 +55,7 @@ class Dropdown:
     def select_option(self, index):
         """Select a resolution option from the dropdown."""
         self.selected_option = self.options[index]
-        self.is_open = False  # Close the dropdown after selection
-        print(f"Resolution selected: {self.selected_option}")
+        self.is_open = False
 
     def draw(self, surface):
         """Draw the dropdown and its options on the surface."""
@@ -49,7 +65,7 @@ class Dropdown:
 
         # Draw selected option text
         text = self.font.render(self.selected_option, True, "#ffffff")
-        text_rect = text.get_rect(midleft=(self.rect.x + self.padding_x, self.rect.centery))
+        text_rect = text.get_rect(midleft=(self.rect.x + self.padding_x//2, self.rect.centery))
         surface.blit(text, text_rect)
 
         # Draw the dropdown arrow
@@ -73,7 +89,7 @@ class Dropdown:
 
                 # Render and draw option text
                 option_text = self.font.render(option, True, "#ffffff")
-                option_text_rect = option_text.get_rect(midleft=(option_rect.x + self.padding_x, option_rect.centery))
+                option_text_rect = option_text.get_rect(midleft=(option_rect.x + self.padding_x//2, option_rect.centery))
                 surface.blit(option_text, option_text_rect)
 
     def update(self, mouse_pos):
