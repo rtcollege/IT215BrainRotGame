@@ -426,10 +426,12 @@ class UI:
     
         # Handle dropdown interactions first, before checking other UI clicks
         if self.current_scene == 'settings':
-            if self.resolution_dropdown.is_open or self.resolution_dropdown.rect.collidepoint(mouse_pos):
-                self.resolution_dropdown.handle_event(event)  # Handle dropdown event
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Let dropdown handle the click event first
+                if self.resolution_dropdown.handle_event(event):
+                    return  # If dropdown handled the event, don't process further
     
-        # Proceed with mouse click handling (if no dropdown interaction occurred)
+        # Proceed with mouse click handling
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_mouse_click(event)
 
