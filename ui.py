@@ -14,6 +14,7 @@ class UI:
         self.display_surface = pygame.display.get_surface()
         self.base_font_size = 40
         self.frames = frames
+        self.font = font
         self.data = data
 
         # State variables
