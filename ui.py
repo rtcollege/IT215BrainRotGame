@@ -1,3 +1,5 @@
+import pygame
+import sys
 from settings import *
 from data import Data
 from debug import debug
@@ -5,6 +7,29 @@ from dropdown import Dropdown
 from timer import Timer
 from button import Button
 from ballsimulation import BallSimulation
+
+class MusicManager:
+    def __init__(self):
+        pygame.mixer.init()
+        self.sounds = {}
+        self.current_music = None
+        # Load sounds here.  Replace with your actual file paths.
+        self.sounds['main_menu'] = pygame.mixer.Sound('data/music/main_menu.mp3')
+        self.sounds['gameplay'] = pygame.mixer.Sound('data/music/gameplay.mp3')
+        self.sounds['game_over'] = pygame.mixer.Sound('data/music/game_over.wav')
+
+    def set_volume(self, volume):
+        for sound in self.sounds.values():
+            sound.set_volume(volume)
+
+    def play_music(self, track, loops= -1):
+        if track in self.sounds:
+            if self.current_music:
+                self.current_music.stop()
+            self.current_music = self.sounds[track]
+            self.current_music.play(loops)
+            
+            
 
 
 class UI:
@@ -16,6 +41,10 @@ class UI:
         self.frames = frames
         self.font = font
         self.data = data
+
+        # Initialize music manager
+        self.music_manager = MusicManager()
+        self.music_manager.set_volume(self.volume / 100)  # Convert percentage to float
 
         # State variables
         self.current_scene = 'main_menu'
@@ -345,6 +374,8 @@ class UI:
 
     def handle_game_over(self, mouse_pos):
         """Handle game over state"""
+        if self.music_manager.current_music != 'game_over':
+            self.music_manager.play_music('game_over', 0)  # Play once
         self.draw_status_info()
         self.draw_experience_bar()
 
@@ -438,11 +469,7 @@ class UI:
         clamped_x = max(left_edge, min(right_edge, mouse_x))
         relative_x = clamped_x - left_edge
         self.volume = max(0, min(100, (relative_x / self.slider_width) * 100))
-
-        self.volume_slider.x = int(left_edge +
-                                   (self.volume * self.slider_width / 100) -
-                                   (self.volume_slider.width // 2))
-        self.volume_slider.y = int(245 * self.sY)
+        self.music_manager.set_volume(self.volume / 100)
 
     def handle_events(self, event):
         """Handle UI events"""
@@ -575,3 +602,9 @@ class UI:
         """Switch to a new scene"""
         self.previous_scene = self.current_scene
         self.current_scene = new_scene
+
+        # Update music based on scene
+        if new_scene == 'main_menu':
+            self.music_manager.play_music('main_menu')
+        elif new_scene == 'gameplay':
+            self.music_manager.play_music('gameplay')
