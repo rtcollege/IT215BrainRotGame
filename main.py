@@ -89,7 +89,7 @@ class Main:
                 
         elif current_scene == 'gameplay':
             if self.ui.restart_button.check_input(mouse_pos):
-                self.ui.handle_gameplay_click(mouse_pos)
+                self.ui.handle_gameplay_click(None, mouse_pos)
             elif self.ui.is_paused:
                 if self.ui.resume_button.check_input(mouse_pos):
                     self.ui.is_paused = False

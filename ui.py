@@ -1,4 +1,3 @@
-
 from settings import *
 from data import Data
 from debug import debug
@@ -7,7 +6,9 @@ from timer import Timer
 from button import Button
 from ballsimulation import BallSimulation
 
+
 class UI:
+
     def __init__(self, font, frames, data):
         # Core initialization
         self.display_surface = pygame.display.get_surface()
@@ -30,36 +31,33 @@ class UI:
         self.sY = SCALE_Y
 
         # Initialize components
-        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
+        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY,
+                                       self.data)
         self.init_buttons()
         self.init_resolution_buttons()
         self.recalculate_layout()
 
     def init_buttons(self):
         """Initialize all UI buttons"""
-        buttons = [
-            ('play_button', "Play"),
-            ('settings_button', "Settings"),
-            ('credits_button', "Credits"),
-            ('quit_button', "Quit"),
-            ('easy_button', "Easy"),
-            ('medium_button', "Medium"),
-            ('hard_button', "Hard"),
-            ('back_button', "Back"),
-            ('resume_button', "Resume"),
-            ('pause_settings_button', "Settings"),
-            ('pause_credits_button', "Credits"),
-            ('pause_main_menu_button', "Main Menu"),
-            ('restart_button', "Restart")
-        ]
+        buttons = [('play_button', "Play"), ('settings_button', "Settings"),
+                   ('credits_button', "Credits"), ('quit_button', "Quit"),
+                   ('easy_button', "Easy"), ('medium_button', "Medium"),
+                   ('hard_button', "Hard"), ('back_button', "Back"),
+                   ('resume_button', "Resume"),
+                   ('pause_settings_button', "Settings"),
+                   ('pause_credits_button', "Credits"),
+                   ('pause_main_menu_button', "Main Menu"),
+                   ('restart_button', "Restart")]
         for attr_name, text in buttons:
-            setattr(self, attr_name, Button(None, (0, 0), text, self.font, "white", "#b68f40"))
+            setattr(self, attr_name,
+                    Button(None, (0, 0), text, self.font, "white", "#b68f40"))
 
     def init_resolution_buttons(self):
         """Initialize resolution selection buttons"""
         self.resolution_buttons = []
         for width, height in RESOLUTIONS:
-            btn = Button(None, (0, 0), f"{width}x{height}", self.font, "white", "#b68f40")
+            btn = Button(None, (0, 0), f"{width}x{height}", self.font, "white",
+                         "#b68f40")
             self.resolution_buttons.append((btn, (width, height)))
 
     def recalculate_layout(self):
@@ -70,20 +68,30 @@ class UI:
         button_y_spacing = int(100 * self.sY)
 
         # Update fonts
-        self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
-                                   int(self.base_font_size * min(self.sX, self.sY)))
-        self.title_font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 
-                                         int(self.base_font_size * 1.5 * min(self.sX, self.sY)))
+        self.font = pygame.font.Font(
+            "graphics/ui/NeotriadFree-1jzAg.ttf",
+            int(self.base_font_size * min(self.sX, self.sY)))
+        self.title_font = pygame.font.Font(
+            "graphics/ui/NeotriadFree-1jzAg.ttf",
+            int(self.base_font_size * 1.5 * min(self.sX, self.sY)))
 
         # Initialize titles
         self.setup_titles(button_x)
-        
+
+        back_button_x = int(50 * self.sX)  # Same as button_x
+        back_button_y = button_y_start + 3 * button_y_spacing
+        self.back_button = Button(None, (back_button_x, back_button_y), "Back",
+                                  self.font, "white", "#b68f40")
+
         # Update main menu buttons
-        menu_buttons = [self.play_button, self.settings_button, 
-                       self.credits_button, self.quit_button]
+        menu_buttons = [
+            self.play_button, self.settings_button, self.credits_button,
+            self.quit_button
+        ]
         for i, button in enumerate(menu_buttons):
             button.update_font(self.font)
-            button.set_position((button_x, button_y_start + i * button_y_spacing))
+            button.set_position(
+                (button_x, button_y_start + i * button_y_spacing))
 
         # Update settings layout
         self.setup_volume_slider(button_x)
@@ -104,11 +112,12 @@ class UI:
             'pause': "Paused"
         }
         y_pos = int(100 * self.sY)
-        
+
         for name, text in titles.items():
             title_text = self.title_font.render(text, True, "white")
             setattr(self, f"{name}_title", title_text)
-            setattr(self, f"{name}_title_rect", title_text.get_rect(topleft=(button_x, y_pos)))
+            setattr(self, f"{name}_title_rect",
+                    title_text.get_rect(topleft=(button_x, y_pos)))
 
     def setup_volume_slider(self, button_x):
         """Set up volume control elements"""
@@ -120,20 +129,13 @@ class UI:
 
         self.slider_width = int(200 * self.sX)
         self.volume_rect = pygame.Rect(
-            self.W_WIDTH // 2 - self.slider_width // 2,
-            volume_y,
-            self.slider_width,
-            int(20 * self.sY)
-        )
+            self.W_WIDTH // 2 - self.slider_width // 2, volume_y,
+            self.slider_width, int(20 * self.sY))
 
         slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int(
             (self.volume / 100) * self.slider_width)
-        self.volume_slider = pygame.Rect(
-            slider_x,
-            volume_y - int(5 * self.sY),
-            int(20 * self.sX),
-            int(30 * self.sY)
-        )
+        self.volume_slider = pygame.Rect(slider_x, volume_y - int(5 * self.sY),
+                                         int(20 * self.sX), int(30 * self.sY))
 
     def setup_difficulty_buttons(self, button_x):
         """Set up difficulty selection buttons"""
@@ -146,14 +148,13 @@ class UI:
         self.difficulty_text_rect = self.difficulty_text.get_rect(
             topleft=(button_x, diff_y - text_height // 2))
 
-        diff_buttons = [(self.easy_button, -1), 
-                       (self.medium_button, 0), 
-                       (self.hard_button, 1)]
-        
+        diff_buttons = [(self.easy_button, -1), (self.medium_button, 0),
+                        (self.hard_button, 1)]
+
         for button, x_offset in diff_buttons:
             button.update_font(self.font)
-            button.set_position((center_x + x_offset * button_spacing - 
-                               button.text.get_width() // 2, diff_y))
+            button.set_position((center_x + x_offset * button_spacing -
+                                 button.text.get_width() // 2, diff_y))
 
     def setup_resolution_dropdown(self, button_x):
         """Set up resolution selection dropdown"""
@@ -161,7 +162,9 @@ class UI:
         dropdown_width = int(220 * self.sX)
         dropdown_height = int(40 * self.sY)
 
-        resolution_options = [f"{width}x{height}" for width, height in RESOLUTIONS]
+        resolution_options = [
+            f"{width}x{height}" for width, height in RESOLUTIONS
+        ]
         current_res = f"{self.W_WIDTH}x{self.W_HEIGHT}"
 
         self.resolution_text = self.font.render("Resolution:", True, "white")
@@ -171,13 +174,8 @@ class UI:
 
         self.resolution_dropdown = Dropdown(
             button_x + self.resolution_text.get_width() + int(40 * self.sX),
-            res_y,
-            dropdown_width,
-            dropdown_height,
-            resolution_options,
-            self.font,
-            current_res
-        )
+            res_y, dropdown_width, dropdown_height, resolution_options,
+            self.font, current_res)
 
         self.apply_button = Button(
             None,
@@ -187,10 +185,10 @@ class UI:
     def setup_credits_text(self, button_x):
         """Set up credits text"""
         credits_lines = [
-            "Lead Developer: John Doe",
-            "Art Director: Jane Smith",
-            "Sound Designer: Mike Johnson",
-            "Level Designer: Sarah Wilson"
+            "Lead Developer: Ryan Tiedeman",
+            "Art Director: Ryan Tiedeman",
+            "Sound Designer: Ryan Tiedeman (There is no sound)",
+            "Level Designer: Ryan Tiedeman"
         ]
         self.credits_texts = []
         self.credits_rects = []
@@ -198,34 +196,31 @@ class UI:
         for i, line in enumerate(credits_lines):
             text = self.font.render(line, True, "white")
             rect = text.get_rect(center=(self.W_WIDTH // 2,
-                                       self.W_HEIGHT // 2 - 100 +
-                                       i * 50 * self.sY))
+                                         self.W_HEIGHT // 2 - 100 +
+                                         i * 50 * self.sY))
             self.credits_texts.append(text)
             self.credits_rects.append(rect)
 
     def setup_pause_menu(self, button_x, button_y_start, button_y_spacing):
         """Set up pause menu buttons"""
-        pause_buttons = [
-            (self.resume_button, 0),
-            (self.pause_settings_button, 1),
-            (self.pause_credits_button, 2),
-            (self.pause_main_menu_button, 3)
-        ]
-        
+        pause_buttons = [(self.resume_button, 0),
+                         (self.pause_settings_button, 1),
+                         (self.pause_credits_button, 2),
+                         (self.pause_main_menu_button, 3)]
+
         for button, i in pause_buttons:
             button.update_font(self.font)
-            button.set_position((button_x, button_y_start + i * button_y_spacing))
+            button.set_position(
+                (button_x, button_y_start + i * button_y_spacing))
 
     def draw_background(self):
         """Draw gradient background"""
         background = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
         for y in range(self.W_HEIGHT):
             factor = y / self.W_HEIGHT
-            color = pygame.Color(
-                int(44 * (1 - factor) + 26 * factor),
-                int(44 * (1 - factor) + 26 * factor),
-                int(44 * (1 - factor) + 26 * factor)
-            )
+            color = pygame.Color(int(44 * (1 - factor) + 26 * factor),
+                                 int(44 * (1 - factor) + 26 * factor),
+                                 int(44 * (1 - factor) + 26 * factor))
             pygame.draw.line(background, color, (0, y), (self.W_WIDTH, y))
         self.display_surface.blit(background, (0, 0))
 
@@ -247,16 +242,20 @@ class UI:
     def update_main_menu(self, mouse_pos, dt):
         """Update main menu scene"""
         self.display_surface.blit(self.main_title, self.main_title_rect)
-        for button in [self.play_button, self.settings_button, 
-                      self.credits_button, self.quit_button]:
+        for button in [
+                self.play_button, self.settings_button, self.credits_button,
+                self.quit_button
+        ]:
             button.update(self.display_surface)
             button.change_color(mouse_pos)
 
     def update_settings(self, mouse_pos, dt):
         """Update settings scene"""
-        self.display_surface.blit(self.settings_title, self.settings_title_rect)
+        self.display_surface.blit(self.settings_title,
+                                  self.settings_title_rect)
         self.display_surface.blit(self.volume_text, self.volume_text_rect)
-        self.display_surface.blit(self.difficulty_text, self.difficulty_text_rect)
+        self.display_surface.blit(self.difficulty_text,
+                                  self.difficulty_text_rect)
 
         # Draw volume controls
         pygame.draw.rect(self.display_surface, "white", self.volume_rect, 2)
@@ -264,7 +263,8 @@ class UI:
 
         # Handle volume slider
         if pygame.mouse.get_pressed()[0]:
-            if self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+            if self.volume_rect.collidepoint(
+                    mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
                 self.update_volume_from_mouse(mouse_pos[0])
 
         # Display volume value
@@ -274,7 +274,8 @@ class UI:
         self.display_surface.blit(volume_value, volume_value_rect)
 
         # Draw resolution controls
-        self.display_surface.blit(self.resolution_text, self.resolution_text_rect)
+        self.display_surface.blit(self.resolution_text,
+                                  self.resolution_text_rect)
         self.resolution_dropdown.draw(self.display_surface)
         self.apply_button.update(self.display_surface)
         self.apply_button.change_color(mouse_pos)
@@ -282,10 +283,11 @@ class UI:
         # Draw difficulty buttons
         for button in [self.easy_button, self.medium_button, self.hard_button]:
             button.update(self.display_surface)
-        
+
         # Highlight selected difficulty
         selected_button = getattr(self, f"{self.difficulty}_button")
-        pygame.draw.rect(self.display_surface, "white", selected_button.rect, 3)
+        pygame.draw.rect(self.display_surface, "white", selected_button.rect,
+                         3)
 
         self.back_button.update(self.display_surface)
         self.back_button.change_color(mouse_pos)
@@ -311,8 +313,7 @@ class UI:
         """Handle game over state"""
         self.draw_status_info()
         self.draw_experience_bar()
-        self.ball_sim.draw_current_state()
-        
+
         # Show game over overlay
         overlay = pygame.Surface((self.W_WIDTH, self.W_HEIGHT))
         overlay.fill((0, 0, 0))
@@ -320,11 +321,14 @@ class UI:
         self.display_surface.blit(overlay, (0, 0))
 
         game_over_text = self.title_font.render("Game Over", True, "white")
-        game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2, self.W_HEIGHT // 2 - 50))
+        game_over_rect = game_over_text.get_rect(center=(self.W_WIDTH // 2,
+                                                         self.W_HEIGHT // 2 -
+                                                         50))
         self.display_surface.blit(game_over_text, game_over_rect)
 
-        self.restart_button.set_position((self.W_WIDTH // 2 - self.restart_button.rect.width // 2,
-                                        self.W_HEIGHT // 2 + 50))
+        self.restart_button.set_position(
+            (self.W_WIDTH // 2 - self.restart_button.rect.width // 2,
+             self.W_HEIGHT // 2 + 50))
         self.restart_button.update(self.display_surface)
         self.restart_button.change_color(mouse_pos)
 
@@ -340,9 +344,11 @@ class UI:
         overlay.set_alpha(96)
         self.display_surface.blit(overlay, (0, 0))
         self.display_surface.blit(self.pause_title, self.pause_title_rect)
-        
-        for button in [self.resume_button, self.pause_settings_button,
-                      self.pause_credits_button, self.pause_main_menu_button]:
+
+        for button in [
+                self.resume_button, self.pause_settings_button,
+                self.pause_credits_button, self.pause_main_menu_button
+        ]:
             button.update(self.display_surface)
             button.change_color(mouse_pos)
 
@@ -352,11 +358,14 @@ class UI:
         status_y = int(20 * self.sY)
         spacing = int(40 * self.sY)
 
-        health_text = self.ball_sim.font.render(f"Health: {self.data.health}", True, "white")
-        currency_text = self.ball_sim.font.render(f"Currency: {self.data.currency}", True, "white")
+        health_text = self.ball_sim.font.render(f"Health: {self.data.health}",
+                                                True, "white")
+        currency_text = self.ball_sim.font.render(
+            f"Currency: {self.data.currency}", True, "white")
 
         self.display_surface.blit(health_text, (status_x, status_y))
-        self.display_surface.blit(currency_text, (status_x, status_y + spacing))
+        self.display_surface.blit(currency_text,
+                                  (status_x, status_y + spacing))
 
     def draw_experience_bar(self):
         """Draw experience bar"""
@@ -366,7 +375,8 @@ class UI:
         exp_bar_y = self.ball_sim.box_y - 50
 
         # Background
-        exp_bar_bg = pygame.Rect(exp_bar_x, exp_bar_y, exp_bar_width, exp_bar_height)
+        exp_bar_bg = pygame.Rect(exp_bar_x, exp_bar_y, exp_bar_width,
+                                 exp_bar_height)
         pygame.draw.rect(self.display_surface, "black", exp_bar_bg)
         pygame.draw.rect(self.display_surface, "white", exp_bar_bg, 2)
 
@@ -375,13 +385,16 @@ class UI:
         progress = self.data.experience / exp_needed
         if progress > 0:
             fill_width = int(exp_bar_width * progress)
-            fill_rect = pygame.Rect(exp_bar_x, exp_bar_y, fill_width, exp_bar_height)
+            fill_rect = pygame.Rect(exp_bar_x, exp_bar_y, fill_width,
+                                    exp_bar_height)
             pygame.draw.rect(self.display_surface, (255, 215, 0), fill_rect)
 
         # Level text
-        level_text = self.ball_sim.font.render(f"Level: {self.data.level}", True, "white")
-        level_rect = level_text.get_rect(center=(exp_bar_x + exp_bar_width // 2,
-                                               exp_bar_y + exp_bar_height // 2))
+        level_text = self.ball_sim.font.render(f"Level: {self.data.level}",
+                                               True, "white")
+        level_rect = level_text.get_rect(
+            center=(exp_bar_x + exp_bar_width // 2,
+                    exp_bar_y + exp_bar_height // 2))
         self.display_surface.blit(level_text, level_rect)
 
     def update_volume_from_mouse(self, mouse_x):
@@ -391,9 +404,10 @@ class UI:
         clamped_x = max(left_edge, min(right_edge, mouse_x))
         relative_x = clamped_x - left_edge
         self.volume = max(0, min(100, (relative_x / self.slider_width) * 100))
-        
-        self.volume_slider.x = int(left_edge + (self.volume * self.slider_width / 100) -
-                                 (self.volume_slider.width // 2))
+
+        self.volume_slider.x = int(left_edge +
+                                   (self.volume * self.slider_width / 100) -
+                                   (self.volume_slider.width // 2))
         self.volume_slider.y = int(245 * self.sY)
 
     def handle_events(self, event):
@@ -401,7 +415,8 @@ class UI:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.handle_escape_key()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.current_scene == 'settings' and self.resolution_dropdown.handle_event(event):
+            if self.current_scene == 'settings' and self.resolution_dropdown.handle_event(
+                    event):
                 return
             self.handle_mouse_click(event)
 
@@ -421,7 +436,7 @@ class UI:
             'credits': self.handle_credits_click,
             'gameplay': self.handle_gameplay_click
         }
-        
+
         if self.current_scene in scene_handlers:
             scene_handlers[self.current_scene](event, mouse_pos)
 
@@ -448,7 +463,8 @@ class UI:
             self.difficulty = 'medium'
         elif self.hard_button.check_input(mouse_pos):
             self.difficulty = 'hard'
-        elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
+        elif self.volume_rect.collidepoint(
+                mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
             self.update_volume_from_mouse(mouse_pos[0])
         elif self.apply_button.check_input(mouse_pos):
             self.apply_resolution_change()
@@ -480,7 +496,8 @@ class UI:
     def restart_game(self):
         """Restart the game"""
         self.data = Data(self)
-        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY, self.data)
+        self.ball_sim = BallSimulation(self.display_surface, self.sX, self.sY,
+                                       self.data)
         self.ball_sim.balls.clear()
         self.ball_sim.circles.clear()
         self.ball_sim.can_spawn_circles = True
