@@ -449,7 +449,8 @@ class UI:
         """Handle UI events"""
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.handle_escape_key()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
             print(f"Mouse click at {event.pos}")
             if self.current_scene == 'settings':
                 print(f"In settings scene, dropdown rect: {self.resolution_dropdown.rect}")
