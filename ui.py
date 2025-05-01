@@ -470,6 +470,8 @@ class UI:
         clamped_x = max(left_edge, min(right_edge, mouse_x))
         relative_x = clamped_x - left_edge
         self.volume = max(0, min(100, (relative_x / self.slider_width) * 100))
+        # Update slider position
+        self.volume_slider.x = left_edge + (self.volume * self.slider_width / 100)
         self.music_manager.set_volume(self.volume / 100)
 
     def handle_events(self, event):
