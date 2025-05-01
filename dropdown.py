@@ -42,7 +42,6 @@ class Dropdown:
         """Select a resolution option from the dropdown."""
         self.selected_option = self.options[index]
         self.is_open = False  # Close the dropdown after selection
-        print(f"Resolution selected: {self.selected_option}")
 
     def draw(self, surface):
         """Draw the dropdown and its options on the surface."""
