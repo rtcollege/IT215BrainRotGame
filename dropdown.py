@@ -69,25 +69,15 @@ class Dropdown:
             mouse_pos = pygame.mouse.get_pos()
             print(f"Clicked at {mouse_pos}")  # Debug click position
 
-            # Check if click is within the main button
             if self.rect.collidepoint(mouse_pos):
                 self.is_open = not self.is_open
                 print(f"Dropdown {'opened' if self.is_open else 'closed'}")
-                return True
 
-            # If dropdown is open, check options and outside clicks
             if self.is_open:
-                # Check if click is within any option
                 for i, rect in enumerate(self.option_rects):
                     if rect.collidepoint(mouse_pos):
                         self.selected_option = self.options[i]
                         self.is_open = False
-                        print(f"Option {self.selected_option} selected.")
+                        print(f"Option {self.selected_option} selected.")  # Debug selected option
                         return True
-                
-                # If click is outside both the button and options, close the dropdown
-                self.is_open = False
-                print("Dropdown closed - clicked outside")
-                return True
-                
         return False
