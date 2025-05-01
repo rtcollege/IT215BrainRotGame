@@ -46,6 +46,7 @@ class UI:
         # Initialize music manager
         self.music_manager = MusicManager()
         self.music_manager.set_volume(self.volume / 100)  # Convert percentage to float
+        self.music_manager.play_music('main_menu')  # Start playing main menu music
 
         # State variables
         self.current_scene = 'main_menu'
