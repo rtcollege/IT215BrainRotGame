@@ -12,12 +12,12 @@ class Particle:
         
         # Random angle and speed
         angle = random.uniform(0, 360)
-        speed = random.uniform(100, 300)
+        speed = random.uniform(50, 150)  # Reduced speed range
         self.vel_x = cos(radians(angle)) * speed
-        self.vel_y = sin(radians(angle)) * speed + 100  # Add slight downward bias
+        self.vel_y = sin(radians(angle)) * speed + 50  # Reduced downward bias
         
         self.gravity = 540 * scale_factor
-        self.lifetime = random.uniform(0.5, 1.5)  # Particle lives for 0.5-1.5 seconds
+        self.lifetime = random.uniform(0.2, 0.8)  # Reduced lifetime range
         
     def update(self, dt):
         self.lifetime -= dt
