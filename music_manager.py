@@ -13,25 +13,26 @@ class MusicManager:
         # Load sound effects
         self.sounds['bounce'] = pygame.mixer.Sound('data/sfx/bounce.mp3')
 
-    def play_music(self, music_type, loops=-1):
-        """Play music of specified type. loops=-1 means loop indefinitely"""
-        if music_type in self.music_paths:
-            path = self.music_paths[music_type]
-            if os.path.exists(path):
-                if self.current_music != music_type:
-                    pygame.mixer.music.load(path)
-                    pygame.mixer.music.play(loops)
-                    self.current_music = music_type
+    def play_music(self, track_type, loops=-1):
+        """Play specified track. loops=-1 means loop indefinitely"""
+        if track_type in self.sounds:
+            if self.current_music:
+                self.current_music.stop()
+            self.current_music = self.sounds[track_type]
+            self.current_music.play(loops)
 
     def stop_music(self):
         """Stop currently playing music"""
-        pygame.mixer.music.stop()
-        self.current_music = None
+        if self.current_music:
+            self.current_music.stop()
+            self.current_music = None
 
     def set_volume(self, volume):
-        """Set music volume (0.0 to 1.0)"""
-        pygame.mixer.music.set_volume(volume)
+        """Set volume for all sounds (0.0 to 1.0)"""
+        for sound in self.sounds.values():
+            sound.set_volume(volume)
 
-    def play_sound(self, sound_type):
+    def plays_sound(self, sound_type):
+        """Play a sound effect once"""
         if sound_type in self.sounds:
             self.sounds[sound_type].play()

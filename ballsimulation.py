@@ -202,7 +202,7 @@ class BallSimulation:
         circle, distance_to_ring, collision_margin = nearest_circle
         
         # Play bounce sound
-        self.data.ui.music_manager.play_sound('bounce')
+        self.data.ui.music_manager.plays_sound('bounce')
 
         dx = ball.x - self.center_x
         dy = ball.y - self.center_y
