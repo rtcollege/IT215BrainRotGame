@@ -21,12 +21,14 @@ class Ball:
             self.vel_x = cos(angle) * speed
             self.vel_y = sin(angle) * speed
             self.gravity = 800
+            self.max_speed = 1000
         else:
             angle = random.uniform(0, 2 * 3.14159)
             speed = random.uniform(1, 50)
             self.vel_x = cos(angle) * speed + random.uniform(-100, 100)
             self.vel_y = sin(angle) * speed + random.uniform(-100, 100)
             self.gravity = 540
+            self.max_speed = 350
             
         self.cell_x = 0
         self.cell_y = 0
