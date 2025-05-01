@@ -2,7 +2,7 @@ import pygame
 
 class Dropdown:
     def __init__(self, x, y, width, height, options, font, selected_option):
-        self.rect = pygame.Rect(x, y, width, height)
+        self.rect = pygame.Rect(x, y, width, int(40 * height/60))
         self.options = options
         self.font = font
         self.selected_option = selected_option
