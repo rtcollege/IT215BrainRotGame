@@ -160,7 +160,7 @@ class UI:
         """Set up resolution selection dropdown"""
         res_y = int(500 * self.sY)
         dropdown_width = int(220 * self.sX)
-        dropdown_height = int(40 * self.sY)
+        dropdown_height = int(60 * self.sY)
 
         resolution_options = [
             f"{width}x{height}" for width, height in RESOLUTIONS
