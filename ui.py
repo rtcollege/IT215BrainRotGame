@@ -445,9 +445,11 @@ class UI:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.handle_escape_key()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.current_scene == 'settings' and self.resolution_dropdown.handle_event(
-                    event):
-                return
+            # Handle dropdown first to prevent other clicks when dropdown is open
+            if self.current_scene == 'settings':
+                if self.resolution_dropdown.rect.collidepoint(event.pos) or self.resolution_dropdown.is_open:
+                    self.resolution_dropdown.handle_event(event)
+                    return
             self.handle_mouse_click(event)
 
     def handle_escape_key(self):
