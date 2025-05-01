@@ -55,6 +55,8 @@ class Main:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.handle_mouse_click(mouse_pos)
 
+    
+
     def handle_mouse_click(self, mouse_pos):
         """Handle mouse click events based on current scene"""
         current_scene = self.ui.current_scene

@@ -416,26 +416,29 @@ class UI:
 
     def handle_events(self, event):
         """Handle UI events"""
-        mouse_pos = pygame.mouse.get_pos()
-        
+        mouse_pos = event.pos
+    
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             if self.current_scene == 'gameplay':
                 self.is_paused = not self.is_paused
             elif self.current_scene in ['settings', 'credits']:
                 self.switch_scene(self.previous_scene)
-
+    
+        # Handle dropdown interactions first, before checking other UI clicks
         if self.current_scene == 'settings':
             if self.resolution_dropdown.is_open or self.resolution_dropdown.rect.collidepoint(mouse_pos):
-                self.resolution_dropdown.handle_event(event)
-            
+                self.resolution_dropdown.handle_event(event)  # Handle dropdown event
+    
+        # Proceed with mouse click handling (if no dropdown interaction occurred)
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_mouse_click(event)
 
 
     def handle_mouse_click(self, event):
-        """Handle mouse click events"""
-        mouse_pos = pygame.mouse.get_pos()
+        """Handle mouse click events based on current scene"""
+        mouse_pos = event.pos
 
+        # Mapping each scene to its corresponding handler
         scene_handlers = {
             'main_menu': self.handle_main_menu_click,
             'settings': self.handle_settings_click,
@@ -443,10 +446,11 @@ class UI:
             'gameplay': self.handle_gameplay_click
         }
 
+        # Call the appropriate handler based on the current scene
         if self.current_scene in scene_handlers:
-            scene_handlers[self.current_scene](mouse_pos)
+            scene_handlers[self.current_scene](event, mouse_pos)
 
-    def handle_main_menu_click(self, mouse_pos):
+    def handle_main_menu_click(self, event, mouse_pos):
         if self.play_button.check_input(mouse_pos):
             self.switch_scene('gameplay')
             self.is_paused = False
@@ -470,37 +474,41 @@ class UI:
         self.volume_slider.x = int(left_edge + (self.volume * self.slider_width / 100) - (self.volume_slider.width // 2))
         self.volume_slider.y = int(245 * self.sY)  # Update Y position with scaling
 
-    def handle_settings_click(self, mouse_pos):
+    def handle_settings_click(self, event,  mouse_pos):
+        """Handle mouse click events in the settings scene"""
+        # Handle button clicks
         if self.back_button.check_input(mouse_pos):
-            self.switch_scene(self.previous_scene)
+            self.switch_scene(self.previous_scene)  # Go back to previous scene
         elif self.easy_button.check_input(mouse_pos):
-            self.difficulty = 'easy'
+            self.difficulty = 'easy'  # Set difficulty to easy
         elif self.medium_button.check_input(mouse_pos):
-            self.difficulty = 'medium'
+            self.difficulty = 'medium'  # Set difficulty to medium
         elif self.hard_button.check_input(mouse_pos):
-            self.difficulty = 'hard'
+            self.difficulty = 'hard'  # Set difficulty to hard
         elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
-            self.update_volume_from_mouse(mouse_pos[0])
+            self.update_volume_from_mouse(mouse_pos[0])  # Adjust volume based on mouse position
         elif self.resolution_dropdown.is_open or self.resolution_dropdown.rect.collidepoint(mouse_pos):
+            # Handle dropdown event if open or clicked
             self.resolution_dropdown.handle_event(event)
         elif self.apply_button.check_input(mouse_pos):
+            # Apply resolution change when button clicked
             selected_res = self.resolution_dropdown.selected_option
             width, height = map(int, selected_res.split('x'))
-            pygame.display.set_mode((width, height))
+            pygame.display.set_mode((width, height))  # Update display resolution
             self.W_WIDTH = width
             self.W_HEIGHT = height
-            self.sX = width / BASE_WIDTH
+            self.sX = width / BASE_WIDTH  # Recalculate scaling factors
             self.sY = height / BASE_HEIGHT
-            self.recalculate_layout()
+            self.recalculate_layout()  # Recalculate layout based on new resolution
             slider_x = self.W_WIDTH // 2 - self.slider_width // 2 + int((self.volume / 100) * self.slider_width)
-            self.volume_slider.x = slider_x
+            self.volume_slider.x = slider_x  # Update volume slider position
 
 
-    def handle_credits_click(self, mouse_pos):
+    def handle_credits_click(self,event, mouse_pos):
         if self.back_button.check_input(mouse_pos):
             self.switch_scene(self.previous_scene)
 
-    def handle_gameplay_click(self, mouse_pos):
+    def handle_gameplay_click(self,event, mouse_pos):
         if self.data.health <= 0:
             if self.restart_button.check_input(mouse_pos):
                 # Create fresh Data instance
