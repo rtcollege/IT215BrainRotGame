@@ -159,8 +159,8 @@ class UI:
     def setup_resolution_dropdown(self, button_x):
         """Set up resolution selection dropdown"""
         res_y = int(500 * self.sY)
-        dropdown_width = int(300 * self.sX)  # Increased width to accommodate larger font
-        dropdown_height = int(80 * self.sY)  # Increased height to match other buttons
+        dropdown_width = int(220 * self.sX)
+        dropdown_height = int(60 * self.sY)
 
         resolution_options = [
             f"{width}x{height}" for width, height in RESOLUTIONS
