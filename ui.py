@@ -162,7 +162,6 @@ class UI:
         dropdown_width = int(220 * self.sX)
         dropdown_height = int(60 * self.sY)
         # Scale padding based on window size
-        self.resolution_dropdown.padding_x = int(10 * self.sX)
 
         resolution_options = [
             f"{width}x{height}" for width, height in RESOLUTIONS
