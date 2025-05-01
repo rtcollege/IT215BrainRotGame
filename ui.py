@@ -14,9 +14,9 @@ class MusicManager:
         self.sounds = {}
         self.current_music = None
         # Load sounds here.  Replace with your actual file paths.
-        self.sounds['main_menu'] = pygame.mixer.Sound('data/main_menu.mp3')
-        self.sounds['gameplay'] = pygame.mixer.Sound('data/gameplay.mp3')
-        self.sounds['game_over'] = pygame.mixer.Sound('data/game_over.mp3')
+        self.sounds['main_menu'] = pygame.mixer.Sound('data/music/main_menu.mp3')
+        self.sounds['gameplay'] = pygame.mixer.Sound('data/music/gameplay.mp3')
+        self.sounds['game_over'] = pygame.mixer.Sound('data/music/game_over.mp3')
 
     def set_volume(self, volume):
         for sound in self.sounds.values():
