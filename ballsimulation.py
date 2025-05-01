@@ -7,6 +7,7 @@ from circle import Circle
 from math import sin, cos, radians, hypot, atan2, degrees
 import random
 import pygame.gfxdraw
+from particle import Particle
 
 class BallSimulation:
     """Handles ball physics simulation"""
@@ -15,6 +16,7 @@ class BallSimulation:
         self.data = data  # Use the passed data reference
         self.balls = []
         self.circles = []
+        self.particles = [] # Initialize particles list
         self.circle_base_radius = 200
         self.ball_base_radius = 6
         self.base_padding = 100
@@ -179,6 +181,14 @@ class BallSimulation:
         self.data.experience += max(10, exp_gain)
         self.data.currency += max(1, currency_gain)
 
+        # Spawn particles
+        for _ in range(30): # Spawn 30 particles
+            angle = random.uniform(0, 2 * math.pi)
+            radius = circle.radius + random.uniform(0, 20) # Radius slightly outside circle
+            x = self.center_x + radius * math.cos(angle)
+            y = self.center_y + radius * math.sin(angle)
+            self.particles.append(Particle(x, y, 5, circle.color)) # Assuming Particle class takes (x,y,radius,color)
+
         # Check if we need to spawn new circles
         active_circles = [c for c in self.circles if c.active]
         if not active_circles:
@@ -297,6 +307,11 @@ class BallSimulation:
             else:
                 ball.draw(self.display_surface)
 
+        self.particles = [p for p in self.particles if p.is_alive()] #remove dead particles
+        for particle in self.particles:
+            particle.update(dt)
+            particle.draw(self.display_surface) #Draw particles
+
         self.handle_collisions()
         self.add_circle(sX, sY)
 
@@ -357,3 +372,18 @@ class BallSimulation:
                         self.data.currency -= cost
                         self.button_pressed = True
                         break
+
+    def draw(self):
+        """Draw the simulation"""
+        # Draw circles
+        for circle in self.circles:
+            circle.draw(self.display_surface, self.center_x, self.center_y,
+                       self.line_thickness, circle.color, pygame.gfxdraw)
+
+        # Draw balls
+        for ball in self.balls:
+            ball.draw(self.display_surface)
+
+        # Draw particles
+        for particle in self.particles:
+            particle.draw(self.display_surface)
