@@ -29,10 +29,12 @@ class Dropdown:
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
+            print(f"Dropdown clicked at {mouse_pos}")
 
             # Check if main button is clicked
             if self.rect.collidepoint(mouse_pos):
                 self.is_open = not self.is_open
+                print(f"Main dropdown button clicked. Is open: {self.is_open}")
                 return True
 
             # If dropdown is open, check for option clicks
@@ -41,15 +43,18 @@ class Dropdown:
                     if rect.collidepoint(mouse_pos):
                         self.selected_option = self.options[i]
                         self.is_open = False
+                        print(f"Selected option: {self.selected_option}")
                         return True
 
                 # Click outside both button and options - close dropdown
                 self.is_open = False
+                print("Clicked outside dropdown - closing")
                 return True
 
         return False
 
     def draw(self, surface):
+        print(f"Drawing dropdown - Is open: {self.is_open}, Selected: {self.selected_option}")
         # Draw main button
         pygame.draw.rect(surface, "#4a4a4a", self.rect, 0, border_radius=10)
         pygame.draw.rect(surface, "#b68f40", self.rect, 2, border_radius=10)
