@@ -493,6 +493,14 @@ class UI:
     def handle_settings_click(self, event, mouse_pos):
         """Handle settings click events"""
         if self.back_button.check_input(mouse_pos):
+            res_str = self.resolution_dropdown.selected_option
+            if res_str:
+                width, height = map(int, res_str.split('x'))
+                self.W_WIDTH = width
+                self.W_HEIGHT = height
+                self.sX = width / BASE_WIDTH
+                self.sY = height / BASE_HEIGHT
+                self.recalculate_layout()
             self.switch_scene(self.previous_scene)
         elif self.easy_button.check_input(mouse_pos):
             self.difficulty = 'easy'
