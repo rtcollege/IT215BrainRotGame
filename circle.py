@@ -49,7 +49,7 @@ class Circle:
         if self.active and self.radius > self.min_radius:
             current_radius = self.radius
             # Apply shrink rate reduction from upgrade
-            base_shrink = self.shrink_rate * (1 + (level - 1) * 0.2)
+            base_shrink = self.shrink_rate * (1 + (level - 1) * 0.9)
             reduced_shrink = base_shrink * (1 - (shrink_reduction * 0.1))  # 10% reduction per level
             new_radius = max(self.min_radius, self.radius - reduced_shrink * dt)
 

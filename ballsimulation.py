@@ -284,7 +284,7 @@ class BallSimulation:
             self.circles.clear()
 
         for circle in self.circles:
-            circle.update(dt, self.circles, self.level)
+            circle.update(dt, self.circles, self.data.level)
             circle.draw(self.display_surface, self.center_x, self.center_y,
                       self.line_thickness, (182, 143, 64), pygame.gfxdraw)
 
