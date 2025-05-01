@@ -200,7 +200,7 @@ class BallSimulation:
         """Resolve ball collision with circles"""
         nearest_circle = min(colliding_circles, key=lambda x: x[1])
         circle, distance_to_ring, collision_margin = nearest_circle
-        
+
         # Play bounce sound
         self.data.ui.music_manager.plays_sound('bounce')
 
@@ -354,7 +354,7 @@ class BallSimulation:
         # Update spawn button and show cost
         self.spawn_button.update(self.display_surface)
         self.spawn_button.change_color(mouse_pos)
-        
+
         # Display ball cost
         ball_cost = self.get_current_ball_cost()
         cost_text = self.font.render(f"Cost: {ball_cost}", True, "white")
