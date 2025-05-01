@@ -20,11 +20,10 @@ class Main:
         # Load assets
         self.import_assets()
 
-        # Initialize data
-        self.data = Data(None)  # Initialize Data without UI reference
-
-        # Initialize UI and pass data reference
+        # Initialize data and UI
+        self.data = Data(None)  # Temporarily initialize Data without UI reference
         self.ui = UI(self.font, self.ui_frames, self.data)
+        self.data.ui = self.ui  # Update UI reference after UI is created
 
     def import_assets(self):
         self.font = pygame.font.Font("graphics/ui/NeotriadFree-1jzAg.ttf", 40)
