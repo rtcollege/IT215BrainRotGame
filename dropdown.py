@@ -23,10 +23,13 @@ class Dropdown:
         """Handle user interaction with the dropdown."""
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
+                print("Dropdown clicked!")
                 self.toggle_dropdown()
+                print(f"Dropdown is now {'open' if self.is_open else 'closed'}")
             if self.is_open:
                 for i, option_rect in enumerate(self.option_rects):
                     if option_rect.collidepoint(event.pos):
+                        print(f"Option {i} selected: {self.options[i]}")
                         self.select_option(i)
                         break
 

@@ -303,10 +303,15 @@ class UI:
             midleft=(self.volume_rect.right + 20, self.volume_rect.centery))
         self.display_surface.blit(volume_value, volume_value_rect)
 
-        # Draw resolution controls
+        # Draw resolution controls with debug outline
         self.display_surface.blit(self.resolution_text,
                                   self.resolution_text_rect)
         self.resolution_dropdown.draw(self.display_surface)
+        # Debug: Draw red outline around dropdown hitbox
+        pygame.draw.rect(self.display_surface, "red", self.resolution_dropdown.rect, 1)
+        if self.resolution_dropdown.is_open:
+            for rect in self.resolution_dropdown.option_rects:
+                pygame.draw.rect(self.display_surface, "green", rect, 1)
         self.apply_button.update(self.display_surface)
         self.apply_button.change_color(mouse_pos)
 
