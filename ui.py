@@ -416,6 +416,8 @@ class UI:
 
     def handle_events(self, event):
         """Handle UI events"""
+        mouse_pos = pygame.mouse.get_pos()
+        
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             if self.current_scene == 'gameplay':
                 self.is_paused = not self.is_paused
@@ -423,7 +425,8 @@ class UI:
                 self.switch_scene(self.previous_scene)
 
         if self.current_scene == 'settings':
-            self.resolution_dropdown.handle_event(event)
+            if self.resolution_dropdown.is_open or self.resolution_dropdown.rect.collidepoint(mouse_pos):
+                self.resolution_dropdown.handle_event(event)
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.handle_mouse_click(event)
@@ -478,8 +481,8 @@ class UI:
             self.difficulty = 'hard'
         elif self.volume_rect.collidepoint(mouse_pos) or self.volume_slider.collidepoint(mouse_pos):
             self.update_volume_from_mouse(mouse_pos[0])
-        elif self.resolution_dropdown.handle_event(mouse_pos):
-            pass
+        elif self.resolution_dropdown.is_open or self.resolution_dropdown.rect.collidepoint(mouse_pos):
+            self.resolution_dropdown.handle_event(event)
         elif self.apply_button.check_input(mouse_pos):
             selected_res = self.resolution_dropdown.selected_option
             width, height = map(int, selected_res.split('x'))
