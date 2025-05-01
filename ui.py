@@ -182,8 +182,32 @@ class UI:
             self.font,
             current_res)
 
+        # Setup apply button
         self.apply_button = Button(
             None,
+            (self.resolution_dropdown.rect.right + int(20 * self.sX), 
+             res_y),
+            "Apply",
+            self.font,
+            "white",
+            "#b68f40")
+
+        # Setup resolution buttons below dropdown
+        button_spacing = int(200 * self.sX)
+        res_button_y = res_y + dropdown_height + int(20 * self.sY)
+        center_x = self.W_WIDTH / 2
+
+        self.resolution_buttons = []
+        for i, (width, height) in enumerate(RESOLUTIONS):
+            btn = Button(
+                None,
+                (center_x + (i - len(RESOLUTIONS)/2 + 0.5) * button_spacing,
+                 res_button_y),
+                f"{width}x{height}",
+                self.font,
+                "white",
+                "#b68f40")
+            self.resolution_buttons.append((btn, (width, height)))
             (self.resolution_dropdown.rect.right + int(20 * self.sX), res_y),
             "Apply", self.font, "white", "#b68f40")
 
