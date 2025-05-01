@@ -134,7 +134,7 @@ class BallSimulation:
             return False
 
         active_circles = sum(1 for c in self.circles if c.active)
-        max_circles = self.base_max_circles + (self.level - 1)
+        max_circles = self.base_max_circles + (self.data.level - 1)
         if active_circles >= max_circles:
             return False
 
@@ -277,7 +277,7 @@ class BallSimulation:
         active_circles = [c for c in self.circles if c.active]
 
         if not active_circles and self.can_spawn_circles:
-            max_circles = self.base_max_circles + (self.level - 1)
+            max_circles = self.base_max_circles + (self.data.level - 1)
             for _ in range(max_circles):
                 self.add_circle(sX, sY)
         elif not active_circles:
