@@ -139,7 +139,7 @@ class BallSimulation:
             return False
 
         scaled_radius = int(self.circle_base_radius * min(sX, sY))
-        new_circle = Circle(scaled_radius, self.line_thickness)
+        new_circle = Circle(scaled_radius, self.line_thickness, level=self.data.level)
         if not new_circle.check_collision(self.circles):
             self.circles.append(new_circle)
             return True
@@ -286,7 +286,7 @@ class BallSimulation:
         for circle in self.circles:
             circle.update(dt, self.circles, self.data.level)
             circle.draw(self.display_surface, self.center_x, self.center_y,
-                      self.line_thickness, (182, 143, 64), pygame.gfxdraw)
+                      self.line_thickness, circle.color, pygame.gfxdraw)
 
         for ball in self.balls[:]:
             ball.update(dt)

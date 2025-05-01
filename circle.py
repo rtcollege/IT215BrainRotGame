@@ -3,7 +3,7 @@ import random
 import pygame
 
 class Circle:
-    def __init__(self, radius, line_thickness, active=True):
+    def __init__(self, radius, line_thickness, active=True, level=1):
         self.initial_radius = radius
         self.radius = radius
         self.active = active
@@ -14,6 +14,11 @@ class Circle:
         self.min_radius = 20  # Minimum radius allowed
         self.line_thickness = line_thickness
         self.scale_factor = 1.0
+        self.color = (182, 143, 64) if level < 10 else (
+            random.randint(50, 255),
+            random.randint(50, 255),
+            random.randint(50, 255)
+        )
 
     def check_collision(self, other_circles):
         if not other_circles:
