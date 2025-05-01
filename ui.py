@@ -208,8 +208,6 @@ class UI:
                 "white",
                 "#b68f40")
             self.resolution_buttons.append((btn, (width, height)))
-            (self.resolution_dropdown.rect.right + int(20 * self.sX), res_y),
-            "Apply", self.font, "white", "#b68f40")
 
     def setup_credits_text(self, button_x):
         """Set up credits text"""
